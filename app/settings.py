@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'accounts',
     'paciente',
+    'qualificacao',
+    'escala',
+    'plantao',
 ]
 
 MIDDLEWARE = [

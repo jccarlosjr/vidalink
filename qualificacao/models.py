@@ -11,3 +11,7 @@ class Qualificacao(models.Model):
 
     def __str__(self):
         return self.usuario
+
+    class Meta:
+        verbose_name = 'Qualificação'
+        verbose_name_plural = 'Qualificações'
