@@ -1,0 +1,66 @@
+{% load static %}
+
+<aside id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <span class="logo-text">Nav Link</span>
+    <button id="toggleSidebar" class="toggle-btn">
+      <i class="bi bi-list"></i>
+    </button>
+  </div>
+
+  <ul class="sidebar-menu">
+
+    <!-- ESCALAS -->
+    <li class="menu-item has-submenu">
+      <a href="#">
+        <i class="bi bi-calendar-week"></i>
+        <span class="menu-label">Escalas</span>
+        <i class="bi bi-chevron-down arrow"></i>
+      </a>
+      <ul class="submenu">
+        <li><a href="#"><i class="bi bi-card-heading"></i> Escalas</a></li>
+        <li><a href="#"><i class="bi bi-calendar"></i> Plantões</a></li>
+      </ul>
+    </li>
+
+    <!-- PACIENTES -->
+    <li class="menu-item has-submenu">
+      <a href="#">
+        <i class="bi bi-people"></i>
+        <span class="menu-label">Pacientes</span>
+        <i class="bi bi-chevron-down arrow"></i>
+      </a>
+      <ul class="submenu">
+        <li><a href="{% url 'pacientes' %}"><i class="bi bi-person-hearts"></i> Pacientes</a></li>
+        <li><a href="#"><i class="bi bi-person-exclamation"></i> Responsáveis</a></li>
+      </ul>
+    </li>
+
+    <!-- CUIDADORAS -->
+    <li class="menu-item">
+      <a href="#">
+        <i class="bi bi-person-vcard"></i>
+        <span class="menu-label">Cuidadoras</span>
+      </a>
+    </li>
+
+    {% if user.is_staff %}
+    <!-- ADMIN -->
+    <li class="menu-item has-submenu">
+      <a href="#">
+        <i class="bi bi-gear"></i>
+        <span class="menu-label">Administração</span>
+        <i class="bi bi-chevron-down arrow"></i>
+      </a>
+      <ul class="submenu">
+        <li><a href="#"><i class="bi bi-people"></i> Usuários</a></li>
+      </ul>
+    </li>
+    {% endif %}
+  </ul>
+
+  <div class="sidebar-footer">
+  </div>
+
+</aside>

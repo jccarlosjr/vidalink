@@ -1,0 +1,281 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+
+body {
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+.btn-sm-icon {
+    --bs-btn-padding-y: 0.25rem !important;
+    --bs-btn-padding-x: 0.5rem;
+    --bs-btn-font-size: 0.575rem !important;
+    --bs-btn-border-radius: var(--bs-border-radius-sm);
+}
+
+[data-bs-theme="dark"] .btn-sm-icon.btn-primary {
+    --bs-btn-bg: var(--bs-primary-bg-subtle);
+    --bs-btn-border-color: var(--bs-primary-border-subtle);
+    --bs-btn-color: var(--bs-primary-text-emphasis);
+}
+
+[data-bs-theme="dark"] .btn-sm-icon.btn-secondary {
+    --bs-btn-bg: var(--bs-secondary-bg-subtle);
+    --bs-btn-border-color: var(--bs-secondary-border-subtle);
+    --bs-btn-color: var(--bs-secondary-text-emphasis);
+}
+
+[data-bs-theme="dark"] .btn-sm-icon.btn-success {
+    --bs-btn-bg: var(--bs-success-bg-subtle);
+    --bs-btn-border-color: var(--bs-success-border-subtle);
+    --bs-btn-color: var(--bs-success-text-emphasis);
+}
+
+[data-bs-theme="dark"] .btn-sm-icon.btn-danger {
+    --bs-btn-bg: var(--bs-danger-bg-subtle);
+    --bs-btn-border-color: var(--bs-danger-border-subtle);
+    --bs-btn-color: var(--bs-danger-text-emphasis);
+}
+
+[data-bs-theme="dark"] .btn-sm-icon.btn-warning {
+    --bs-btn-bg: var(--bs-warning-bg-subtle);
+    --bs-btn-border-color: var(--bs-warning-border-subtle);
+    --bs-btn-color: var(--bs-warning-text-emphasis);
+}
+
+[data-bs-theme="dark"] .btn-sm-icon.btn-info {
+    --bs-btn-bg: var(--bs-info-bg-subtle);
+    --bs-btn-border-color: var(--bs-info-border-subtle);
+    --bs-btn-color: var(--bs-info-text-emphasis);
+}
+
+[data-bs-theme="dark"] .btn-sm-icon.btn-light {
+    --bs-btn-bg: var(--bs-light-bg-subtle);
+    --bs-btn-border-color: var(--bs-light-border-subtle);
+    --bs-btn-color: var(--bs-light-text-emphasis);
+}
+
+[data-bs-theme="dark"] .btn-sm-icon.btn-dark {
+    --bs-btn-bg: var(--bs-dark-bg-subtle);
+    --bs-btn-border-color: var(--bs-dark-border-subtle);
+    --bs-btn-color: var(--bs-dark-text-emphasis);
+}
+
+.loader-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid #e9ecef;
+    border-top: 6px solid #0d6efd;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.d-none {
+    display: none !important;
+}
+
+.timeline {
+    position: relative;
+    padding: 20px 0;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 4px;
+    height: 100%;
+    background: #dee2e6;
+    transform: translateX(-50%);
+}
+
+.timeline-item {
+    position: relative;
+    width: 50%;
+    padding: 15px 30px;
+}
+
+.timeline-item.left {
+    left: 0;
+    text-align: right;
+}
+
+.timeline-item.right {
+    left: 50%;
+}
+
+.timeline-item .content {
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    position: relative;
+}
+
+.timeline-item.left .content::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    right: -10px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent transparent transparent #fff;
+}
+
+.timeline-item.right .content::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: -10px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent #fff transparent transparent;
+}
+
+/* Bolinha do eixo */
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    top: 25px;
+    width: 14px;
+    height: 14px;
+    background: #6c757d;
+    border-radius: 50%;
+    z-index: 2;
+}
+
+.timeline-item.left::before {
+    right: -7px;
+}
+
+.timeline-item.right::before {
+    left: -7px;
+}
+
+
+/* ========================= */
+/* BASE */
+/* ========================= */
+
+.btn {
+    border-radius: 10px;
+    padding: 0.4rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+/* efeito "pressionável" */
+.btn:active {
+    transform: scale(0.97);
+    box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.2),
+        inset -2px -2px 6px rgba(255, 255, 255, 0.1);
+}
+
+/* ========================= */
+/* PRIMARY */
+/* ========================= */
+
+.btn-primary {
+    background: #0d6efd;
+    color: #fff;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2),
+        -4px -4px 10px rgba(255, 255, 255, 0.05);
+}
+
+.btn-outline-primary {
+    background: transparent;
+    color: #0d6efd;
+    border: 1px solid #0d6efd;
+}
+
+/* ========================= */
+/* SECONDARY */
+/* ========================= */
+
+.btn-secondary {
+    background: #6c757d;
+    color: #fff;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn-outline-secondary {
+    color: #6c757d;
+    border: 1px solid #6c757d;
+}
+
+/* ========================= */
+/* SUCCESS */
+/* ========================= */
+
+.btn-success {
+    background: #198754;
+    color: #fff;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn-outline-success {
+    color: #198754;
+    border: 1px solid #198754;
+}
+
+/* ========================= */
+/* DANGER */
+/* ========================= */
+
+.btn-danger {
+    background: #dc3545;
+    color: #fff;
+}
+
+.btn-outline-danger {
+    color: #dc3545;
+    border: 1px solid #dc3545;
+}
+
+/* ========================= */
+/* WARNING */
+/* ========================= */
+
+.btn-warning {
+    background: #ffc107;
+    color: #000;
+}
+
+.btn-outline-warning {
+    color: #b58100;
+    border: 1px solid #ffc107;
+}
+
+/* ========================= */
+/* INFO */
+/* ========================= */
+
+.btn-info {
+    background: #0dcaf0;
+    color: #000;
+}
+
+.btn-outline-info {
+    color: #0aa2c0;
+    border: 1px solid #0dcaf0;
+}

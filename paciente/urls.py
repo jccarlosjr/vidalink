@@ -6,8 +6,8 @@ router = DefaultRouter()
 router.register(r'api/pacientes', views.PacienteViewSet)
 router.register(r'api/responsaveis', views.ResponsavelViewSet)
 
-# urlpatterns = [
-#     path('pacientes/', views.PacientesView.as_view(), name='pacientes'),
-# ]
+urlpatterns = [
+    path('pacientes/', views.PacientesListView.as_view(), name='pacientes'),
+]
 
-urlpatterns = router.urls
+urlpatterns += router.urls
