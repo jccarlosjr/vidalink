@@ -1,0 +1,150 @@
+<div class="modal modal-lg fade" id="novaCuidadoraModal" data-bs-backdrop="static" data-bs-keyboard="false"
+    tabindex="-2" aria-labelledby="novaCuidadoraModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="novaCuidadoraModalLabel">Nova Cuidadora</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="novaCuidadoraForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-1">
+                                <label for="nome" class="form-label">Nome</label>
+                                <input type="text" class="form-control form-control-sm" id="nome" name="nome" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-1">
+                                <label for="cpf" class="form-label">CPF</label>
+                                <input type="text" maxlength="14" class="form-control form-control-sm cpf-mask" id="cpf"
+                                    name="cpf" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-1">
+                                <label for="nascimento" class="form-label">Nascimento</label>
+                                <input type="date" class="form-control form-control-sm" id="nascimento"
+                                    name="nascimento" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-1">
+                                <label for="cnpj" class="form-label">CNPJ</label>
+                                <input type="text" class="form-control form-control-sm cnpj-mask" id="cnpj" name="cnpj"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-1">
+                                <label for="telefone" class="form-label">Telefone</label>
+                                <input type="text" maxlength="14" class="form-control form-control-sm celphone-mask"
+                                    id="telefone" name="telefone" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-1">
+                                <label for="cep" class="form-label">CEP</label>
+                                <input type="text" class="form-control form-control-sm cep-mask" id="cep" name="cep"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="mb-1">
+                                <label for="endereco" class="form-label">Endereço</label>
+                                <input type="text" class="form-control form-control-sm" id="endereco" name="endereco"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="mb-1">
+                                <label for="numero" class="form-label">Número</label>
+                                <input type="text" class="form-control form-control-sm" id="numero" name="numero"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-1">
+                                <label for="complemento" class="form-label">Complemento</label>
+                                <input type="text" class="form-control form-control-sm" id="complemento"
+                                    name="complemento">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-1">
+                                <label for="bairro" class="form-label">Bairro</label>
+                                <input type="text" class="form-control form-control-sm" id="bairro" name="bairro"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-1">
+                                <label for="cidade" class="form-label">Cidade</label>
+                                <input type="text" class="form-control form-control-sm" id="cidade" name="cidade"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="mb-1">
+                                <label for="estado" class="form-label">Estado</label>
+                                <select class="form-select form-select-sm" id="estado" name="estado">
+                                    {% include 'partials/ufs.html' %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-1 form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="ativo" name="ativo" checked>
+                                <label class="form-check-label" for="ativo">
+                                    Ativo
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveNovaCuidadoraBtn" class="btn-modern"><i class="bi bi-floppy"></i>
+                    Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal modal-lg fade" id="detalhesCuidadoraModal" tabindex="-2" aria-labelledby="detalhesCuidadoraModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detalhesCuidadoraModalLabel">Detalhes da Cuidadora</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="deletarCuidadoraModal" data-bs-backdrop="static" tabindex="-2"
+    aria-labelledby="deletarCuidadoraModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deletarCuidadoraModalLabel">Deletar Cuidadora</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="deletarCuidadoraId">
+                <p>Tem certeza que deseja deletar a cuidadora?</p>
+                <p class="text-danger">Essa ação não pode ser desfeita.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-modern" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn-modern text-danger" id="deletarCuidadoraBtn">Deletar</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -104,6 +104,16 @@ function maskCPF(value) {
         .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
 }
 
+function maskCNPJ(value) {
+    return value
+        .replace(/\D/g, '')
+        .replace(/^(\d{2})(\d)/, '$1.$2')
+        .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
+        .replace(/\.(\d{3})(\d)/, '.$1/$2')
+        .replace(/(\d{4})(\d)/, '$1-$2')
+        .replace(/(-\d{2})\d+?$/, '$1');
+}
+
 function maskCelphone(value) {
     return value
         .replace(/\D/g, '')
@@ -151,6 +161,11 @@ document.querySelectorAll('.numbers-only').forEach(input => {
     });
 });
 
+document.querySelectorAll(".cpf-mask").forEach(input => {
+    input.addEventListener("input", function () {
+        this.value = maskCPF(this.value);
+    });
+});
 
 document.querySelectorAll(".cep-mask").forEach(input => {
     input.addEventListener("input", function () {
@@ -168,5 +183,11 @@ document.querySelectorAll(".nome-mask").forEach(input => {
     input.addEventListener("input", function () {
         this.value = this.value.replace(/[^A-Za-z\s]/g, '');
         this.value = this.value.toUpperCase();
+    });
+});
+
+document.querySelectorAll(".cnpj-mask").forEach(input => {
+    input.addEventListener("input", function () {
+        this.value = maskCNPJ(this.value);
     });
 });

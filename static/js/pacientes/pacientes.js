@@ -80,7 +80,7 @@ function renderPaginationDRF(pagination) {
     let html = `<div class="d-flex justify-content-center gap-2 mt-4">`
 
     html += `
-        <button class="btn btn-outline-secondary"
+        <button class="btn-modern"
             ${!pagination.previous ? "disabled" : ""}
             onclick="loadPacientes('${pagination.previous}')">
             ← Anterior
@@ -88,7 +88,7 @@ function renderPaginationDRF(pagination) {
     `
 
     html += `
-        <button class="btn btn-outline-secondary"
+        <button class="btn-modern"
             ${!pagination.next ? "disabled" : ""}
             onclick="loadPacientes('${pagination.next}')">
             Próxima →
@@ -245,7 +245,7 @@ function renderResponsaveis(responsaveis) {
 
 
 // ############################################
-// ############## MODAIS #####################
+// ############## MODALS ######################
 // ############################################
 
 function abrirModalNovoPaciente() {
