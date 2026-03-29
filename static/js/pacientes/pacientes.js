@@ -44,6 +44,7 @@ document.getElementById("cep").addEventListener("blur", function () {
                     return;
                 } else {
                     document.getElementById("endereco").value = data.logradouro;
+                    document.getElementById("bairro").value = data.bairro;
                     document.getElementById("cidade").value = data.localidade;
                     document.getElementById("estado").value = data.uf;
                 }
@@ -72,7 +73,6 @@ function loadPacientes(url = null) {
         })
     })
 }
-
 
 function renderPaginationDRF(pagination) {
     let container = document.getElementById("pagination")
@@ -132,63 +132,62 @@ function renderPacientes(pacientes = []) {
             text = paciente.sexo
         }
 
-        const enderecoCompleto = `${paciente.endereco}, ${paciente.cidade}, ${paciente.estado}, ${paciente.cep}`;
+        const enderecoCompleto = `${paciente.endereco}, ${paciente.numero}, ${paciente.complemento}, ${paciente.bairro}, ${paciente.cidade}-${paciente.estado}, ${paciente.cep}`;
         const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(enderecoCompleto)}`;
 
         html += `
-        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+        <div class="col-12 col-md-3 col-lg-3 col-xl-3">
             <div class="card shadow-lg border-0">
 
                 <div class="card-header">
-                    <div class="d-flex justify-content-between">
-                        <div class="fw-semibold fs-5">${paciente.nome}</div>
-                        ${paciente.idade} anos
-                        <span class="${badge}">
-                            <i class="${icon}"></i>${text}
-                        </span>
+                    <div class="d-flex justify-content-end">
+                        <div>
+                            <button class="btn-modern" title="Editar"
+                                data-paciente='${JSON.stringify(paciente)}'
+                                onclick="abrirModalEditarPaciente(this)">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
+
+                            <button class="btn-modern" title="Responsáveis"
+                                onclick="abrirModalResponsavel(${paciente.id})">
+                                <i class="bi bi-people"></i>
+                            </button>
+
+                            <button class="btn-modern" title="Detalhes"
+                                onclick="abrirModalDetalhesPaciente(${paciente.id})">
+                                <i class="bi bi-eye"></i>
+                            </button>
+
+                            <button class="btn-modern" title="Excluir"
+                                onclick="abrirModalExcluirPaciente(${paciente.id})">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 <div class="card-body d-flex flex-column">
-                    <!-- Endereço -->
-                    <div class="small mb-2">
-                        <a href="${mapsUrl}" target="_blank" class="text-decoration-none">
-                            <i class="bi bi-geo-alt-fill text-primary btn-modern"></i>
-                        </a>
-                        <small class="text-body fw-bold ms-2">
-                            ${paciente.endereco} - ${paciente.cidade}-${paciente.estado} - ${paciente.cep}
-                        </small>
+                    <div class="fw-semibold fs-5">${paciente.nome}</div>
+                    <div class="mb-3 small">
+                        <i class="${icon} ${badge}">${text}</i> ${paciente.idade} anos
                     </div>
 
-                    <!-- Observações -->
                     <div class="mt-auto mb-2 border-top pt-2">
                         <small class="text-muted">
                             ${paciente.observacoes || "Sem observações"}
                         </small>
                     </div>
                 </div>
-                <div class="card-footer d-flex justify-content-between mt-2">
-                        <button class="btn-modern" title="Editar"
-                            data-paciente='${JSON.stringify(paciente)}'
-                            onclick="abrirModalEditarPaciente(this)">
-                            <i class="bi bi-pencil-square"></i>
-                        </button>
+                <div class="card-footer small">
+                    <small class="text-body fw-bold ms-2">
+                        <a href="${mapsUrl}" target="_blank" class="text-decoration-none">
+                            <i class="bi bi-geo-alt-fill text-primary border rounded"></i>
+                        </a>
+                        ${paciente.endereco}, ${paciente.numero}, ${paciente.bairro}
+                        ${paciente.cep} - ${paciente.cidade}-${paciente.estado} ${paciente.complemento ? ', ' + paciente.complemento : ''}</p>
+                    </small>
+                </div>
 
-                        <button class="btn-modern" title="Responsáveis"
-                            onclick="abrirModalResponsavel(${paciente.id})">
-                            <i class="bi bi-people"></i>
-                        </button>
-
-                        <button class="btn-modern" title="Detalhes"
-                            onclick="abrirModalDetalhesPaciente(${paciente.id})">
-                            <i class="bi bi-eye"></i>
-                        </button>
-
-                        <button class="btn-modern" title="Excluir"
-                            onclick="abrirModalExcluirPaciente(${paciente.id})">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </div>
             </div>
         </div>
         `
@@ -255,6 +254,9 @@ function abrirModalNovoPaciente() {
     document.getElementById("sexo").value = "";
     document.getElementById("cep").value = "";
     document.getElementById("endereco").value = "";
+    document.getElementById("numero").value = "";
+    document.getElementById("complemento").value = "";
+    document.getElementById("bairro").value = "";
     document.getElementById("cidade").value = "";
     document.getElementById("estado").value = "";
     document.getElementById("observacoes").value = "";
@@ -280,6 +282,9 @@ async function abrirModalDetalhesPaciente(id) {
     document.getElementById("detalhe_sexo").value = sexo;
     document.getElementById("detalhe_cep").value = paciente.cep;
     document.getElementById("detalhe_endereco").value = paciente.endereco;
+    document.getElementById("detalhe_numero").value = paciente.numero;
+    document.getElementById("detalhe_complemento").value = paciente.complemento;
+    document.getElementById("detalhe_bairro").value = paciente.bairro;
     document.getElementById("detalhe_cidade").value = paciente.cidade;
     document.getElementById("detalhe_estado").value = paciente.estado;
     document.getElementById("detalhe_observacoes").value = paciente.observacoes;
@@ -294,6 +299,9 @@ async function abrirModalEditarPaciente(btn) {
     document.getElementById("sexo").value = paciente.sexo;
     document.getElementById("cep").value = paciente.cep;
     document.getElementById("endereco").value = paciente.endereco;
+    document.getElementById("numero").value = paciente.numero;
+    document.getElementById("complemento").value = paciente.complemento;
+    document.getElementById("bairro").value = paciente.bairro;
     document.getElementById("cidade").value = paciente.cidade;
     document.getElementById("estado").value = paciente.estado;
     document.getElementById("observacoes").value = paciente.observacoes;
@@ -351,6 +359,9 @@ function salvarPaciente() {
     const sexo = document.getElementById("sexo").value;
     const cep = document.getElementById("cep").value;
     const endereco = document.getElementById("endereco").value;
+    const numero = document.getElementById("numero").value;
+    const complemento = document.getElementById("complemento").value;
+    const bairro = document.getElementById("bairro").value;
     const cidade = document.getElementById("cidade").value;
     const estado = document.getElementById("estado").value;
     const observacoes = document.getElementById("observacoes").value;
@@ -371,6 +382,9 @@ function salvarPaciente() {
         sexo: sexo,
         cep: cep,
         endereco: endereco,
+        numero: numero,
+        complemento: complemento,
+        bairro: bairro,
         cidade: cidade,
         estado: estado,
         observacoes: observacoes

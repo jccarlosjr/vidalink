@@ -164,3 +164,9 @@ document.querySelectorAll(".celphone-mask").forEach(input => {
     });
 });
 
+document.querySelectorAll(".nome-mask").forEach(input => {
+    input.addEventListener("input", function () {
+        this.value = this.value.replace(/[^A-Za-z\s]/g, '');
+        this.value = this.value.toUpperCase();
+    });
+});
