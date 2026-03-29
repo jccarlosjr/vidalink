@@ -1,0 +1,172 @@
+<div class="modal modal-lg fade" id="novoPacienteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-2"
+    aria-labelledby="novoPacienteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="novoPacienteModalLabel">Novo Paciente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <input type="hidden" id="pacienteId" name="pacienteId">
+                        <div class="mb-3">
+                            <label for="nome" class="form-label">Nome</label>
+                            <input type="text" class="form-control form-control-sm" id="nome" name="nome">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Idade</label>
+                            <input type="text" maxlength="3" class="form-control form-control-sm numbers-only"
+                                id="idade" name="idade">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label for="sexo" class="form-label">Sexo</label>
+                            <select class="form-select form-select-sm" id="sexo" name="sexo">
+                                <option value="M">Masculino</option>
+                                <option value="F">Feminino</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="cep">CEP</label>
+                            <input type="text" maxlength="9" class="form-control form-control-sm cep-mask" id="cep"
+                                name="cep">
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <label for="endereco">Endereço</label>
+                            <input type="text" class="form-control form-control-sm" id="endereco" name="endereco">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="cidade">Cidade</label>
+                            <input type="text" class="form-control form-control-sm" id="cidade" name="cidade">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="estado">Estado</label>
+                            <select class="form-select form-select-sm" id="estado" name="estado">
+                                {% include 'partials/ufs.html' %}
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="mb-3">
+                            <label for="observacoes">Observações</label>
+                            <textarea class="form-control form-control-sm" id="observacoes"
+                                name="observacoes"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveNovoPacienteBtn" class="btn-modern"><i class="bi bi-floppy"></i>
+                    Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal modal-lg fade" id="detalhesPacienteModal" tabindex="-2" aria-labelledby="detalhesPacienteModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detalhesPacienteModalLabel">Detalhes do Paciente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-1">
+                            <label for="detalhe_nome" class="form-label">Nome</label>
+                            <input type="text" class="form-control" id="detalhe_nome" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-1">
+                            <label for="detalhe_idade" class="form-label">Idade</label>
+                            <input type="text" class="form-control" id="detalhe_idade" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-1">
+                            <label for="detalhe_sexo" class="form-label">Sexo</label>
+                            <input type="text" class="form-control" id="detalhe_sexo" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-1">
+                            <label for="detalhe_cep" class="form-label">CEP</label>
+                            <input type="text" class="form-control" id="detalhe_cep" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-1">
+                            <label for="detalhe_endereco" class="form-label">Endereço</label>
+                            <input type="text" class="form-control" id="detalhe_endereco" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-1">
+                            <label for="detalhe_cidade" class="form-label">Cidade</label>
+                            <input type="text" class="form-control" id="detalhe_cidade" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-1">
+                            <label for="detalhe_estado" class="form-label">Estado</label>
+                            <input type="text" class="form-control" id="detalhe_estado" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-1">
+                            <label for="detalhe_observacoes" class="form-label">Observações</label>
+                            <textarea class="form-control" id="detalhe_observacoes" readonly></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="deletarPacienteModal" data-bs-backdrop="static" tabindex="-2"
+    aria-labelledby="deletarPacienteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deletarPacienteModalLabel">Deletar Paciente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="deletarPacienteId">
+                <p>Tem certeza que deseja deletar o paciente?</p>
+                <p class="text-danger">Essa ação não pode ser desfeita.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-modern" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn-modern text-danger" id="deletarPacienteBtn">Deletar</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -11,10 +11,10 @@
     <div class="row align-items-center mb-4">
         <div class="col-md-12 col-12 mb-3 mb-md-0">
             <h4 class="mb-0 fw-bold">Pacientes</h4>
-            <button class="btn btn-sm btn-outline-success shadow-sm mt-2" id="novoPacienteBtn"
+            <a class="shadow-lg mt-2 text-decoration-none btn-modern" id="novoPacienteBtn"
                 title="Adicionar Novo Paciente">
                 <i class="bi bi-plus-circle me-2"></i>Novo Paciente
-            </button>
+            </a>
         </div>
     </div>
 
@@ -35,29 +35,13 @@
     </div>
 
     <!-- Tabela de Pacientes -->
-    <div class="card border-0 shadow-sm bg-body">
-        <div class="card-body p-0">
-            <!-- Table Responsiva wrapper -->
-            <div class="table-responsive rounded">
-                <table class="table table-hover align-middle mb-0 text-body">
-                    <thead class="table">
-                        <tr>
-                            <th class="ps-4">Paciente</th>
-                            <th class="text-center">Endereço</th>
-                            <th class="text-center pe-4">Observações</th>
-                            <th class="text-center pe-4">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table" id="table-pacientes">
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="row" id="table-pacientes">
     </div>
+    <div id="pagination"></div>
 </main>
 
-{% include 'partials/novo_paciente_modal.html' %}
+{% include 'partials/paciente_modals.html' %}
+{% include 'partials/responsavel_modals.html' %}
 
 <script src="{% static 'js/pacientes/pacientes.js' %}"></script>
-<script src="{% static 'js/pacientes/novo_paciente.js' %}"></script>
 {% endblock %}

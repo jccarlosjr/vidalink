@@ -157,3 +157,10 @@ document.querySelectorAll(".cep-mask").forEach(input => {
         this.value = maskCEP(this.value);
     });
 });
+
+document.querySelectorAll(".celphone-mask").forEach(input => {
+    input.addEventListener("input", function () {
+        this.value = maskCelphone(this.value);
+    });
+});
+

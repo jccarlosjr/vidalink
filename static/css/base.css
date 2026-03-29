@@ -175,107 +175,98 @@ body {
 /* BASE */
 /* ========================= */
 
-.btn {
-    border-radius: 10px;
-    padding: 0.4rem 1rem;
-    font-size: 0.85rem;
-    font-weight: 500;
-    border: none;
-    transition: all 0.2s ease;
+.btn-modern {
+    --btn-bg: rgba(255, 255, 255, 0.35);
+    --btn-border: rgba(255, 255, 255, 0.6);
+    --btn-color: #111827;
+    --btn-shadow: rgba(0, 0, 0, 0.15);
+
+    position: relative;
+
+    padding: 8px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--btn-border);
+
+    background: var(--btn-bg);
+    color: var(--btn-color);
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    font-weight: 600;
+    font-size: 0.9rem;
+
+    box-shadow:
+        0 6px 16px var(--btn-shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+
+    transition: all 0.25s ease;
+    cursor: pointer;
 }
 
-/* efeito "pressionável" */
-.btn:active {
-    transform: scale(0.97);
-    box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.2),
-        inset -2px -2px 6px rgba(255, 255, 255, 0.1);
+/* Hover mais chamativo */
+.btn-modern:hover {
+    transform: translateY(-2px) scale(1.03);
+
+    background: rgba(255, 255, 255, 0.5);
+
+    box-shadow:
+        0 10px 25px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
-/* ========================= */
-/* PRIMARY */
-/* ========================= */
+/* Clique */
+.btn-modern:active {
+    transform: scale(0.96);
+}
 
 .btn-primary {
-    background: #0d6efd;
-    color: #fff;
-    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2),
-        -4px -4px 10px rgba(255, 255, 255, 0.05);
+    --btn-bg: linear-gradient(135deg, #3b82f6, #2563eb);
+    --btn-border: transparent;
+    --btn-color: white;
 }
-
-.btn-outline-primary {
-    background: transparent;
-    color: #0d6efd;
-    border: 1px solid #0d6efd;
-}
-
-/* ========================= */
-/* SECONDARY */
-/* ========================= */
-
-.btn-secondary {
-    background: #6c757d;
-    color: #fff;
-    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.btn-outline-secondary {
-    color: #6c757d;
-    border: 1px solid #6c757d;
-}
-
-/* ========================= */
-/* SUCCESS */
-/* ========================= */
 
 .btn-success {
-    background: #198754;
-    color: #fff;
-    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+    --btn-bg: linear-gradient(135deg, #22c55e, #16a34a);
+    --btn-border: transparent;
+    --btn-color: white;
 }
-
-.btn-outline-success {
-    color: #198754;
-    border: 1px solid #198754;
-}
-
-/* ========================= */
-/* DANGER */
-/* ========================= */
 
 .btn-danger {
-    background: #dc3545;
-    color: #fff;
+    --btn-bg: linear-gradient(135deg, #ef4444, #dc2626);
+    --btn-border: transparent;
+    --btn-color: white;
 }
-
-.btn-outline-danger {
-    color: #dc3545;
-    border: 1px solid #dc3545;
-}
-
-/* ========================= */
-/* WARNING */
-/* ========================= */
 
 .btn-warning {
-    background: #ffc107;
-    color: #000;
+    --btn-bg: linear-gradient(135deg, #f59e0b, #d97706);
+    --btn-border: transparent;
+    --btn-color: #111;
 }
-
-.btn-outline-warning {
-    color: #b58100;
-    border: 1px solid #ffc107;
-}
-
-/* ========================= */
-/* INFO */
-/* ========================= */
 
 .btn-info {
-    background: #0dcaf0;
-    color: #000;
+    --btn-bg: linear-gradient(135deg, #06b6d4, #0891b2);
+    --btn-border: transparent;
+    --btn-color: white;
 }
 
-.btn-outline-info {
-    color: #0aa2c0;
-    border: 1px solid #0dcaf0;
+.btn-secondary {
+    --btn-bg: linear-gradient(135deg, #6b7280, #4b5563);
+    --btn-border: transparent;
+    --btn-color: white;
+}
+
+[data-bs-theme="dark"] .btn-modern {
+    --btn-bg: rgba(30, 41, 59, 0.8);
+    --btn-border: rgba(255, 255, 255, 0.1);
+    --btn-color: #f9fafb;
+
+    box-shadow:
+        0 6px 16px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
