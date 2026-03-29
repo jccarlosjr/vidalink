@@ -25,6 +25,7 @@ function getData(url, renderFunction = null) {
 
 function saveData(url, data, callBack = null, method = "POST") {
     showLoader();
+
     return fetch(url, {
         method: method,
         headers: {
@@ -33,16 +34,35 @@ function saveData(url, data, callBack = null, method = "POST") {
         },
         body: JSON.stringify(data)
     })
-        .then(response => response.json())
+        .then(async response => {
+            const responseData = await response.json();
+
+            if (!response.ok) {
+                throw responseData;
+            }
+
+            return responseData;
+        })
         .then(data => {
             if (callBack) {
-                callBack();
+                callBack(data);
             }
             return data;
         })
         .catch(error => {
-            console.error("Erro ao buscar dados:", error);
-            hideLoader();
+            console.error("Erro ao salvar dados:", error);
+
+            if (typeof error === "object") {
+                let messages = [];
+
+                for (let field in error) {
+                    messages.push(`${field}: ${error[field].join(", ")}`);
+                }
+
+                showToast(messages.join("<br>"), "danger");
+            } else {
+                showToast("Erro ao salvar dados!", "danger");
+            }
         })
         .finally(() => {
             hideLoader();
@@ -59,23 +79,45 @@ function deleteData(url, callBack = null) {
             "X-CSRFToken": getCSRFToken()
         }
     })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Erro na requisição");
+        .then(async response => {
+            let responseData = null;
+
+            try {
+                const text = await response.text();
+                responseData = text ? JSON.parse(text) : null;
+            } catch {
+                responseData = null;
             }
 
-            return response.text().then(text => {
-                return text ? JSON.parse(text) : null;
-            });
+            if (!response.ok) {
+                throw responseData || { error: "Erro ao deletar registro." };
+            }
+
+            return responseData;
         })
         .then(data => {
+            showToast("Registro excluído com sucesso!", "success");
+
             if (callBack) {
-                callBack();
+                callBack(data);
             }
+
             return data;
         })
         .catch(error => {
-            console.error("Erro ao buscar dados:", error);
+            console.error("Erro ao deletar:", error);
+
+            if (typeof error === "object") {
+                let messages = [];
+
+                for (let field in error) {
+                    messages.push(`${field}: ${error[field].join(", ")}`);
+                }
+
+                showToast(messages.join("<br>"), "danger");
+            } else {
+                showToast("Erro ao deletar registro!", "danger");
+            }
         })
         .finally(() => {
             hideLoader();
@@ -84,6 +126,7 @@ function deleteData(url, callBack = null) {
 
 function patchData(url, data, callBack = null) {
     showLoader();
+
     return fetch(url, {
         method: "PATCH",
         headers: {
@@ -92,16 +135,38 @@ function patchData(url, data, callBack = null) {
         },
         body: JSON.stringify(data)
     })
-        .then(response => response.json())
-        .then(data => {
-            if (callBack) {
-                callBack();
+        .then(async response => {
+            const responseData = await response.json();
+
+            if (!response.ok) {
+                throw responseData;
             }
+
+            return responseData;
+        })
+        .then(data => {
+            showToast("Atualizado com sucesso!", "success");
+
+            if (callBack) {
+                callBack(data);
+            }
+
             return data;
         })
         .catch(error => {
-            console.error("Erro ao buscar dados:", error);
-            hideLoader();
+            console.error("Erro ao atualizar:", error);
+
+            if (typeof error === "object") {
+                let messages = [];
+
+                for (let field in error) {
+                    messages.push(`${field}: ${error[field].join(", ")}`);
+                }
+
+                showToast(messages.join("<br>"), "danger");
+            } else {
+                showToast("Erro ao atualizar dados!", "danger");
+            }
         })
         .finally(() => {
             hideLoader();

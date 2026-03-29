@@ -353,7 +353,7 @@ function abrirModalExcluirResponsavel(id) {
 // ############## HELPERS #####################
 // ############################################
 
-function salvarPaciente() {
+async function salvarPaciente() {
     const nome = document.getElementById("nome").value;
     const idade = document.getElementById("idade").value;
     const sexo = document.getElementById("sexo").value;
@@ -390,23 +390,29 @@ function salvarPaciente() {
         observacoes: observacoes
     };
 
-    saveData(
+    let res = await saveData(
         url = url,
         data = paciente,
         callBack = loadPacientes,
         method = method
     );
 
-    novoPacienteModal.hide();
+    if (res) {
+        novoPacienteModal.hide();
+        showToast("Paciente salvo com sucesso!", "success");
+    }
 }
 
-function deletarPaciente() {
+async function deletarPaciente() {
     const id = document.getElementById("deletarPacienteId").value;
-    deleteData(`/api/pacientes/${id}/`, loadPacientes);
-    deletarPacienteModal.hide();
+    let res = await deleteData(`/api/pacientes/${id}/`, loadPacientes);
+    if (res) {
+        deletarPacienteModal.hide();
+        showToast("Paciente deletado com sucesso!", "success");
+    }
 }
 
-function salvarResponsavel() {
+async function salvarResponsavel() {
     const nome = document.getElementById("novo_responsavel_nome").value;
     const telefone = document.getElementById("novo_responsavel_telefone").value;
     const pacienteId = document.getElementById("pacienteId").value;
@@ -427,21 +433,27 @@ function salvarResponsavel() {
         paciente: pacienteId
     };
 
-    saveData(
+    let res = await saveData(
         url = url,
         data = responsavel,
         callBack = () => getData(url = "/api/responsaveis/", renderFunction = renderResponsaveis),
         method = method
     );
 
-    novoResponsavelModal.hide();
+    if (res) {
+        novoResponsavelModal.hide();
+        showToast("Responsável salvo com sucesso!", "success");
+    }
 }
 
-function deletarResponsavel() {
+async function deletarResponsavel() {
     const id = document.getElementById("deletarResponsavelId").value;
-    deleteData(
+    let res = await deleteData(
         url = `/api/responsaveis/${id}/`,
         callBack = () => getData(url = "/api/responsaveis/", renderFunction = renderResponsaveis)
     );
-    deletarResponsavelModal.hide();
+    if (res) {
+        deletarResponsavelModal.hide();
+        showToast("Responsável deletado com sucesso!", "success");
+    }
 }

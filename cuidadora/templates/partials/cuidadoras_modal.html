@@ -11,6 +11,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-1">
+                                <input type="hidden" id="id_cuidadora" name="id_cuidadora">
                                 <label for="nome" class="form-label">Nome</label>
                                 <input type="text" class="form-control form-control-sm" id="nome" name="nome" required>
                             </div>
@@ -122,6 +123,101 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-1">
+                            <label for="nome" class="form-label">Nome</label>
+                            <input type="text" class="form-control form-control-sm" id="detalhe_nome" name="nome"
+                                readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-1">
+                            <label for="cpf" class="form-label">CPF</label>
+                            <input type="text" class="form-control form-control-sm cpf-mask" id="detalhe_cpf" name="cpf"
+                                readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-1">
+                            <label for="nascimento" class="form-label">Nascimento</label>
+                            <input type="date" class="form-control form-control-sm" id="detalhe_nascimento"
+                                name="nascimento" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-1">
+                            <label for="cnpj" class="form-label">CNPJ</label>
+                            <input type="text" class="form-control form-control-sm cnpj-mask" id="detalhe_cnpj"
+                                name="cnpj" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-1">
+                            <label for="telefone" class="form-label">Telefone</label>
+                            <input type="text" maxlength="14" class="form-control form-control-sm celphone-mask"
+                                id="detalhe_telefone" name="detalhe_telefone" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-1">
+                            <label for="cep" class="form-label">CEP</label>
+                            <input type="text" class="form-control form-control-sm cep-mask" id="detalhe_cep" name="cep"
+                                readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="mb-1">
+                            <label for="endereco" class="form-label">Endereço</label>
+                            <input type="text" class="form-control form-control-sm" id="detalhe_endereco"
+                                name="endereco" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-1">
+                            <label for="numero" class="form-label">Número</label>
+                            <input type="text" class="form-control form-control-sm" id="detalhe_numero" name="numero"
+                                readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-1">
+                            <label for="complemento" class="form-label">Complemento</label>
+                            <input type="text" class="form-control form-control-sm" id="detalhe_complemento"
+                                name="complemento" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-1">
+                            <label for="bairro" class="form-label">Bairro</label>
+                            <input type="text" class="form-control form-control-sm" id="detalhe_bairro" name="bairro"
+                                readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-1">
+                            <label for="cidade" class="form-label">Cidade</label>
+                            <input type="text" class="form-control form-control-sm" id="detalhe_cidade" name="cidade"
+                                readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-1">
+                            <label for="estado" class="form-label">Estado</label>
+                            <select class="form-select form-select-sm" id="detalhe_estado" name="estado" readonly>
+                                {% include 'partials/ufs.html' %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-1 form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="detalhe_ativo" name="ativo" disabled>
+                            <label class="form-check-label" for="detalhe_ativo">
+                                Ativo
+                            </label>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
