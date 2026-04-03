@@ -40,8 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'accounts',
     'paciente',
-    'qualificacao',
-    'escala',
+    'escala.apps.EscalaConfig',
     'plantao',
     'cuidadora',
 ]

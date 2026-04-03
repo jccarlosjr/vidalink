@@ -11,8 +11,13 @@ class PacienteViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Paciente.objects.all()
 
-    filter_backends = [SearchFilter]
-    search_fields = ['nome']
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        filter_type = self.request.query_params.get('filter_type', None)
+        filter_value = self.request.query_params.get('filter_value', None)
+        if filter_type and filter_value:
+            queryset = queryset.filter(**{filter_type + "__icontains": filter_value})
+        return queryset
 
 
 class ResponsavelViewSet(ModelViewSet):

@@ -5,3 +5,4 @@ class EscalaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Escala
         fields = '__all__'
+        read_only_fields = ['id']

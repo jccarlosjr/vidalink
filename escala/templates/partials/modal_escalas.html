@@ -1,0 +1,150 @@
+<div class="modal modal-xl fade" id="modal_buscar_paciente" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Buscar Paciente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <label class="form-label">Buscar Paciente</label>
+                        <div class="d-flex">
+                            <select name="tipo_busca" id="filter_paciente" class="form-select form-select-sm">
+                                <option value="nome">Nome</option>
+                            </select>
+                            <input type="text" id="filter_value_paciente" class="form-control form-control-sm"
+                                placeholder="Buscar paciente">
+                            <button class="btn-modern" id="btn-buscar-paciente">
+                                <i class="bi bi-search"></i> Buscar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="table-responsive mt-3">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Nome</th>
+                                    <th class="text-center">Idade</th>
+                                    <th class="text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pacientes_table">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-modern">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal modal-md fade" id="modalEditarPlantao" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h6 class="modal-title">Editar Plantão</h6>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <input type="hidden" id="edit_id">
+
+                <div class="mb-2">
+                    <label class="form-label small">Início</label>
+                    <input type="time" id="edit_inicio" class="form-control form-control-sm">
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label small">Fim</label>
+                    <input type="time" id="edit_fim" class="form-control form-control-sm">
+                    <small class="text-muted">Se o horário de fim for menor que o horário de início, será considerado
+                        dia seguinte</small>
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label small">Cuidadora</label>
+
+                    <div class="input-group input-group-sm">
+                        <input type="hidden" id="edit_cuidadora">
+
+                        <input type="text" id="edit_cuidadora_nome" class="form-control" readonly>
+
+                        <button class="btn-outline-secondary btn-modern" type="button" title="Alterar Cuidador(a)"
+                            onclick="openModalBuscarCuidadora()">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-modern text-danger" onclick="deletarPlantao()">Excluir</button>
+                <button class="btn-modern" onclick="patchPlantao()">Salvar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal modal-xl fade" id="modal_buscar_cuidadora" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Buscar Cuidadora</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <label class="form-label">Buscar Cuidadora</label>
+                        <div class="d-flex">
+                            <select name="tipo_busca" id="filter_cuidadora" class="form-select form-select-sm">
+                                <option value="nome">Nome</option>
+                                <option value="cpf">CPF</option>
+                                <option value="cnpj">CNPJ</option>
+                                <option value="telefone">Telefone</option>
+                            </select>
+                            <input type="text" id="filter_value_cuidadora" class="form-control form-control-sm"
+                                placeholder="Buscar cuidadora">
+                            <button class="btn-modern" id="btn-buscar-cuidadora">
+                                <i class="bi bi-search"></i> Buscar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="table-responsive mt-3">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Nome</th>
+                                    <th class="text-center">CPF</th>
+                                    <th class="text-center">Telefone</th>
+                                    <th class="text-center">Data de Nascimento</th>
+                                    <th class="text-center">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cuidadoras_table">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-modern">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>

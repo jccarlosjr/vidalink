@@ -32,6 +32,9 @@ document.getElementById("adicionarResponsavelBtn").addEventListener("click", abr
 document.getElementById("saveNovoResponsavelBtn").addEventListener("click", salvarResponsavel);
 document.getElementById("deletarResponsavelBtn").addEventListener("click", deletarResponsavel);
 
+document.getElementById("filter_btn").addEventListener("click", () => loadPacientes());
+document.getElementById("clear_filter_btn").addEventListener("click", clearFilter);
+
 
 document.getElementById("cep").addEventListener("blur", function () {
     const cep = this.value.replace("-", "");
@@ -56,15 +59,23 @@ document.getElementById("cep").addEventListener("blur", function () {
 // ############################################
 // ############## RENDERS #####################
 // ############################################
+function clearFilter() {
+    document.getElementById("filter_type").value = ""
+    document.getElementById("filter_value").value = ""
+    loadPacientes()
+}
 
-function loadPacientes(url = null) {
-    const search = document.querySelector('input[name="search"]').value || ""
+function loadPacientes() {
+    let filterField = document.getElementById("filter_type").value
+    let filterValue = document.getElementById("filter_value").value.trim()
+    const params = new URLSearchParams()
 
-    if (!url) {
-        url = `/api/pacientes/?search=${encodeURIComponent(search)}`
+    if (filterValue) {
+        params.append("filter_type", filterField)
+        params.append("filter_value", filterValue)
     }
 
-    getData(url, (data) => {
+    getData(`/api/pacientes/?${params.toString()}`, (data) => {
         renderPacientes(data.results)
 
         renderPaginationDRF({
@@ -314,6 +325,7 @@ async function abrirModalExcluirPaciente(id) {
 }
 
 async function abrirModalResponsavel(id) {
+
     document.getElementById("pacienteIdModal").value = id;
     let responsaveis = await getData(
         url = `/api/responsaveis/?paciente=${id}`,
@@ -365,7 +377,7 @@ async function salvarPaciente() {
     const cidade = document.getElementById("cidade").value;
     const estado = document.getElementById("estado").value;
     const observacoes = document.getElementById("observacoes").value;
-    let pacienteId = document.getElementById("pacienteId").value;
+    let pacienteId = Number(document.getElementById("pacienteId").value);
 
     let url = "/api/pacientes/";
     let method = "POST";
@@ -436,7 +448,7 @@ async function salvarResponsavel() {
     let res = await saveData(
         url = url,
         data = responsavel,
-        callBack = () => getData(url = "/api/responsaveis/", renderFunction = renderResponsaveis),
+        callBack = () => getData(url = `/api/responsaveis/?paciente=${pacienteId}`, renderFunction = renderResponsaveis),
         method = method
     );
 
@@ -448,12 +460,11 @@ async function salvarResponsavel() {
 
 async function deletarResponsavel() {
     const id = document.getElementById("deletarResponsavelId").value;
+    const pacienteId = document.getElementById("pacienteIdModal").value;
     let res = await deleteData(
         url = `/api/responsaveis/${id}/`,
-        callBack = () => getData(url = "/api/responsaveis/", renderFunction = renderResponsaveis)
+        callBack = () => getData(url = `/api/responsaveis/?paciente=${pacienteId}`, renderFunction = renderResponsaveis)
     );
-    if (res) {
-        deletarResponsavelModal.hide();
-        showToast("Responsável deletado com sucesso!", "success");
-    }
+    deletarResponsavelModal.hide();
+    showToast("Responsável deletado com sucesso!", "success");
 }

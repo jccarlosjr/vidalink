@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<title>Escalas</title>
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/main.min.css" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/escalas.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+<main class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row align-items-center ms-3 mb-4">
+        <div class="col-md-12 col-12 mb-3 mb-md-0">
+            <h4 class="mb-0 fw-bold">Escalas</h4>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body">
+            <h6 class="text-muted mb-3">Busque o paciente para retornar a escala de plantões</h6>
+
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label small">Paciente</label>
+                    <div class="input-group input-group-sm">
+                        <input type="hidden" id="paciente_id" class="form-control" readonly>
+                        <input type="text" id="paciente" class="form-control" readonly>
+                        <button class="btn-outline-secondary btn-modern" onclick="openModalBuscarPaciente()">
+                            <i class="bi bi-search"></i> Buscar Paciente
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-3 align-items-end mt-2 pt-2 border-top">
+                <div class="col-md-4">
+                    <label class="form-label small">Cuidadora</label>
+                    <div class="input-group input-group-sm">
+                        <input type="hidden" id="cuidadora_id" class="form-control" readonly>
+                        <input type="text" id="cuidadora" class="form-control" readonly>
+                        <button class="btn-outline-secondary btn-modern" onclick="openModalBuscarCuidadora()">
+                            <i class="bi bi-search"></i> Buscar Cuidadora
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label small">Início</label>
+                    <input type="time" id="hora_inicio" class="form-control form-control-sm" value="08:00">
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label small">Fim</label>
+                    <input type="time" id="hora_fim" class="form-control form-control-sm" value="18:00">
+                </div>
+
+                <div class="col-md-2">
+                    <button class="btn-modern" onclick="criarPlantoesLote()">
+                        Criar Plantões
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="calendar"></div>
+
+        <button class="btn-modern" onclick="exportarEscalaProfissional(PLANTOES)">
+            Exportar PDF
+        </button>
+
+        {% include 'partials/modal_escalas.html' %}
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+<script src="{% static 'js/defaults/requests.js' %}"></script>
+<script src="{% static 'js/escalas/escalas.js' %}"></script>
+
+
+{% endblock %}

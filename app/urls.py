@@ -22,7 +22,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.HomeView.as_view(), name='home'),
     path('', include('accounts.urls')),
-    path('', include('qualificacao.urls')),
     path('', include('paciente.urls')),
     path('', include('cuidadora.urls')),
+    path('', include('escala.urls')),
+    path('', include('plantao.urls')),
 ]

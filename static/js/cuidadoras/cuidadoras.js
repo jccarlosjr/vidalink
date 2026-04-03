@@ -23,6 +23,8 @@ document.getElementById("novaCuidadoraBtn").addEventListener("click", () => {
 
 document.getElementById("saveNovaCuidadoraBtn").addEventListener("click", saveCuidadora);
 document.getElementById("deletarCuidadoraBtn").addEventListener("click", deleteCuidadora);
+document.getElementById("filter_btn").addEventListener("click", loadCuidadoras);
+document.getElementById("clear_filter_btn").addEventListener("click", clearFilter);
 
 document.getElementById("cep").addEventListener("blur", function () {
     const cep = this.value.replace("-", "");
@@ -52,10 +54,23 @@ document.getElementById("cep").addEventListener("blur", function () {
 // ############## HELPERS #####################
 // ############################################
 
-function loadCuidadoras(url = null) {
-    if (!url) {
-        url = `/api/cuidadoras/`
+function clearFilter() {
+    document.getElementById("filter_type").value = ""
+    document.getElementById("filter_value").value = ""
+    loadCuidadoras()
+}
+
+function loadCuidadoras() {
+    let filterField = document.getElementById("filter_type").value
+    let filterValue = document.getElementById("filter_value").value.trim()
+    const params = new URLSearchParams()
+
+    if (filterValue) {
+        params.append("filter_type", filterField)
+        params.append("filter_value", filterValue)
     }
+
+    let url = `/api/cuidadoras/?${params.toString()}`
 
     getData(url, (data) => {
         renderCuidadoras(data.results)
@@ -143,6 +158,20 @@ async function deleteCuidadora() {
     }
 }
 
+async function toggleActiveCuidadora(id_cuidadora) {
+    let res = await patchData(
+        `/api/cuidadoras/${id_cuidadora}/active/`,
+        null,
+        () => {
+            loadCuidadoras();
+        }
+    )
+
+    if (res) {
+        showToast("Cuidadora atualizada com sucesso!", "success");
+    }
+}
+
 // ############################################
 // ############################################
 
@@ -203,10 +232,10 @@ function renderCuidadoras(cuidadoras) {
         let title
 
         if (ativa) {
-            icon = "bi-check-circle"
+            icon = "bi-check-circle text-success"
             title = "Ativa"
         } else {
-            icon = "bi-x-circle"
+            icon = "bi-x-circle text-danger"
             title = "Inativa"
         }
 
@@ -217,7 +246,7 @@ function renderCuidadoras(cuidadoras) {
                 <div class="card-header">
                     <div class="d-flex justify-content-end">
                         <div>
-                            <button class="btn-modern" title="${title}">
+                            <button class="btn-modern" title="${title}" onclick="toggleActiveCuidadora(${cuidadora.id})">
                                 <i class="bi ${icon}"></i>
                             </button>
 

@@ -1,8 +1,10 @@
 from rest_framework import serializers
-from .models import Escala
+from .models import Plantao
 
 
-class EscalaSerializer(serializers.ModelSerializer):
+class PlantaoSerializer(serializers.ModelSerializer):
+    cuidadora_nome = serializers.CharField(source='cuidadora.nome', read_only=True)
+
     class Meta:
-        model = Escala
+        model = Plantao
         fields = '__all__'

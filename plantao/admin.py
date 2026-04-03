@@ -3,5 +3,5 @@ from .models import Plantao
 
 @admin.register(Plantao)
 class PlantaoAdmin(admin.ModelAdmin):
-    list_display = ('escala__codigo_interno', 'data', 'inicio', 'fim', 'horas', 'status', 'cuidador__username')
-    search_fields = ('data', 'inicio', 'fim', 'horas', 'status', 'cuidador__username', 'escala__codigo_interno')
+    list_display = ('escala__codigo_interno', 'data', 'inicio', 'fim', 'horas', 'status', 'cuidadora__nome', 'paciente__nome')
+    search_fields = ('data', 'inicio', 'fim', 'horas', 'status', 'cuidadora__nome', 'paciente__nome', 'escala__codigo_interno')
