@@ -17,7 +17,7 @@ class PacienteViewSet(ModelViewSet):
         filter_value = self.request.query_params.get('filter_value', None)
         if filter_type and filter_value:
             queryset = queryset.filter(**{filter_type + "__icontains": filter_value})
-        return queryset
+        return queryset.order_by('-id')
 
 
 class ResponsavelViewSet(ModelViewSet):
@@ -31,7 +31,7 @@ class ResponsavelViewSet(ModelViewSet):
         paciente = self.request.GET.get('paciente')
         if paciente:
             queryset = queryset.filter(paciente=paciente)
-        return queryset
+        return queryset.order_by('-id')
 
 
 class PacientesListView(TemplateView):

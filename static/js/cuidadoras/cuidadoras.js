@@ -4,12 +4,14 @@
 let novaCuidadoraModal;
 let deletarCuidadoraModal;
 let detalhesCuidadoraModal;
+let plantoesCuidadoraModal;
 
 document.addEventListener("DOMContentLoaded", () => {
     loadCuidadoras();
     novaCuidadoraModal = new bootstrap.Modal(document.getElementById('novaCuidadoraModal'));
     deletarCuidadoraModal = new bootstrap.Modal(document.getElementById('deletarCuidadoraModal'));
     detalhesCuidadoraModal = new bootstrap.Modal(document.getElementById('detalhesCuidadoraModal'));
+    plantoesCuidadoraModal = new bootstrap.Modal(document.getElementById('plantoesCuidadoraModal'));
 });
 
 document.querySelector("form").addEventListener("submit", function (e) {
@@ -53,6 +55,14 @@ document.getElementById("cep").addEventListener("blur", function () {
 // ############################################
 // ############## HELPERS #####################
 // ############################################
+
+function formatDate(date) {
+    return new Date(date).toLocaleDateString("pt-BR")
+}
+
+function formatDateTime(date) {
+    return new Date(date).toLocaleDateString("pt-BR") + " " + new Date(date).toLocaleTimeString("pt-BR")
+}
 
 function clearFilter() {
     document.getElementById("filter_type").value = ""
@@ -158,6 +168,13 @@ async function deleteCuidadora() {
     }
 }
 
+async function getPlantoes(cuidadora_id) {
+    getData(`/api/plantao/?cuidadora=${cuidadora_id}`, (data) => {
+        renderPlantoes(data)
+        plantoesCuidadoraModal.show();
+    })
+}
+
 async function toggleActiveCuidadora(id_cuidadora) {
     let res = await patchData(
         `/api/cuidadoras/${id_cuidadora}/active/`,
@@ -220,8 +237,6 @@ function renderCuidadoras(cuidadoras) {
 
     let html = ""
 
-
-
     cuidadoras.forEach(cuidadora => {
         const enderecoCompleto = `${cuidadora.endereco}, ${cuidadora.numero}, ${cuidadora.complemento}, ${cuidadora.bairro}, ${cuidadora.cidade}-${cuidadora.estado}, ${cuidadora.cep}`;
         const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(enderecoCompleto)}`;
@@ -257,7 +272,8 @@ function renderCuidadoras(cuidadoras) {
                                 <i class="bi bi-pencil-square"></i>
                             </button>
 
-                            <button class="btn-modern" title="Escalas e Plantões">
+                            <button class="btn-modern" title="Escalas e Plantões"
+                                onclick="getPlantoes(${cuidadora.id})">
                                 <i class="bi bi-calendar"></i>
                             </button>
 
@@ -306,6 +322,120 @@ function renderCuidadoras(cuidadoras) {
     container.innerHTML = html
 }
 
+function renderPlantoes(plantoes) {
+    let container = document.getElementById("plantoes")
+    const statusMap = {
+        "P": {
+            label: "Pendente de Cuidador",
+            class: "bg-warning-subtle text-warning-emphasis",
+            icon: "bi-hourglass-split"
+        },
+        "A": {
+            label: "Cuidador Aprovado",
+            class: "bg-primary-subtle text-primary-emphasis",
+            icon: "bi-person-check"
+        },
+        "C": {
+            label: "Confirmado",
+            class: "bg-success-subtle text-success-emphasis",
+            icon: "bi-check-circle"
+        },
+        "F": {
+            label: "Finalizado",
+            class: "bg-secondary-subtle text-secondary-emphasis",
+            icon: "bi-flag"
+        }
+    }
+
+    if (plantoes.length === 0) {
+        container.innerHTML = `
+            <div class="col-12">
+                <div class="text-center py-5 text-body-secondary">
+                    <i class="bi bi-calendar-x fs-1 d-block mb-2"></i>
+                    Nenhum plantão encontrado
+                </div>
+            </div>
+        `
+        return;
+    }
+
+    let html = ""
+
+    plantoes.forEach(plantao => {
+
+        const statusMap = {
+            "P": { label: "Pendente", class: "bg-warning-subtle text-warning-emphasis" },
+            "C": { label: "Confirmado", class: "bg-success-subtle text-success-emphasis" },
+            "F": { label: "Finalizado", class: "bg-secondary-subtle text-secondary-emphasis" }
+        }
+
+        const status = statusMap[plantao.status] || { label: "Desconhecido", class: "bg-secondary-subtle" }
+
+        html += `
+        <div class="col-12 col-md-6 col-lg-4 col-xl-4 mb-4">
+            <div class="card h-100 plantao-card">
+
+                <div class="card-body d-flex flex-column">
+
+                    <!-- Topo -->
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="badge plantao-badge">
+                            ${plantao.escala_codigo_interno || 'Sem código'}
+                        </span>
+                        <span class="badge d-flex align-items-center gap-1 ${status.class}">
+                            <i class="bi ${status.icon}"></i>
+                            ${status.label}
+                        </span>
+                    </div>
+
+                    <!-- Data -->
+                    <div class="mb-3 small text-body-secondary">
+                        <i class="bi bi-calendar-event me-1"></i>
+                        ${formatDateTime(plantao.inicio)}<br>
+                        <span class="opacity-75">até</span><br>
+                        <i class="bi bi-calendar-event me-1"></i>
+                        ${formatDateTime(plantao.fim)}
+                    </div>
+
+                    <!-- Horas -->
+                    <div class="mb-3">
+                        <span class="badge bg-info-subtle text-info-emphasis">
+                            ⏱ ${plantao.horas}h
+                        </span>
+                    </div>
+
+                    <!-- Paciente -->
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="avatar-icon me-2">
+                            <i class="bi bi-person-heart"></i>
+                        </div>
+                        <div class="text-truncate">
+                            <div class="fw-semibold">${plantao.paciente_nome}</div>
+                            <small class="text-body-secondary">Paciente</small>
+                        </div>
+                    </div>
+
+                    <!-- Cuidadora -->
+                    <div class="d-flex align-items-center">
+                        <div class="avatar-icon me-2">
+                            <i class="bi bi-person-badge"></i>
+                        </div>
+                        <div class="text-truncate">
+                            <div class="fw-semibold">${plantao.cuidadora_nome}</div>
+                            <small class="text-body-secondary">Cuidadora</small>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto"></div>
+
+                </div>
+            </div>
+        </div>
+        `
+    })
+
+    container.innerHTML = html
+}
 // ############################################
 // ############################################
 

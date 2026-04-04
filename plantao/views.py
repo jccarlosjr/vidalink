@@ -18,6 +18,9 @@ class PlantaoViewSet(ModelViewSet):
     def get_queryset(self):
         if self.request.query_params.get("paciente"):
             return Plantao.objects.filter(paciente_id=self.request.query_params.get("paciente"))
+        
+        if self.request.query_params.get("cuidadora"):
+            return Plantao.objects.filter(cuidadora_id=self.request.query_params.get("cuidadora"))
 
         return Plantao.objects.all()
 

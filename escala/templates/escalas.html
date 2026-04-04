@@ -26,9 +26,9 @@
                 <div class="col-md-4">
                     <label class="form-label small">Paciente</label>
                     <div class="input-group input-group-sm">
-                        <input type="hidden" id="paciente_id" class="form-control" readonly>
-                        <input type="text" id="paciente" class="form-control" readonly>
-                        <button class="btn-outline-secondary btn-modern" onclick="openModalBuscarPaciente()">
+                        <input type="hidden" id="paciente_id" class="form-control form-control-sm" readonly>
+                        <input type="text" id="paciente" class="form-control form-control-sm" readonly>
+                        <button class="btn btn-sm btn-modern" onclick="openModalBuscarPaciente()">
                             <i class="bi bi-search"></i> Buscar Paciente
                         </button>
                     </div>
@@ -38,9 +38,9 @@
                 <div class="col-md-4">
                     <label class="form-label small">Cuidadora</label>
                     <div class="input-group input-group-sm">
-                        <input type="hidden" id="cuidadora_id" class="form-control" readonly>
-                        <input type="text" id="cuidadora" class="form-control" readonly>
-                        <button class="btn-outline-secondary btn-modern" onclick="openModalBuscarCuidadora()">
+                        <input type="hidden" id="cuidadora_id" class="form-control form-control-sm" readonly>
+                        <input type="text" id="cuidadora" class="form-control form-control-sm" readonly>
+                        <button class="btn btn-sm btn-modern" onclick="openModalBuscarCuidadora()">
                             <i class="bi bi-search"></i> Buscar Cuidadora
                         </button>
                     </div>
@@ -57,14 +57,14 @@
                 </div>
 
                 <div class="col-md-2">
-                    <button class="btn-modern" onclick="criarPlantoesLote()">
+                    <button class="btn-modern btn btn-sm" onclick="criarPlantoesLote()">
                         Criar Plantões
                     </button>
                 </div>
             </div>
         </div>
 
-        <div id="calendar"></div>
+        <div id="calendar" class="container-sm"></div>
 
         <button class="btn-modern" onclick="exportarEscalaProfissional(PLANTOES)">
             Exportar PDF

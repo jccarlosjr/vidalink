@@ -7,7 +7,7 @@ from rest_framework.decorators import action
 
 
 class CuidadoraViewSet(viewsets.ModelViewSet):
-    queryset = Cuidadora.objects.all().order_by('-created_at')
+    queryset = Cuidadora.objects.all()
     serializer_class = CuidadoraSerializer
 
     def get_queryset(self):
@@ -16,7 +16,7 @@ class CuidadoraViewSet(viewsets.ModelViewSet):
         filter_value = self.request.query_params.get('filter_value', None)
         if filter_type and filter_value:
             queryset = queryset.filter(**{filter_type + "__icontains": filter_value})
-        return queryset
+        return queryset.order_by('-created_at')
 
     @action(detail=True, methods=['patch'])
     def active(self, request, pk):
