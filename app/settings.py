@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'escala.apps.EscalaConfig',
     'plantao',
     'cuidadora',
+    'registro',
 ]
 
 MIDDLEWARE = [

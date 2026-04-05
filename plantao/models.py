@@ -7,6 +7,7 @@ STATUS_CHOICES = (
     ('P', 'Pendente de Cuidador'),
     ('A', 'Cuidador Aprovado'),
     ('C', 'Confirmado'),
+    ('R', 'Em Andamento'),
     ('F', 'Finalizado')
 )
 
@@ -16,7 +17,8 @@ class Plantao(models.Model):
     inicio = models.DateTimeField()
     fim = models.DateTimeField()
     horas = models.IntegerField()
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='P')
+    horas_cumpridas = models.FloatField(default=0)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='A')
     cuidadora = models.ForeignKey(Cuidadora, on_delete=models.PROTECT)
     escala = models.ForeignKey(Escala, on_delete=models.PROTECT)
     paciente = models.ForeignKey(Paciente, on_delete=models.PROTECT)

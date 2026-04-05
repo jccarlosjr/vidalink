@@ -26,4 +26,5 @@ urlpatterns = [
     path('', include('cuidadora.urls')),
     path('', include('escala.urls')),
     path('', include('plantao.urls')),
+    path('', include('registro.urls')),
 ]

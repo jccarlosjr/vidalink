@@ -62,14 +62,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
             return {
                 html: `
-            <div class="fc-event-custom">
-                <div class="fc-event-hora">${horaInicio} - ${horaFim}</div>
-                <div class="fc-event-cuidadora">${cuidadora}</div>
-            </div>
-        `
+                    <div class="fc-event-custom">
+                        <div class="fc-event-hora">${horaInicio} - ${horaFim}</div>
+                        <div class="fc-event-cuidadora">${cuidadora}</div>
+                    </div>
+                `
             };
         },
         eventClick: function (info) {
+            const status = info.event.extendedProps.status;
+
+            if (status === 'R' || status === 'F') {
+                return;
+            }
+
             abrirModalEditarPlantao(info.event);
         }
     });
@@ -285,6 +291,8 @@ function renderPlantoesNoCalendario(plantoes = []) {
         const horaInicio = inicio.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         const horaFim = fim.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
+        const bloqueado = p.status === 'R' || p.status === 'F';
+
         return {
             id: String(p.id),
             start: p.inicio,
@@ -295,14 +303,16 @@ function renderPlantoesNoCalendario(plantoes = []) {
                 ? `${horaInicio}-${horaFim}`
                 : `${p.cuidadora_nome} (${horaInicio} - ${horaFim})`,
 
-            backgroundColor: "#198754",
-            borderColor: "#198754",
+            backgroundColor: bloqueado ? "#6c757d" : "#198754",
+            borderColor: bloqueado ? "#6c757d" : "#198754",
+            classNames: bloqueado ? ['evento-bloqueado'] : [],
 
             extendedProps: {
                 horaInicio,
                 horaFim,
                 cuidadora: p.cuidadora_nome,
                 cuidadora_id: p.cuidadora,
+                status: p.status
             }
         };
     });

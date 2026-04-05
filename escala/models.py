@@ -12,3 +12,6 @@ class Escala(models.Model):
     class Meta:
         verbose_name = 'Escala'
         verbose_name_plural = 'Escalas'
+
+    def __str__(self):
+        return self.codigo_interno
