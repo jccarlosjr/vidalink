@@ -18,9 +18,9 @@ class PlantaoListView(ListView):
 
     def get_context_data(self, **kwargs):
         if self.request.user.is_superuser:
-            plantoes = Plantao.objects.all()
+            plantoes = Plantao.objects.all().order_by('-updated_at')
         else:
-            plantoes = Plantao.objects.filter(cuidadora=self.request.user.cuidadora)
+            plantoes = Plantao.objects.filter(cuidadora=self.request.user.cuidadora).order_by('-updated_at')
         return super().get_context_data(plantoes=plantoes, **kwargs)
 
 

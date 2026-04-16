@@ -16,7 +16,7 @@ class CuidadoraViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['patch'])
     def active(self, request, pk):
-        cuidadora = self.get_object()
+        cuidadora = self.get_object().order_by('-id')
         cuidadora.ativo = not cuidadora.ativo
         cuidadora.save()
         return self.retrieve(request)

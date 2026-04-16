@@ -16,7 +16,7 @@ class CuidadoraFilter(django_filters.FilterSet):
         if type in allowed_fields and value:
             return queryset.filter(**{f"{type}__icontains": value})
 
-        return queryset
+        return queryset.order_by('id')
 
     class Meta:
         model = Cuidadora
