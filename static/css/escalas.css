@@ -14,6 +14,12 @@
     --fc-text-secondary: var(--bs-secondary);
 }
 
+#calendar > div.fc-view-harness.fc-view-harness-active > div > table > tbody > tr > td > div > div > div > table > tbody > tr:nth-child(2) > td.fc-day.fc-day-mon.fc-day-past.fc-daygrid-day > div > div.fc-daygrid-day-events > div.fc-daygrid-event-harness.fc-daygrid-event-harness-abs > a{
+    background-color: rgba(13, 109, 253, 0.5) !important;
+    border-color: rgba(13, 109, 253, 0.5) !important;
+    color: black !important;
+}
+
 [data-bs-theme="dark"] {
     --fc-bg: #1e1e1e;
     --fc-border: rgba(255, 255, 255, 0.08);

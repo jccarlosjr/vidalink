@@ -7,9 +7,24 @@ from .serializers import PlantaoSerializer
 from .models import Plantao
 from datetime import datetime
 from django.db import transaction
+from django.views.generic import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class PlantaoViewSet(ModelViewSet):
+class PlantaoListView(ListView):
+    template_name = "plantao_list.html"
+    model = Plantao
+    context_object_name = "plantoes"
+
+    def get_context_data(self, **kwargs):
+        if self.request.user.is_superuser:
+            plantoes = Plantao.objects.all()
+        else:
+            plantoes = Plantao.objects.filter(cuidadora=self.request.user.cuidadora)
+        return super().get_context_data(plantoes=plantoes, **kwargs)
+
+
+class PlantaoViewSet(LoginRequiredMixin, ModelViewSet):
     serializer_class = PlantaoSerializer
     permission_classes = [IsAuthenticated]
     queryset = Plantao.objects.all()

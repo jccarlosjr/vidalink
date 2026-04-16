@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Paciente, Responsavel
 from django.views.generic import TemplateView
 from rest_framework.filters import SearchFilter
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class PacienteViewSet(ModelViewSet):
@@ -34,7 +35,7 @@ class ResponsavelViewSet(ModelViewSet):
         return queryset.order_by('-id')
 
 
-class PacientesListView(TemplateView):
+class PacientesListView(LoginRequiredMixin, TemplateView):
     template_name = "pacientes.html"
 
 

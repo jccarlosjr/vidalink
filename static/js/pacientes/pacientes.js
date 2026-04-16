@@ -153,23 +153,23 @@ function renderPacientes(pacientes = []) {
                 <div class="card-header">
                     <div class="d-flex justify-content-end">
                         <div>
-                            <button class="btn-modern" title="Editar"
+                            <button class="btn-modern btn-sm" title="Editar"
                                 data-paciente='${JSON.stringify(paciente)}'
                                 onclick="abrirModalEditarPaciente(this)">
                                 <i class="bi bi-pencil-square"></i>
                             </button>
 
-                            <button class="btn-modern" title="Responsáveis"
+                            <button class="btn-modern btn-sm" title="Responsáveis"
                                 onclick="abrirModalResponsavel(${paciente.id})">
                                 <i class="bi bi-people"></i>
                             </button>
 
-                            <button class="btn-modern" title="Detalhes"
+                            <button class="btn-modern btn-sm" title="Detalhes"
                                 onclick="abrirModalDetalhesPaciente(${paciente.id})">
                                 <i class="bi bi-eye"></i>
                             </button>
 
-                            <button class="btn-modern" title="Excluir"
+                            <button class="btn-modern btn-sm" title="Excluir"
                                 onclick="abrirModalExcluirPaciente(${paciente.id})">
                                 <i class="bi bi-trash"></i>
                             </button>

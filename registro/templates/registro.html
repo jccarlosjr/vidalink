@@ -15,7 +15,8 @@
             <div class="mb-3">
                 <strong>Paciente:</strong> {{ plantao.paciente.nome }} <br>
                 <strong>Cuidadora:</strong> {{ plantao.cuidadora.nome }} <br>
-                <strong>Data:</strong> {{ plantao.data }}
+                <strong>Início:</strong> {{ plantao.inicio|date:"d/m/Y - H:i" }}  <br>
+                <strong>Fim:</strong> {{ plantao.fim|date:"d/m/Y - H:i" }} 
             </div>
 
             <hr>
@@ -123,7 +124,6 @@
         try {
             const pos = await getLocation()
 
-            // 🔥 pega endereço junto
             const endereco = await getAddress(pos.lat, pos.lng)
 
             const response = await fetch(`/api/registro/{{ plantao.id }}/registrar_evento/`, {

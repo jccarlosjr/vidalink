@@ -1,0 +1,22 @@
+New Features
+- Criar app histórico de plantões
+- Mostrar o histórico do plantão na tela de escala
+- Criar app de financeiro
+- App para classificação de cuidadoras com base nos plantões finalizados
+
+Ongoing Features
+- Configurar registro para impedir início do plantão antes do horário permitido
+- Lógica para expirar plantões
+- Melhorar a view de lista de plantões com 3 partials templates
+- plantões expirados
+- plantões aguardando atendimento
+- plantões finalizados
+
+Bugs
+- Precisão de geolocalização do registro muito alta
+
+Finalizado
+- App Cuidadoras
+- App Pacientes
+- App Escala/Plantões
+- App Registros de plantões

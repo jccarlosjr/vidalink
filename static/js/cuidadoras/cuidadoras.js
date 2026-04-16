@@ -71,16 +71,18 @@ function clearFilter() {
 }
 
 function loadCuidadoras() {
-    let filterField = document.getElementById("filter_type").value
-    let filterValue = document.getElementById("filter_value").value.trim()
+    const filterField = document.getElementById("filter_type").value
+    const filterValue = document.getElementById("filter_value").value.trim()
+
     const params = new URLSearchParams()
 
-    if (filterValue) {
-        params.append("filter_type", filterField)
-        params.append("filter_value", filterValue)
+    if (filterField && filterValue) {
+        params.append("search", `${filterField}:${filterValue}`)
     }
 
-    let url = `/api/cuidadoras/?${params.toString()}`
+    const url = params.toString()
+        ? `/api/cuidadoras/?${params.toString()}`
+        : `/api/cuidadoras/`
 
     getData(url, (data) => {
         renderCuidadoras(data.results)
@@ -261,29 +263,29 @@ function renderCuidadoras(cuidadoras) {
                 <div class="card-header">
                     <div class="d-flex justify-content-end">
                         <div>
-                            <button class="btn-modern" title="${title}" onclick="toggleActiveCuidadora(${cuidadora.id})">
+                            <button class="btn-modern btn-sm" title="${title}" onclick="toggleActiveCuidadora(${cuidadora.id})">
                                 <i class="bi ${icon}"></i>
                             </button>
 
-                            <button class="btn-modern" title="Editar"
+                            <button class="btn-modern btn-sm" title="Editar"
                                 data-cuidadora='${JSON.stringify(cuidadora)}'
                                 onclick="abrirModalEditarCuidadora(this)"
                             >
                                 <i class="bi bi-pencil-square"></i>
                             </button>
 
-                            <button class="btn-modern" title="Escalas e Plantões"
+                            <button class="btn-modern btn-sm" title="Escalas e Plantões"
                                 onclick="getPlantoes(${cuidadora.id})">
                                 <i class="bi bi-calendar"></i>
                             </button>
 
-                            <button class="btn-modern" title="Detalhes"
+                            <button class="btn-modern btn-sm" title="Detalhes"
                                 data-cuidadora='${JSON.stringify(cuidadora)}'
                                 onclick="abrirModalDetalheCuidadora(this)">
                                 <i class="bi bi-eye"></i>
                             </button>
 
-                            <button class="btn-modern" title="Excluir"
+                            <button class="btn-modern btn-sm" title="Excluir"
                                 onclick="abrirModalDeleteCuidadora(${cuidadora.id})">
                                 <i class="bi bi-trash"></i>
                             </button>
