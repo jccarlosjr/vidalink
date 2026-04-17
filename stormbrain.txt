@@ -9,7 +9,6 @@ New Features
 Ongoing Features
 - Configurar tela de usuários / Vínculo de usuário com cuidadora
 - Criar tela de admin plantões para editar livremente os plantões
-- Adicionar filtro de paciente por responsável na tela de pacientes
 - Adicionar dados bancários para as cuidadoras
 
 

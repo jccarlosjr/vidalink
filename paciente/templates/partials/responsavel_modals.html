@@ -20,6 +20,7 @@
                         <thead class="table">
                             <tr>
                                 <th class="ps-4">Nome</th>
+                                <th class="ps-4">CPF</th>
                                 <th class="text-center">Telefone</th>
                                 <th class="text-center">Ações</th>
                             </tr>
@@ -48,6 +49,10 @@
                     <div class="mb-3">
                         <label for="novo_responsavel_nome" class="form-label">Nome</label>
                         <input type="text" class="form-control" id="novo_responsavel_nome" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="novo_responsavel_nome" class="form-label">CPF</label>
+                        <input type="text" maxlength="14" class="form-control cpf-mask" id="novo_responsavel_cpf" required>
                     </div>
                     <div class="mb-3">
                         <label for="novo_responsavel_telefone" class="form-label">Telefone</label>

@@ -192,7 +192,7 @@ function renderPacientes(pacientes = []) {
                 <div class="card-footer small">
                     <small class="text-body fw-bold ms-2">
                         <a href="${mapsUrl}" target="_blank" class="text-decoration-none">
-                            <i class="bi bi-geo-alt-fill text-primary border rounded"></i>
+                            <i class="bi bi-geo-alt-fill btn-modern btn-sm"></i>
                         </a>
                         ${paciente.endereco}, ${paciente.numero}, ${paciente.bairro}
                         ${paciente.cep} - ${paciente.cidade}-${paciente.estado} ${paciente.complemento ? ', ' + paciente.complemento : ''}</p>
@@ -227,6 +227,7 @@ function renderResponsaveis(responsaveis) {
         responsaveisTableBody.innerHTML += `
         <tr class="text-center">
             <td>${responsavel.nome}</td>
+            <td>${responsavel.cpf || "-"}</td>
             <td>
                 ${responsavel.telefone}
                 <a href="https://wa.me/55${telefoneLimpo}" target="_blank" class="text-success text-decoration-none">
@@ -340,6 +341,7 @@ function abrirModalNovoResponsavel() {
     document.getElementById("responsavelId").value = "";
     document.getElementById("novo_responsavel_nome").value = "";
     document.getElementById("novo_responsavel_telefone").value = "";
+    document.getElementById("novo_responsavel_cpf").value = "";
     novoResponsavelModal.show();
 }
 
@@ -349,6 +351,7 @@ function abrirModalEditarResponsavel(btn) {
     document.getElementById("pacienteId").value = responsavel.paciente;
     document.getElementById("novo_responsavel_nome").value = responsavel.nome;
     document.getElementById("novo_responsavel_telefone").value = responsavel.telefone;
+    document.getElementById("novo_responsavel_cpf").value = responsavel.cpf;
     novoResponsavelModal.show();
 }
 
@@ -427,6 +430,7 @@ async function deletarPaciente() {
 async function salvarResponsavel() {
     const nome = document.getElementById("novo_responsavel_nome").value;
     const telefone = document.getElementById("novo_responsavel_telefone").value;
+    const cpf = document.getElementById("novo_responsavel_cpf").value;
     const pacienteId = document.getElementById("pacienteId").value;
     let responsavelId = document.getElementById("responsavelId").value;
 
@@ -442,7 +446,8 @@ async function salvarResponsavel() {
     const responsavel = {
         nome: nome,
         telefone: telefone,
-        paciente: pacienteId
+        paciente: pacienteId,
+        cpf: cpf
     };
 
     let res = await saveData(

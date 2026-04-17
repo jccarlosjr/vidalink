@@ -25,6 +25,7 @@ class Paciente(models.Model):
 class Responsavel(models.Model):
     nome = models.CharField(max_length=100)
     telefone = models.CharField(max_length=20)
+    cpf = models.CharField(max_length=14, unique=True, null=True, blank=True)
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, related_name='responsaveis', null=True, blank=True)
 
     def __str__(self):
