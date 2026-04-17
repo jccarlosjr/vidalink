@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-<main class="container ms-2 mb-5">
+<main class="container mb-5">
     <!-- Header -->
     <div class="row align-items-center mb-4">
         <div class="col-md-12 col-12 mb-3 mb-md-0">
@@ -14,81 +14,56 @@
         </div>
     </div>
 
-    <!-- Toolbar / Search Area -->
-    <div class="m-3 border-bottom pb-3">
-        <h5>Filtros</h5>
+    <!-- Tabs (nav) -->
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="andamento-tab" data-bs-toggle="tab" data-bs-target="#andamento" type="button">
+            Andamento
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link text-success" id="finalizados-tab" data-bs-toggle="tab" data-bs-target="#finalizados" type="button">
+            Finalizados
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link text-danger" id="expirados-tab" data-bs-toggle="tab" data-bs-target="#expirados" type="button">
+            Expirados
+            </button>
+        </li>
+    </ul>
 
-        <div class="row g-2 align-items-end mb-5">
-            <div class="col-md-2">
-                <label class="form-label">Tipo</label>
-                <select name="filter_type" id="filter_type" class="form-select form-select-sm">
-                    <option value="">Selecione um filtro</option>
-                    <option value="nome_cuidadora">Nome (Cuidadora)</option>
-                    <option value="nome_paciente">Nome (Paciente)</option>
-                    <option value="cpf_cuidadora">CPF (Cuidadora)</option>
-                    <option value="data">Data</option>
-                </select>
+    <!-- Conteúdo das tabs -->
+    <div class="tab-content mt-3">
+        <div class="tab-pane fade show active" id="andamento">
+            <div class="row">
+                {% for plantao in plantoes_andamento %}
+                    {% include "partials/card_plantao.html" %}
+                {% empty %}
+                    <p>Nenhum plantão em andamento</p>
+                {% endfor %}
             </div>
-
-            <div class="col-md-2">
-                <label class="form-label">Valor</label>
-                <input type="text" id="filter_value" class="form-control form-control-sm">
+        </div>
+        <div class="tab-pane fade" id="finalizados">
+            <div class="row">
+                {% for plantao in plantoes_finalizados %}
+                    {% include "partials/card_plantao.html" %}
+                {% empty %}
+                    <p>Nenhum finalizado</p>
+                {% endfor %}
             </div>
-
-            <div class="col-md-2 d-flex">
-                <button class="text-decoration-none btn-modern" id="filter_btn">
-                    <i class="bi bi-search"></i> Filtrar
-                </button>
-                <button class="text-decoration-none btn-modern ms-2" id="clear_filter_btn">
-                    <i class="bi bi-x-circle"></i> Limpar
-                </button>
+        </div>
+        <div class="tab-pane fade" id="expirados">
+            <div class="row">
+                {% for plantao in plantoes_expirados %}
+                    {% include "partials/card_plantao.html" %}
+                {% empty %}
+                    <p>Nenhum plantão expirado</p>
+                {% endfor %}
             </div>
         </div>
     </div>
 
-    <div class="row">
-    {% for plantao in plantoes %}
-    <div class="col-md-4">
-        <div class="card mb-2 rounded">
-            <div class="card-header d-flex justify-content-between">
-                <div>
-                    <strong class="text-muted">{{ plantao.paciente }}</strong>
-                </div>
-                <div>
-                    <small class="badge rounded-pill 
-                    {% if plantao.status == 'A' %} 
-                        bg-secondary 
-                    {% elif plantao.status == 'P' %} 
-                        bg-warning 
-                    {% elif plantao.status == 'C' %} 
-                        bg-primary 
-                    {% elif plantao.status == 'R' %} 
-                        bg-primary 
-                    {% elif plantao.status == 'F' %} 
-                        bg-success 
-                    {% endif %}"
-                    >{{ plantao.get_status_display  }}</small>
-                </div>
-            </div>
-            <div class="card-body">
-                <p class="card-text">Cuidador(a): {{ plantao.cuidadora }}</p>
-                <p>
-                    <button class="btn-modern btn-sm" title="Abrir Local" onclick="getMaps('{{plantao.paciente.endereco}}, {{plantao.paciente.numero}}, {{plantao.paciente.complemento}}, {{plantao.paciente.bairro}}, {{plantao.paciente.cidade}}-{{plantao.paciente.estado}}, {{plantao.paciente.cep}}')"><i class="bi bi-geo-alt"></i></button> 
-                    <small class="small">
-                        {{ plantao.paciente.endereco }} {{ plantao.paciente.numero }}, {{ plantao.paciente.bairro }}, {{ plantao.paciente.cidade }} - {{ plantao.paciente.estado }}
-                    </small>
-                </p>
-                <p>
-                    <a href="{% url 'registro_execucao' plantao.id %}" class="btn-modern text-decoration-none">Iniciar/Finalizar</a>
-                </p>
-            </div>
-            <div class="card-footer">
-                <small>{{ plantao.inicio|date:"d/m/Y - H:i" }}  <i class="bi bi-arrow-right"></i>  {{ plantao.fim|date:"d/m/Y - H:i" }}</small>
-            </div>
-        </div>
-    </div>
-    {% endfor %}
-    </div>
 
 </main>
 

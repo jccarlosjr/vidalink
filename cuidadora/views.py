@@ -9,14 +9,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class CuidadoraViewSet(viewsets.ModelViewSet):
-    queryset = Cuidadora.objects.all()
+    queryset = Cuidadora.objects.all().order_by('-id')
     serializer_class = CuidadoraSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = CuidadoraFilter
 
     @action(detail=True, methods=['patch'])
     def active(self, request, pk):
-        cuidadora = self.get_object().order_by('-id')
+        cuidadora = self.get_object()
         cuidadora.ativo = not cuidadora.ativo
         cuidadora.save()
         return self.retrieve(request)

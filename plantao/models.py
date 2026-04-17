@@ -3,12 +3,14 @@ from cuidadora.models import Cuidadora
 from paciente.models import Paciente
 from escala.models import Escala
 
+
 STATUS_CHOICES = (
     ('P', 'Pendente de Cuidador'),
-    ('A', 'Cuidador Aprovado'),
+    ('A', 'Aguarda Atendimento'),
     ('C', 'Confirmado'),
     ('R', 'Em Andamento'),
-    ('F', 'Finalizado')
+    ('F', 'Finalizado'),
+    ('E', 'Expirado'),
 )
 
 
@@ -28,6 +30,17 @@ class Plantao(models.Model):
 
     def __str__(self):
         return self.escala.codigo_interno
+
+    @property
+    def horas_cumpridas_formatadas(self):
+        horas = int(self.horas_cumpridas)
+        minutos = int(round((self.horas_cumpridas - horas) * 60))
+
+        if minutos == 60:
+            horas += 1
+            minutos = 0
+
+        return f"{horas:02d}:{minutos:02d}"
 
     class Meta:
         verbose_name = 'Plantão'

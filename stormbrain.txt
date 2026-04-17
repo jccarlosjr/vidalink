@@ -3,22 +3,38 @@ New Features
 - Mostrar o histórico do plantão na tela de escala
 - Criar app de financeiro
 - App para classificação de cuidadoras com base nos plantões finalizados
+- Criar registro de substituição de plantões afim de analisar se cada cuidadora tem finalizado os plantões originalmente atribuídos a elas
+
 
 Ongoing Features
-- Configurar registro para impedir início do plantão antes do horário permitido
-- Lógica para expirar plantões
-- Melhorar a view de lista de plantões com 3 partials templates
-- plantões expirados
-- plantões aguardando atendimento
-- plantões finalizados
+- Configurar tela de usuários / Vínculo de usuário com cuidadora
+- Criar tela de admin plantões para editar livremente os plantões
+- Adicionar filtro de paciente por responsável na tela de pacientes
+- Adicionar dados bancários para as cuidadoras
+
 
 Bugs
 - Precisão de geolocalização do registro muito alta
 - Corrigir bug na exportação do PDF onde não é possível ver plantões nas datas corretas de inicio e fim
-- Configurar tela de usuários / Vínculo de usuário com cuidadora
+- Padronizar o envio de CPF, Nome e CPNJ pro backend
+
 
 Finalizado
 - App Cuidadoras
 - App Pacientes
 - App Escala/Plantões
 - App Registros de plantões
+
+
+Sistema de avaliação por estrelas como uber e ifood (máximo 5 estrelas)
+
+Avaliação do sistema (Automática)
+- plantão expirado ou cancelado = 1
+- carga horária abaixo de 70% = 2
+- carga horária abaixo de 80% = 2
+- carga horária abaixo de 90% = 4
+- carga horária acima de 90% = 5
+- avaliação do paciente = de 1 a 5
+- avaliação da staff = de 1 a 5
+
+No fim o(a) cuidador(a) tem a nota de avaliação baseado na média de todas as notas do sistema

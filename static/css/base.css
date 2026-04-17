@@ -179,7 +179,7 @@ body {
     --btn-bg: rgba(255, 255, 255, 0.35);
     --btn-border: rgba(255, 255, 255, 0.6);
     --btn-color: #111827;
-    --btn-shadow: rgba(0, 0, 0, 0.15);
+    --btn-shadow: rgba(0, 0, 0, 0.35);
 
     position: relative;
 

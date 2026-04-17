@@ -301,7 +301,7 @@ function renderCuidadoras(cuidadoras) {
                     <div class="mb-3 small">
                         ${cuidadora.telefone}
                         <a href="https://wa.me/55${telefoneLimpo}" target="_blank" class="text-success text-decoration-none">
-                            <i class="bi bi-whatsapp btn-modern"></i>
+                            <i class="bi bi-whatsapp btn-modern btn-sm"></i>
                         </a>
                     </div>
 
@@ -309,7 +309,7 @@ function renderCuidadoras(cuidadoras) {
                 <div class="card-footer small">
                     <small class="text-body fw-bold ms-2">
                         <a href="${mapsUrl}" target="_blank" class="text-decoration-none">
-                            <i class="bi bi-geo-alt-fill text-primary border rounded"></i>
+                            <i class="bi bi-geo-alt-fill text-primary border rounded btn-modern btn-sm"></i>
                         </a>
                         ${cuidadora.endereco}, ${cuidadora.numero}, ${cuidadora.bairro}
                         ${cuidadora.cep} - ${cuidadora.cidade}-${cuidadora.estado} ${cuidadora.complemento ? ', ' + cuidadora.complemento : ''}</p>
@@ -325,118 +325,111 @@ function renderCuidadoras(cuidadoras) {
 }
 
 function renderPlantoes(plantoes) {
-    let container = document.getElementById("plantoes")
-    const statusMap = {
-        "P": {
-            label: "Pendente de Cuidador",
-            class: "bg-warning-subtle text-warning-emphasis",
-            icon: "bi-hourglass-split"
-        },
-        "A": {
-            label: "Cuidador Aprovado",
-            class: "bg-primary-subtle text-primary-emphasis",
-            icon: "bi-person-check"
-        },
-        "C": {
-            label: "Confirmado",
-            class: "bg-success-subtle text-success-emphasis",
-            icon: "bi-check-circle"
-        },
-        "F": {
-            label: "Finalizado",
-            class: "bg-secondary-subtle text-secondary-emphasis",
-            icon: "bi-flag"
-        }
+    let divAndamento = document.getElementById("plantoes-andamento")
+    let divFinalizados = document.getElementById("plantoes-finalizados")
+    let divExpirados = document.getElementById("plantoes-expirados")
+
+    function floatToHHMM(value) {
+        const hours = Math.floor(value)
+        const minutes = Math.round((value - hours) * 60)
+
+        return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`
     }
 
-    if (plantoes.length === 0) {
-        container.innerHTML = `
-            <div class="col-12">
-                <div class="text-center py-5 text-body-secondary">
-                    <i class="bi bi-calendar-x fs-1 d-block mb-2"></i>
-                    Nenhum plantão encontrado
-                </div>
-            </div>
-        `
-        return;
-    }
-
-    let html = ""
+    let htmlAndamento = ""
+    let htmlFinalizados = ""
+    let htmlExpirados = ""
 
     plantoes.forEach(plantao => {
+        let bgcolor = ""
 
-        const statusMap = {
-            "P": { label: "Pendente", class: "bg-warning-subtle text-warning-emphasis" },
-            "C": { label: "Confirmado", class: "bg-success-subtle text-success-emphasis" },
-            "F": { label: "Finalizado", class: "bg-secondary-subtle text-secondary-emphasis" }
-        }
+        if (plantao.status == 'P') bgcolor = "bg-warning"
+        else if (plantao.status == 'A' || plantao.status == 'C') bgcolor = "bg-secondary"
+        else if (plantao.status == 'R') bgcolor = "bg-primary"
+        else if (plantao.status == 'F') bgcolor = "bg-success"
+        else if (plantao.status == 'E') bgcolor = "bg-danger"
 
-        const status = statusMap[plantao.status] || { label: "Desconhecido", class: "bg-secondary-subtle" }
+        const cumpridas = floatToHHMM(plantao.horas_cumpridas)
 
-        html += `
-        <div class="col-12 col-md-6 col-lg-4 col-xl-4 mb-4">
-            <div class="card h-100 plantao-card">
+        let horarioColor = plantao.horas_cumpridas < plantao.horas
+            ? "bg-warning-subtle"
+            : "bg-success-subtle"
 
-                <div class="card-body d-flex flex-column">
+        let textColor = plantao.horas_cumpridas < plantao.horas
+            ? "text-danger"
+            : "text-info-emphasis"
 
-                    <!-- Topo -->
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <span class="badge plantao-badge">
-                            ${plantao.escala_codigo_interno || 'Sem código'}
-                        </span>
-                        <span class="badge d-flex align-items-center gap-1 ${status.class}">
-                            <i class="bi ${status.icon}"></i>
-                            ${status.label}
-                        </span>
-                    </div>
+        const card = `
+            <div class="col-12 col-md-6 col-lg-4 col-xl-4 mb-4">
+                <div class="card h-100 plantao-card">
+                    <div class="card-body d-flex flex-column">
 
-                    <!-- Data -->
-                    <div class="mb-3 small text-body-secondary">
-                        <i class="bi bi-calendar-event me-1"></i>
-                        ${formatDateTime(plantao.inicio)}<br>
-                        <span class="opacity-75">até</span><br>
-                        <i class="bi bi-calendar-event me-1"></i>
-                        ${formatDateTime(plantao.fim)}
-                    </div>
-
-                    <!-- Horas -->
-                    <div class="mb-3">
-                        <span class="badge bg-info-subtle text-info-emphasis">
-                            ⏱ ${plantao.horas}h
-                        </span>
-                    </div>
-
-                    <!-- Paciente -->
-                    <div class="d-flex align-items-center mb-2">
-                        <div class="avatar-icon me-2">
-                            <i class="bi bi-person-heart"></i>
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="badge plantao-badge">
+                                ${plantao.escala_codigo_interno || 'Sem código'}
+                            </span>
+                            <span class="badge d-flex align-items-center gap-1 ${bgcolor}">
+                                ${plantao.status_name}
+                            </span>
                         </div>
-                        <div class="text-truncate">
-                            <div class="fw-semibold">${plantao.paciente_nome}</div>
-                            <small class="text-body-secondary">Paciente</small>
+
+                        <div class="mb-3 small text-body-secondary">
+                            <i class="bi bi-calendar-event me-1"></i>
+                            ${formatDateTime(plantao.inicio)}<br>
+                            <span class="opacity-75">até</span><br>
+                            <i class="bi bi-calendar-event me-1"></i>
+                            ${formatDateTime(plantao.fim)}
                         </div>
+
+                        <div class="mb-3 small">
+                            Carga Horária
+                            <span class="badge bg-info-subtle text-info-emphasis">
+                                ⏱ ${plantao.horas}h
+                            </span>
+                            Cumpridas
+                            <span class="badge ${horarioColor} ${textColor}">
+                                ⏱ ${cumpridas}h
+                            </span>
+                        </div>
+
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="avatar-icon me-2">
+                                <i class="bi bi-person-heart"></i>
+                            </div>
+                            <div class="text-truncate">
+                                <div class="fw-semibold">${plantao.paciente_nome}</div>
+                                <small class="text-body-secondary">Paciente</small>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <div class="avatar-icon me-2">
+                                <i class="bi bi-person-badge"></i>
+                            </div>
+                            <div class="text-truncate">
+                                <div class="fw-semibold">${plantao.cuidadora_nome}</div>
+                                <small class="text-body-secondary">Cuidador(a)</small>
+                            </div>
+                        </div>
+
+                        <div class="mt-auto"></div>
                     </div>
-
-                    <!-- Cuidadora -->
-                    <div class="d-flex align-items-center">
-                        <div class="avatar-icon me-2">
-                            <i class="bi bi-person-badge"></i>
-                        </div>
-                        <div class="text-truncate">
-                            <div class="fw-semibold">${plantao.cuidadora_nome}</div>
-                            <small class="text-body-secondary">Cuidadora</small>
-                        </div>
-                    </div>
-
-                    <div class="mt-auto"></div>
-
                 </div>
             </div>
-        </div>
         `
+
+        if (['A','C','P','R'].includes(plantao.status)) {
+            htmlAndamento += card
+        } else if (plantao.status == 'F') {
+            htmlFinalizados += card
+        } else if (plantao.status == 'E') {
+            htmlExpirados += card
+        }
     })
 
-    container.innerHTML = html
+    divAndamento.innerHTML = htmlAndamento
+    divFinalizados.innerHTML = htmlFinalizados
+    divExpirados.innerHTML = htmlExpirados
 }
 // ############################################
 // ############################################

@@ -9,6 +9,16 @@ from datetime import datetime
 from django.db import transaction
 from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils import timezone
+from datetime import timedelta
+
+
+def expirar_plantoes():
+    limite = timezone.now() - timedelta(hours=24)
+
+    Plantao.objects.filter(
+        fim__lt=limite
+    ).exclude(status='E').update(status='E')
 
 
 class PlantaoListView(ListView):
@@ -17,27 +27,46 @@ class PlantaoListView(ListView):
     context_object_name = "plantoes"
 
     def get_context_data(self, **kwargs):
+        expirar_plantoes()
+        limite = timezone.now() - timedelta(days=90)
+
+        plantoes = Plantao.objects.filter(updated_at__gte=limite).order_by('-updated_at')
+
         if self.request.user.is_superuser:
-            plantoes = Plantao.objects.all().order_by('-updated_at')
+            plantoes = plantoes
         else:
-            plantoes = Plantao.objects.filter(cuidadora=self.request.user.cuidadora).order_by('-updated_at')
-        return super().get_context_data(plantoes=plantoes, **kwargs)
+            plantoes =plantoes.filter(cuidadora=self.request.user.cuidadora).order_by('-updated_at')
+
+        plantoes_andamento = plantoes.filter(status__in=['A', 'P', 'C', 'R'])
+        plantoes_finalizados = plantoes.filter(status='F')
+        plantoes_expirados = plantoes.filter(status='E')
+
+        context = {
+            "plantoes_andamento": plantoes_andamento,
+            "plantoes_finalizados": plantoes_finalizados,
+            "plantoes_expirados": plantoes_expirados,
+        }
+
+        return context
 
 
 class PlantaoViewSet(LoginRequiredMixin, ModelViewSet):
     serializer_class = PlantaoSerializer
     permission_classes = [IsAuthenticated]
-    queryset = Plantao.objects.all()
+    queryset = Plantao.objects.all().order_by('-updated_at')
     pagination_class = None
 
     def get_queryset(self):
-        if self.request.query_params.get("paciente"):
-            return Plantao.objects.filter(paciente_id=self.request.query_params.get("paciente"))
-        
-        if self.request.query_params.get("cuidadora"):
-            return Plantao.objects.filter(cuidadora_id=self.request.query_params.get("cuidadora"))
+        expirar_plantoes()
+        plantaoes = Plantao.objects.all().order_by('-updated_at')
 
-        return Plantao.objects.all()
+        if self.request.query_params.get("paciente"):
+            return plantaoes.filter(paciente_id=self.request.query_params.get("paciente")).order_by('-updated_at')
+
+        if self.request.query_params.get("cuidadora"):
+            return plantaoes.filter(cuidadora_id=self.request.query_params.get("cuidadora")).order_by('-updated_at')
+
+        return plantaoes
 
 
     @action(detail=False, methods=["post"])

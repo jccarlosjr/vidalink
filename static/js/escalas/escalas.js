@@ -291,7 +291,7 @@ function renderPlantoesNoCalendario(plantoes = []) {
         const horaInicio = inicio.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         const horaFim = fim.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-        const bloqueado = p.status === 'R' || p.status === 'F';
+        const bloqueado = p.status === 'R' || p.status === 'F' || p.status === 'E';
 
         return {
             id: String(p.id),

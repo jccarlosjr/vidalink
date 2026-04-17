@@ -1,0 +1,61 @@
+<div class="col-md-4">
+    <div class="card mb-2 rounded">
+        <div class="card-header d-flex justify-content-between
+            {% if plantao.status == 'A' %} bg-secondary-subtle
+            {% elif plantao.status == 'R' %} bg-primary-subtle
+            {% elif plantao.status == 'P' %} bg-warning-subtle
+            {% elif plantao.status == 'C' %} bg-primary-subtle
+            {% elif plantao.status == 'F' %} bg-success-subtle
+            {% else %} bg-danger-subtle
+            {% endif %}
+        ">
+            <strong class="text-muted">{{ plantao.paciente }}</strong>
+        </div>
+
+        <div class="card-body text-center">
+            <p>
+                <small class="badge 
+                    {% if plantao.status == 'A' %} bg-secondary
+                    {% elif plantao.status == 'R' %} bg-primary
+                    {% elif plantao.status == 'P' %} bg-warning
+                    {% elif plantao.status == 'C' %} bg-primary
+                    {% elif plantao.status == 'F' %} bg-success
+                    {% else %} bg-danger
+                    {% endif %}">
+                    {{ plantao.get_status_display }}
+                </small>
+            </p>
+            <p class="small fw-bold">Cuidador(a): {{ plantao.cuidadora }}</p>
+
+            <p>
+                <button class="btn-modern btn-sm"
+                    onclick="getMaps('{{plantao.paciente.endereco}}, {{plantao.paciente.numero}}')">
+                    <i class="bi bi-geo-alt"></i>
+                </button>
+
+                <small class="small fs-10 text-muted">
+                    {{ plantao.paciente.endereco }}, Nº {{ plantao.paciente.numero }}
+                </small>
+            </p>
+            <div class="d-flex justify-content-center">
+                {% if plantao.status == 'F' or plantao.status == 'E' %}
+                    <a href="{% url 'registro_execucao' plantao.id %}" class="btn-modern btn-sm">
+                        Registros
+                    </a>
+                {% else %}
+                    <a href="{% url 'registro_execucao' plantao.id %}" class="btn-modern btn-sm">
+                        Registrar Início / Fim
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card-footer text-center">
+            <small>
+                <span class="badge bg-primary">{{ plantao.inicio|date:"d/m/Y - H:i" }}</span> 
+                <span class="badge bg-primary">→</span>
+                <span class="badge bg-primary">{{ plantao.fim|date:"d/m/Y - H:i" }}</span>
+            </small>
+        </div>
+    </div>
+</div>

@@ -4,36 +4,73 @@
 {% endblock %}
 
 {% block content %}
-
-<div class="container py-4 ms-2 mb-5">
-
+{% now "Y-m-d" as hoje %}
+<div class="container py-4 mb-5">
     <div class="card shadow-sm border-0 rounded-4">
         <div class="card-body">
+            <a href="{% url 'plantoes' %}" class="btn-modern mb-4 text-decoration-none"><i class="bi bi-arrow-left-circle"></i> Voltar para lista de plantões</a>
 
-            <h4 class="mb-3">Execução do Plantão</h4>
+            <h4 class="mb-3">Registros do Plantão</h4>
 
-            <div class="mb-3">
-                <strong>Paciente:</strong> {{ plantao.paciente.nome }} <br>
-                <strong>Cuidadora:</strong> {{ plantao.cuidadora.nome }} <br>
-                <strong>Início:</strong> {{ plantao.inicio|date:"d/m/Y - H:i" }}  <br>
-                <strong>Fim:</strong> {{ plantao.fim|date:"d/m/Y - H:i" }} 
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <small class="text-muted">Paciente</small>
+                            <div class="fw-semibold">{{ plantao.paciente.nome }}</div>
+                        </div>
+
+                        <div class="col-6">
+                            <small class="text-muted">Cuidadora</small>
+                            <div class="fw-semibold">{{ plantao.cuidadora.nome }}</div>
+                        </div>
+
+                        <div class="col-6">
+                            <small class="text-muted">Início</small>
+                            <div>{{ plantao.inicio|date:"d/m/Y H:i" }}</div>
+                        </div>
+
+                        <div class="col-6">
+                            <small class="text-muted">Fim</small>
+                            <div>{{ plantao.fim|date:"d/m/Y H:i" }}</div>
+                        </div>
+
+                        <div class="col-6">
+                            <small class="text-muted">Carga Horária</small>
+                            <div>{{ plantao.horas }}h</div>
+                        </div>
+
+                        <div class="col-6">
+                            <small class="text-muted">Cumpridas</small>
+                            <div>{{ plantao.horas_cumpridas_formatadas }}h</div>
+                        </div>
+
+                    </div>
+
+                </div>
             </div>
 
             <hr>
 
             <div class="d-flex gap-2">
 
-                <button id="btnCheckin" 
-                    class="btn btn-success flex-fill" {% if iniciado %}disabled{% endif %}
-                    onclick="registrarEvento('I')">
-                    Iniciar Plantão
-                </button>
+                {% if plantao.status != 'F' and plantao.status != 'E' %}
+                    {% if plantao.inicio|date:"Y-m-d" == hoje %}
+                        <button id="btnCheckin" 
+                            class="btn btn-modern bg-success-subtle flex-fill" {% if iniciado %}disabled{% endif %}
+                            onclick="registrarEvento('I')">
+                            Iniciar Plantão
+                        </button>
+                    {% endif %}
 
-                <!-- prettier-ignore -->
-                <button id="btnCheckout" class="btn btn-danger flex-fill" 
-                    {% if not iniciado or finalizado %} disabled {% endif %} onclick="registrarEvento('F')">
-                    Finalizar Plantão
-                </button>
+                    {% if plantao.fim|date:"Y-m-d" == hoje %}
+                        <!-- prettier-ignore -->
+                        <button id="btnCheckout" class="btn btn-modern bg-danger-subtle flex-fill" 
+                            {% if not iniciado or finalizado %} disabled {% endif %} onclick="registrarEvento('F')">
+                            Finalizar Plantão
+                        </button>
+                    {% endif %}
+                {% endif %}
 
             </div>
 
@@ -46,9 +83,15 @@
 
                         <span>
                             {% if e.tipo == 'I' %}
-                                🟢 Início
+                                <span class="d-inline-flex align-items-center gap-2">
+                                <span class="bg-success rounded-circle p-2 btn-modern btn-sm" style="width:10px; height:10px;"></span>
+                                    Início
+                                </span>
                             {% else %}
-                                🔴 Fim
+                                <span class="d-inline-flex align-items-center gap-2">
+                                <span class="bg-danger rounded-circle p-2 btn-modern btn-sm" style="width:10px; height:10px;"></span>
+                                    Fim
+                                </span>
                             {% endif %}
                         </span>
 
@@ -60,10 +103,9 @@
 
                             <!-- Ícone Google Maps -->
                             <a href="https://www.google.com/maps?q={{ e.endereco|urlencode }}" 
-                            target="_blank"
-                            class="text-decoration-none"
-                            title="Ver localização">
-
+                                target="_blank"
+                                class="text-decoration-none btn-modern btn-sm"
+                                title="Ver localização">
                                 <i class="bi bi-geo-alt-fill text-primary"></i>
                             </a>
 
