@@ -74,11 +74,11 @@
 
 </main>
 
+{% block scripts %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 <script src="{% static 'js/defaults/requests.js' %}"></script>
 <script src="{% static 'js/escalas/escalas.js' %}"></script>
-
-
+{% endblock %}
 {% endblock %}

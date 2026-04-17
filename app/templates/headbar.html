@@ -15,12 +15,14 @@
             <i class="bi bi-house"></i>
           </a>
 
-          <a href="{% url 'escalas' %}" class="icon-btn" title="Escalas">
-            <i class="bi bi-calendar-week"></i>
-          </a>
-
           <a href="{% url 'plantoes' %}" class="icon-btn" title="Plantões">
             <i class="bi bi-calendar2-check"></i>
+          </a>
+
+          {% if user.is_staff %}
+
+          <a href="{% url 'escalas' %}" class="icon-btn" title="Escalas">
+            <i class="bi bi-calendar-week"></i>
           </a>
 
           <a href="{% url 'cuidadoras' %}" class="icon-btn" title="Cuidadoras">
@@ -30,11 +32,6 @@
           <a href="{% url 'pacientes' %}" class="icon-btn" title="Pacientes">
             <i class="bi bi-people"></i>
           </a>
-
-          {% if user.is_staff %}
-          <button class="icon-btn" title="Administração">
-            <i class="bi bi-gear"></i>
-          </button>
           {% endif %}
 
           <button id="theme-toggle" class="icon-btn" title="Tema">

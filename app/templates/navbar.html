@@ -9,34 +9,12 @@
     </button>
   </div>
 
-  <ul class="sidebar-menu">
-
-    <!-- ESCALAS -->
-    <li class="menu-item has-submenu">
-      <a href="#">
-        <i class="bi bi-calendar-week"></i>
-        <span class="menu-label">Escalas</span>
-        <i class="bi bi-chevron-down arrow"></i>
-      </a>
-      <ul class="submenu">
-        <li><a href="{% url 'escalas' %}"><i class="bi bi-calendar-week"></i> Escalas</a></li>
-        <li><a href="{% url 'plantoes' %}"><i class="bi bi-calendar2-check"></i> Plantões</a></li>
-      </ul>
-    </li>
-
-    <!-- PACIENTES -->
+  <ul class="sidebar-menu">    
+    <!-- PLANTOES -->
     <li class="menu-item">
-      <a href="{% url 'pacientes' %}">
-        <i class="bi bi-person-hearts"></i>
-        <span class="menu-label">Pacientes</span>
-      </a>
-    </li>
-
-    <!-- CUIDADORAS -->
-    <li class="menu-item">
-      <a href="{% url 'cuidadoras' %}">
-        <i class="bi bi-person-vcard"></i>
-        <span class="menu-label">Cuidadoras</span>
+      <a href="{% url 'plantoes' %}">
+        <i class="bi bi-calendar2-check"></i>
+        <span class="menu-label">Plantões</span>
       </a>
     </li>
 
@@ -50,6 +28,15 @@
       </a>
       <ul class="submenu">
         <li><a href="#"><i class="bi bi-people"></i> Usuários</a></li>
+      </ul>
+      <ul class="submenu">
+        <li><a href="{% url 'cuidadoras' %}"><i class="bi bi-person-vcard"></i> Cuidadoras</a></li>
+      </ul>
+      <ul class="submenu">
+        <li><a href="{% url 'pacientes' %}"><i class="bi bi-person"></i> Pacientes</a></li>
+      </ul>
+      <ul class="submenu">
+        <li><a href="{% url 'escalas' %}"><i class="bi-calendar-week"></i> Escalas</a></li>
       </ul>
     </li>
     {% endif %}
