@@ -71,20 +71,16 @@ function clearFilter() {
 }
 
 function loadCuidadoras() {
-    const filterField = document.getElementById("filter_type").value
-    const filterValue = document.getElementById("filter_value").value.trim()
-
+    let filterField = document.getElementById("filter_type").value
+    let filterValue = document.getElementById("filter_value").value.trim()
     const params = new URLSearchParams()
 
-    if (filterField && filterValue) {
-        params.append("search", `${filterField}:${filterValue}`)
+    if (filterValue) {
+        params.append("filter_type", filterField)
+        params.append("filter_value", filterValue)
     }
 
-    const url = params.toString()
-        ? `/api/cuidadoras/?${params.toString()}`
-        : `/api/cuidadoras/`
-
-    getData(url, (data) => {
+    getData(`/api/cuidadoras/?${params.toString()}`, (data) => {
         renderCuidadoras(data.results)
 
         renderPaginationDRF({
