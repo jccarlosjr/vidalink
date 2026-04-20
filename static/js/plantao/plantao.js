@@ -54,7 +54,7 @@ function renderPlantoes(plantoes) {
         else if (plantao.status == 'E') badgeColor = "bg-danger"
 
         const cumpridas = floatToHHMM(plantao.horas_cumpridas)
-        const enderecoCompleto = `${plantao.paciente.endereco}, ${plantao.paciente.numero}, ${plantao.paciente.complemento}, ${plantao.paciente.bairro}, ${plantao.paciente.cidade}-${plantao.paciente.estado}, ${plantao.paciente.cep}`;
+        const enderecoCompleto = `${plantao.paciente_detalhe.endereco}, ${plantao.paciente_detalhe.numero}, ${plantao.paciente_detalhe.complemento}, ${plantao.paciente_detalhe.bairro}, ${plantao.paciente_detalhe.cidade}-${plantao.paciente_detalhe.estado}, ${plantao.paciente_detalhe.cep}`;
         const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(enderecoCompleto)}`;
 
         let horarioColor = plantao.horas_cumpridas < plantao.horas
@@ -121,7 +121,7 @@ function renderPlantoes(plantoes) {
                                     </a>
                                 </div>
                                 <small class="text-body-secondary">
-                                    ${plantao.paciente.endereco}, ${plantao.paciente.numero}, ${plantao.paciente.bairro} - ${plantao.paciente.cidade}-${plantao.paciente.estado}
+                                    ${plantao.paciente_detalhe.endereco}, ${plantao.paciente_detalhe.numero}, ${plantao.paciente_detalhe.bairro} - ${plantao.paciente_detalhe.cidade}-${plantao.paciente_detalhe.estado}
                                 </small>
                             </div>
                         </div>
