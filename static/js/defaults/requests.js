@@ -54,12 +54,14 @@ function saveData(url, data, callBack = null, method = "POST") {
 
             if (typeof error === "object") {
                 let messages = [];
-
-                for (let field in error) {
+                try{
+                    for (let field in error) {
                     messages.push(`${field}: ${error[field].join(", ")}`);
+                    }
+                    showToast(messages.join("<br>"), "danger");
+                } catch {
+                    showToast(error.erro, "danger");
                 }
-
-                showToast(messages.join("<br>"), "danger");
             } else {
                 showToast("Erro ao salvar dados!", "danger");
             }
@@ -109,12 +111,14 @@ function deleteData(url, callBack = null) {
 
             if (typeof error === "object") {
                 let messages = [];
-
-                for (let field in error) {
-                    messages.push(`${field}: ${error[field].join(", ")}`);
+                try{
+                    for (let field in error) {
+                        messages.push(`${field}: ${error[field].join(", ")}`);
+                    }
+                    showToast(messages.join("<br>"), "danger");
+                } catch {
+                    showToast(error.erro, "danger");
                 }
-
-                showToast(messages.join("<br>"), "danger");
             } else {
                 showToast("Erro ao deletar registro!", "danger");
             }
@@ -158,12 +162,14 @@ function patchData(url, data, callBack = null) {
 
             if (typeof error === "object") {
                 let messages = [];
-
-                for (let field in error) {
-                    messages.push(`${field}: ${error[field].join(", ")}`);
+                try{
+                    for (let field in error) {
+                        messages.push(`${field}: ${error[field].join(", ")}`);
+                    }
+                    showToast(messages.join("<br>"), "danger");
+                } catch {
+                    showToast(error.erro, "danger");
                 }
-
-                showToast(messages.join("<br>"), "danger");
             } else {
                 showToast("Erro ao atualizar dados!", "danger");
             }

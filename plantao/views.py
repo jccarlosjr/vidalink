@@ -11,6 +11,8 @@ from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils import timezone
 from datetime import timedelta
+from .services import PlantaoValidator
+from rest_framework import serializers
 
 
 def expirar_plantoes():
@@ -31,6 +33,27 @@ class PlantaoViewSet(ModelViewSet):
     queryset = Plantao.objects.all().order_by('inicio')
     pagination_class = None
 
+    def _validar_plantao(self, data, instance=None):
+        try:
+            inicio = datetime.fromisoformat(data.get("inicio"))
+            fim = datetime.fromisoformat(data.get("fim"))
+
+            cuidadora_id = data.get("cuidadora")
+
+            if not cuidadora_id and instance:
+                cuidadora_id = instance.cuidadora_id
+
+            PlantaoValidator.validar_intervalo(
+                inicio,
+                fim,
+                cuidadora_id,
+                instance_id=instance.id if instance else None
+            )
+
+        except ValueError as e:
+            raise serializers.ValidationError({"erro": str(e)})
+
+
     def get_queryset(self):
         expirar_plantoes()
         if self.request.user.is_superuser:
@@ -47,6 +70,41 @@ class PlantaoViewSet(ModelViewSet):
         return plantaoes
 
 
+    def create(self, request, *args, **kwargs):
+        self._validar_plantao(request.data)
+        return super().create(request, *args, **kwargs)
+
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        data = request.data.copy()
+
+        data.setdefault("inicio", instance.inicio.isoformat())
+        data.setdefault("fim", instance.fim.isoformat())
+        data.setdefault("cuidadora", instance.cuidadora_id)
+
+        self._validar_plantao(data, instance)
+
+        return super().update(request, *args, **kwargs)
+
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        data = request.data.copy()
+
+        print(data)
+
+        data["inicio"] = data.get("inicio", instance.inicio.isoformat())
+        data["fim"] = data.get("fim", instance.fim.isoformat())
+        data["cuidadora"] = data.get("cuidadora", instance.cuidadora_id)
+
+        self._validar_plantao(data, instance)
+
+        return super().partial_update(request, *args, **kwargs)
+
+
     @action(detail=False, methods=["post"])
     def lote(self, request):
         plantoes = request.data.get("plantoes", [])
@@ -60,6 +118,8 @@ class PlantaoViewSet(ModelViewSet):
 
                 paciente_id = primeiro["paciente"]
                 cuidadora_id = primeiro["cuidadora"]
+
+                PlantaoValidator.validar_lote(plantoes, cuidadora_id)
 
                 escala, _ = Escala.objects.get_or_create(
                     paciente_id=paciente_id,
