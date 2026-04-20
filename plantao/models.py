@@ -5,7 +5,7 @@ from escala.models import Escala
 
 
 STATUS_CHOICES = (
-    ('P', 'Pendente de Cuidador'),
+    ('P', 'Pendente'),
     ('A', 'Aguarda Atendimento'),
     ('C', 'Confirmado'),
     ('R', 'Em Andamento'),

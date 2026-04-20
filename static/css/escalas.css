@@ -162,5 +162,56 @@
 
 .evento-bloqueado {
     cursor: not-allowed;
-    opacity: 0.7;
+    opacity: 0.5;
+    background: #6c757d;
 }
+
+.evento-bloqueado:hover {
+    cursor: not-allowed;
+    opacity: 0.5;
+    background: #6c757d;
+}
+
+.evento-finalizado {
+    cursor: not-allowed;
+    opacity: 0.5;
+    background: #199c14;
+}
+
+.evento-finalizado:hover {
+    cursor: not-allowed;
+    opacity: 0.5;
+    background: #199c14;
+}
+
+
+.evento-expirado {
+    cursor: not-allowed;
+    opacity: 0.7;
+    background: #a01a1a;
+    color: white;
+}
+
+.evento-expirado:hover {
+    cursor: not-allowed;
+    opacity: 0.5;
+    background: #a01a1a;
+}
+
+
+.evento-andamento {
+    cursor: not-allowed;
+    opacity: 0.7;
+    background: #1a69c4;
+    color: white;
+}
+
+.evento-andamento:hover {
+    cursor: not-allowed;
+    opacity: 0.5;
+    background: #1a69c4;
+}
+
+
+
+

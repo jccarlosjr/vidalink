@@ -70,12 +70,6 @@ document.addEventListener("DOMContentLoaded", function () {
             };
         },
         eventClick: function (info) {
-            const status = info.event.extendedProps.status;
-
-            if (status === 'R' || status === 'F') {
-                return;
-            }
-
             abrirModalEditarPlantao(info.event);
         }
     });
@@ -291,7 +285,31 @@ function renderPlantoesNoCalendario(plantoes = []) {
         const horaInicio = inicio.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         const horaFim = fim.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-        const bloqueado = p.status === 'R' || p.status === 'F' || p.status === 'E';
+        const finalizado = p.status === 'F'; // verde
+        const expirado = p.status === 'E';   // vermelho
+        const andamento = p.status === 'R';  // azul
+
+        let backgroundColor;
+        let borderColor;
+        let classNames = [];
+        let titulo = "";
+
+        if (finalizado) {
+            backgroundColor = "#199c14";
+            borderColor = "#199c14";
+            classNames.push('evento-finalizado');
+            titulo = "Plantão Finalizado";
+        } else if (expirado) {
+            backgroundColor = "#a01a1a";
+            borderColor = "#a01a1a";
+            classNames.push('evento-expirado');
+            titulo = "Plantão Expirado";
+        } else if (andamento) {
+            backgroundColor = "#1a69c4";
+            borderColor = "#1a69c4";
+            classNames.push('evento-andamento');
+            titulo = "Plantão em Andamento";
+        }
 
         return {
             id: String(p.id),
@@ -303,16 +321,18 @@ function renderPlantoesNoCalendario(plantoes = []) {
                 ? `${horaInicio}-${horaFim}`
                 : `${p.cuidadora_nome} (${horaInicio} - ${horaFim})`,
 
-            backgroundColor: bloqueado ? "#6c757d" : "#198754",
-            borderColor: bloqueado ? "#6c757d" : "#198754",
-            classNames: bloqueado ? ['evento-bloqueado'] : [],
+            backgroundColor,
+            borderColor,
+            classNames,
+            titulo,
 
             extendedProps: {
                 horaInicio,
                 horaFim,
                 cuidadora: p.cuidadora_nome,
                 cuidadora_id: p.cuidadora,
-                status: p.status
+                status: p.status,
+                titulo: titulo
             }
         };
     });
@@ -334,7 +354,7 @@ function renderPlantoesNoCalendario(plantoes = []) {
 
         return {
             html: `
-            <div>
+            <div title="${arg.event.extendedProps.titulo}">
                 <strong>${nome}</strong><br>
                 <small>${arg.event.extendedProps.horaInicio} - ${arg.event.extendedProps.horaFim}</small>
             </div>
@@ -348,6 +368,8 @@ function renderPlantoesNoCalendario(plantoes = []) {
 function abrirModalEditarPlantao(event) {
     const inicio = new Date(event.start);
     const fim = new Date(event.end);
+
+    document.getElementById("edit_status").value = event.extendedProps.status;
 
     document.getElementById("edit_id").value = event.id;
 
@@ -364,6 +386,7 @@ function patchPlantao() {
     const id = document.getElementById("edit_id").value;
     const inicio = document.getElementById("edit_inicio").value;
     const fim = document.getElementById("edit_fim").value;
+    const status = document.getElementById("edit_status").value;
     const cuidadora = document.getElementById("edit_cuidadora").value;
 
     const event = calendar.getEventById(id);
@@ -382,7 +405,8 @@ function patchPlantao() {
     const payload = {
         inicio: `${dataInicio}T${inicio}:00`,
         fim: `${dataFim}T${fim}:00`,
-        cuidadora: cuidadora
+        cuidadora: cuidadora,
+        status: status
     };
 
     saveData(`/api/plantao/${id}/`, payload, () => {

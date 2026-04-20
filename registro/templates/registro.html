@@ -55,21 +55,18 @@
             <div class="d-flex gap-2">
 
                 {% if plantao.status != 'F' and plantao.status != 'E' %}
-                    {% if plantao.inicio|date:"Y-m-d" == hoje %}
-                        <button id="btnCheckin" 
-                            class="btn btn-modern bg-success-subtle flex-fill" {% if iniciado %}disabled{% endif %}
-                            onclick="registrarEvento('I')">
-                            Iniciar Plantão
-                        </button>
-                    {% endif %}
+                {% if plantao.inicio|date:"Y-m-d" == hoje %}
+                <button id="btnCheckin" class="btn btn-modern bg-success-subtle flex-fill" {% if iniciado %}disabled{% endif %} onclick="registrarEvento('I')">
+                    Iniciar Plantão
+                </button>
+                {% endif %}
 
-                    {% if plantao.fim|date:"Y-m-d" == hoje %}
-                        <!-- prettier-ignore -->
-                        <button id="btnCheckout" class="btn btn-modern bg-danger-subtle flex-fill" 
-                            {% if not iniciado or finalizado %} disabled {% endif %} onclick="registrarEvento('F')">
-                            Finalizar Plantão
-                        </button>
-                    {% endif %}
+                {% if plantao.fim|date:"Y-m-d" == hoje %}
+                <!-- prettier-ignore -->
+                <button id="btnCheckout" class="btn btn-modern bg-danger-subtle flex-fill" onclick="registrarEvento('F')">
+                    Finalizar Plantão
+                </button>
+                {% endif %}
                 {% endif %}
 
             </div>
@@ -83,15 +80,15 @@
 
                         <span>
                             {% if e.tipo == 'I' %}
-                                <span class="d-inline-flex align-items-center gap-2">
+                            <span class="d-inline-flex align-items-center gap-2">
                                 <span class="bg-success rounded-circle p-2 btn-modern btn-sm" style="width:10px; height:10px;"></span>
-                                    Início
-                                </span>
+                                Início
+                            </span>
                             {% else %}
-                                <span class="d-inline-flex align-items-center gap-2">
+                            <span class="d-inline-flex align-items-center gap-2">
                                 <span class="bg-danger rounded-circle p-2 btn-modern btn-sm" style="width:10px; height:10px;"></span>
-                                    Fim
-                                </span>
+                                Fim
+                            </span>
                             {% endif %}
                         </span>
 
@@ -102,10 +99,7 @@
                             </small>
 
                             <!-- Ícone Google Maps -->
-                            <a href="https://www.google.com/maps?q={{ e.endereco|urlencode }}" 
-                                target="_blank"
-                                class="text-decoration-none btn-modern btn-sm"
-                                title="Ver localização">
+                            <a href="https://www.google.com/maps?q={{ e.endereco|urlencode }}" target="_blank" class="text-decoration-none btn-modern btn-sm" title="Ver localização">
                                 <i class="bi bi-geo-alt-fill text-primary"></i>
                             </a>
 
