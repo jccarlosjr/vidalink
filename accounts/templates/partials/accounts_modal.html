@@ -1,0 +1,88 @@
+<div class="modal modal-xl fade" id="plantoesCuidadoraModal" data-bs-backdrop="static" tabindex="-2" aria-labelledby="plantoesCuidadoraModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="plantoesCuidadoraModalLabel">Plantoes do(a) Cuidador(a)</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="mb-1">
+                            <label for="plantoes" class="form-label">Plantoes</label>
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="andamento-tab" data-bs-toggle="tab" data-bs-target="#andamento" type="button">
+                                        Andamento
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link text-success" id="finalizados-tab" data-bs-toggle="tab" data-bs-target="#finalizados" type="button">
+                                        Finalizados
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link text-danger" id="expirados-tab" data-bs-toggle="tab" data-bs-target="#expirados" type="button">
+                                        Expirados
+                                    </button>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content mt-3">
+                                <div class="tab-pane fade show active" id="andamento">
+                                    <div id="plantoes-andamento" class="row">
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="finalizados">
+                                    <div id="plantoes-finalizados" class="row">
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="expirados">
+                                    <div id="plantoes-expirados" class="row">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal modal-sm fade" id="resetSenhaModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5>Resetar Senha <strong id="reset-user-name"></strong></h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <input type="hidden" id="reset-user-id">
+
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <label class="form-label">Nova senha</label>
+                        <input type="password" maxlength="25" id="reset-password" class="form-control form-control-sm text-center">
+                    </div>
+                    <div class="col-md-12 mt-2 text-center">
+                        <label class="form-label">Confirmar senha</label>
+                        <input type="password" maxlength="25" id="reset-password-confirm" class="form-control form-control-sm text-center">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-sm btn-modern" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn-sm btn-modern text-success" id="btn-reset-password">
+                    Redefinir Senha
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

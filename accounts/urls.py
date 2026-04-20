@@ -9,6 +9,7 @@ router.register(r'api/users', views.CustomUserViewSet)
 urlpatterns = [
     path('login/', views.CustomLoginView.as_view(), name='login'),
     path('logout/', auth_view.LogoutView.as_view(next_page='login'), name='logout'),
+    path('usuarios/', views.UserAdminView.as_view(), name='usuarios'),
 ]
 
 urlpatterns += router.urls

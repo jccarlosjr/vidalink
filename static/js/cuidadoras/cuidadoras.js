@@ -24,7 +24,6 @@ document.getElementById("novaCuidadoraBtn").addEventListener("click", () => {
 });
 
 document.getElementById("saveNovaCuidadoraBtn").addEventListener("click", saveCuidadora);
-document.getElementById("deletarCuidadoraBtn").addEventListener("click", deleteCuidadora);
 document.getElementById("filter_btn").addEventListener("click", loadCuidadoras);
 document.getElementById("clear_filter_btn").addEventListener("click", clearFilter);
 
@@ -71,13 +70,16 @@ function clearFilter() {
 }
 
 function loadCuidadoras() {
-    let filterField = document.getElementById("filter_type").value
-    let filterValue = document.getElementById("filter_value").value.trim()
+    let filterField = document.getElementById("filter_type").value;
+    let filterValue = document.getElementById("filter_value").value.trim();
+    let checked = document.getElementById("filter_active").checked;
     const params = new URLSearchParams()
 
     if (filterValue) {
-        params.append("filter_type", filterField)
-        params.append("filter_value", filterValue)
+        params.append("filter_type", filterField);
+        params.append("filter_value", filterValue);
+    } else if (checked) {
+        params.append("is_active", true);
     }
 
     getData(`/api/cuidadoras/?${params.toString()}`, (data) => {
@@ -89,6 +91,7 @@ function loadCuidadoras() {
         })
     })
 }
+
 
 async function saveCuidadora() {
     let id_cuidadora = document.getElementById("id_cuidadora").value
@@ -146,23 +149,6 @@ async function saveCuidadora() {
     if (res) {
         novaCuidadoraModal.hide();
         showToast("Cuidadora salva com sucesso!", "success");
-    }
-}
-
-async function deleteCuidadora() {
-    let id_cuidadora = document.getElementById("deletarCuidadoraId").value;
-
-    let res = await deleteData(
-        `/api/cuidadoras/${id_cuidadora}/`,
-        () => {
-            deletarCuidadoraModal.hide();
-            loadCuidadoras();
-        }
-    )
-
-    if (res) {
-        deletarCuidadoraModal.hide();
-        showToast("Cuidadora deletada com sucesso!", "success");
     }
 }
 
@@ -252,12 +238,20 @@ function renderCuidadoras(cuidadoras) {
             title = "Inativa"
         }
 
+        let badgeAtiva = ""
+
+        if (ativa) {
+            badgeAtiva = ""
+        } else {
+            badgeAtiva = "<span class='badge bg-danger'>Cuidador(a) Inativo(a)</span>"
+        }
+
         html += `
         <div class="col-12 col-md-3 col-lg-3 col-xl-3">
             <div class="card shadow-lg border-0">
 
                 <div class="card-header">
-                    <div class="d-flex justify-content-end">
+                    <div class="d-flex justify-content-between">
                         <div>
                             <button class="btn-modern btn-sm" title="${title}" onclick="toggleActiveCuidadora(${cuidadora.id})">
                                 <i class="bi ${icon}"></i>
@@ -280,16 +274,12 @@ function renderCuidadoras(cuidadoras) {
                                 onclick="abrirModalDetalheCuidadora(this)">
                                 <i class="bi bi-eye"></i>
                             </button>
-
-                            <button class="btn-modern btn-sm" title="Excluir"
-                                onclick="abrirModalDeleteCuidadora(${cuidadora.id})">
-                                <i class="bi bi-trash"></i>
-                            </button>
                         </div>
                     </div>
                 </div>
 
                 <div class="card-body d-flex flex-column">
+                    ${badgeAtiva}
                     <div class="fw-semibold fs-5">${cuidadora.nome}</div>
                     <div class="mb-3 small text-muted">
                         ${cuidadora.cpf}
@@ -414,7 +404,7 @@ function renderPlantoes(plantoes) {
             </div>
         `
 
-        if (['A','C','P','R'].includes(plantao.status)) {
+        if (['A', 'C', 'P', 'R'].includes(plantao.status)) {
             htmlAndamento += card
         } else if (plantao.status == 'F') {
             htmlFinalizados += card
@@ -474,10 +464,6 @@ function abrirModalEditarCuidadora(btn) {
     novaCuidadoraModal.show();
 }
 
-function abrirModalDeleteCuidadora(id) {
-    document.getElementById("deletarCuidadoraId").value = id;
-    deletarCuidadoraModal.show();
-}
 
 function abrirModalDetalheCuidadora(btn) {
     let cuidadora = JSON.parse(btn.dataset.cuidadora)

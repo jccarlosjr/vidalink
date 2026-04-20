@@ -4,7 +4,6 @@
 {% block head %}
 <title>Cuidadoras</title>
 <style>
-
     /* Card base */
     .plantao-card {
         border-radius: 14px;
@@ -62,7 +61,6 @@
     .badge {
         font-size: 0.75rem;
     }
-
 </style>
 {% endblock %}
 
@@ -72,8 +70,7 @@
     <div class="row align-items-center mb-4">
         <div class="col-md-12 col-12 mb-3 mb-md-0">
             <h4 class="mb-0 fw-bold">Cuidadoras</h4>
-            <a class="shadow-lg mt-2 text-decoration-none btn-modern" id="novaCuidadoraBtn"
-                title="Adicionar Nova Cuidadora">
+            <a class="shadow-lg mt-2 text-decoration-none btn-modern" id="novaCuidadoraBtn" title="Adicionar Nova Cuidadora">
                 <i class="bi bi-plus-circle me-2"></i>Nova Cuidadora
             </a>
         </div>
@@ -98,6 +95,13 @@
             <div class="col-md-2">
                 <label class="form-label">Valor</label>
                 <input type="text" id="filter_value" class="form-control form-control-sm">
+            </div>
+
+            <div class="col-md-1 mt-2 form-check form-switch d-inline-flex">
+                <input class="form-check-input" type="checkbox" id="filter_active" checked="on">
+                <label class="form-check-label ms-1" for="filter_active">
+                    Ativo
+                </label>
             </div>
 
             <div class="col-md-2 d-flex">
