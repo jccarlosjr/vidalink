@@ -15,7 +15,7 @@ class PlantaoViewSet(ModelViewSet):
     def registrar_evento(self, request, pk=None):
         plantao = self.get_object()
 
-        if request.user.cuidadora != plantao.cuidadora:
+        if request.user != plantao.cuidadora:
             return Response({"error": "Sem permissão"}, status=403)
 
         tipo = request.data.get("tipo")

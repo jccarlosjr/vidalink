@@ -134,7 +134,7 @@ async function saveCuidadora() {
         "bairro": bairro,
         "cidade": cidade,
         "estado": estado,
-        "ativo": ativoBool
+        "is_active": ativoBool
     }
 
     let res = await saveData(
@@ -226,7 +226,7 @@ function renderCuidadoras(cuidadoras) {
         const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(enderecoCompleto)}`;
         const telefoneLimpo = cuidadora.telefone.replace(/\D/g, "");
 
-        const ativa = cuidadora.ativo
+        const ativa = cuidadora.is_active
         let icon
         let title
 
@@ -459,7 +459,7 @@ function abrirModalEditarCuidadora(btn) {
     document.getElementById("bairro").value = cuidadora.bairro
     document.getElementById("cidade").value = cuidadora.cidade
     document.getElementById("estado").value = cuidadora.estado
-    document.getElementById("ativo").value = cuidadora.ativo
+    document.getElementById("ativo").value = cuidadora.is_active
 
     novaCuidadoraModal.show();
 }
@@ -480,7 +480,7 @@ function abrirModalDetalheCuidadora(btn) {
     document.getElementById("detalhe_cidade").value = cuidadora.cidade
     document.getElementById("detalhe_estado").value = cuidadora.estado
 
-    document.getElementById("detalhe_ativo").checked = cuidadora.ativo;
+    document.getElementById("detalhe_ativo").checked = cuidadora.is_active;
 
     detalhesCuidadoraModal.show();
 }

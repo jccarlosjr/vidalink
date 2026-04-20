@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Cuidadora
 
 class CuidadoraSerializer(serializers.ModelSerializer):
-    class Meta:
+
+    class Meta:        
         model = Cuidadora
-        fields = '__all__'
+        exclude = ['password', 'user_permissions', 'groups']

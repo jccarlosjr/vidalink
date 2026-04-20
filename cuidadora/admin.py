@@ -1,7 +1,47 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 from .models import Cuidadora
 
-@admin.register(Cuidadora)
-class CuidadoraAdmin(admin.ModelAdmin):
-    list_display = ('nome', 'cpf', 'cnpj', 'nascimento', 'telefone', 'endereco', 'cidade', 'estado', 'ativo')
-    search_fields = ('nome', 'cpf', 'cnpj', 'nascimento', 'telefone', 'endereco', 'cidade', 'estado', 'ativo')
+class CuidadoraAdmin(UserAdmin):
+    list_display = [
+        'username', 'first_name', 
+        'is_staff', 'is_superuser', 
+        'is_active', 'last_login',
+        'date_joined'
+        ]
+    fieldsets = (
+        ('Personal info', 
+         {
+             'fields': 
+             (
+                'username', 'password', 'nome',
+                'cpf', 'cnpj', 'nascimento',
+                'telefone', 'cep', 'endereco',
+                'numero', 'complemento', 'bairro',
+                'cidade', 'estado'
+            )
+         }
+        ),
+        ('Financial Info', 
+         {
+             'fields': 
+             (
+                'chave_pix', 'tipo_chave_pix', 'nome_banco',
+                'codigo_banco', 'tipo_conta', 'numero_conta',
+                'agencia_conta'
+            )
+         }
+        ),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups')}),
+        ('Important dates', {'fields': ('last_login',)}),
+    )
+
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('username', 'password1', 'password2', 'cuidadora'),
+        }),
+    )
+
+
+admin.site.register(Cuidadora, CuidadoraAdmin)
