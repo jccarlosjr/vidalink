@@ -16,7 +16,7 @@ class PlantaoViewSet(ModelViewSet):
         plantao = self.get_object()
 
         if request.user != plantao.cuidadora:
-            return Response({"error": "Sem permissão"}, status=403)
+            return Response({"error": "Somente o(a) cuidador(a) registrado(a) pode incluir eventos"}, status=403)
 
         tipo = request.data.get("tipo")
         lat = request.data.get("lat")

@@ -11,6 +11,7 @@ STATUS_CHOICES = (
     ('R', 'Em Andamento'),
     ('F', 'Finalizado'),
     ('E', 'Expirado'),
+    ('D', 'Desistência do Cuidador')
 )
 
 

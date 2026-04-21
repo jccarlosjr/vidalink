@@ -3,7 +3,7 @@ from .serializers import PacienteSerializer, ResponsavelSerializer
 from rest_framework.permissions import IsAuthenticated
 from .models import Paciente, Responsavel
 from django.views.generic import TemplateView
-from rest_framework.filters import SearchFilter
+from app.mixins import StaffRequiredMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
@@ -35,7 +35,7 @@ class ResponsavelViewSet(ModelViewSet):
         return queryset.order_by('-id')
 
 
-class PacientesListView(LoginRequiredMixin, TemplateView):
+class PacientesListView(StaffRequiredMixin, LoginRequiredMixin, TemplateView):
     template_name = "pacientes.html"
 
 

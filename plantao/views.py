@@ -8,11 +8,13 @@ from .models import Plantao
 from datetime import datetime
 from django.db import transaction
 from django.views.generic import TemplateView
+from app.mixins import StaffRequiredMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils import timezone
 from datetime import timedelta
 from .services import PlantaoValidator
 from rest_framework import serializers
+from django.db.models import Sum
 
 
 def expirar_plantoes():
@@ -20,11 +22,14 @@ def expirar_plantoes():
 
     Plantao.objects.filter(
         fim__lt=limite
-    ).exclude(status='E').update(status='E')
+    ).exclude(status='E').exclude(status='F').update(status='E')
 
 
 class PlantaoListView(LoginRequiredMixin, TemplateView):
     template_name = "plantao_list.html"
+
+class PlantaoAdminListView(StaffRequiredMixin, LoginRequiredMixin, TemplateView):
+    template_name = "plantao_admin_list.html"
 
 
 class PlantaoViewSet(ModelViewSet):
@@ -56,16 +61,24 @@ class PlantaoViewSet(ModelViewSet):
 
     def get_queryset(self):
         expirar_plantoes()
-        if self.request.user.is_superuser:
+        if self.request.query_params.get("cuidadora"):
+            plantaoes = Plantao.objects.filter(cuidadora=self.request.query_params.get("cuidadora")).order_by('inicio')
+        elif self.request.user.is_superuser:
             plantaoes = Plantao.objects.all().order_by('inicio')
         else:
             plantaoes = Plantao.objects.filter(cuidadora=self.request.user.cuidadora).order_by('inicio')
 
-        if self.request.query_params.get("paciente"):
-            return plantaoes.filter(paciente_id=self.request.query_params.get("paciente")).order_by('inicio')
+        filter_type = self.request.query_params.get('filter_type', None)
+        filter_value = self.request.query_params.get('filter_value', None)
 
-        if self.request.query_params.get("cuidadora"):
-            return plantaoes.filter(cuidadora_id=self.request.query_params.get("cuidadora")).order_by('inicio')
+        if filter_type and filter_value:
+            plantaoes = plantaoes.filter(**{filter_type + "__icontains": filter_value})
+
+        if self.request.query_params.get("data_inicio"):
+            plantaoes = plantaoes.filter(inicio__gte=self.request.query_params.get("data_inicio")).order_by('inicio')
+
+        if self.request.query_params.get("data_fim"):
+            plantaoes = plantaoes.filter(fim__lte=self.request.query_params.get("data_fim")).order_by('inicio')
 
         return plantaoes
 
@@ -94,8 +107,6 @@ class PlantaoViewSet(ModelViewSet):
 
         data = request.data.copy()
 
-        print(data)
-
         data["inicio"] = data.get("inicio", instance.inicio.isoformat())
         data["fim"] = data.get("fim", instance.fim.isoformat())
         data["cuidadora"] = data.get("cuidadora", instance.cuidadora_id)
@@ -103,6 +114,25 @@ class PlantaoViewSet(ModelViewSet):
         self._validar_plantao(data, instance)
 
         return super().partial_update(request, *args, **kwargs)
+
+
+    @action(detail=False, methods=["get"], url_path="plantoes_finalizados_by_user")
+    def plantoes_finalizados_by_user(self, request):
+        cuidadora_id = request.query_params.get("cuidadora")
+        plantoes = Plantao.objects.filter(cuidadora=cuidadora_id, inicio__gte=timezone.now() - timedelta(days=90))
+        horas_cumpridas_total = plantoes.aggregate(total=Sum('horas_cumpridas'))['total'] or 0
+        horas_devidas = plantoes.aggregate(total=Sum('horas'))['total'] or 0
+        total_plantoes = plantoes.count()
+        plantoes_finalizados = plantoes.filter(status='F').count()
+        plantoes_expirados = plantoes.filter(status='E').count()
+
+        return Response({
+            "total_plantoes": total_plantoes,
+            "horas_devidas": horas_devidas,
+            "horas_cumpridas_total": horas_cumpridas_total,
+            "plantoes_finalizados": plantoes_finalizados,
+            "plantoes_expirados": plantoes_expirados,
+        })
 
 
     @action(detail=False, methods=["post"])

@@ -9,17 +9,6 @@ New Features
 
 
 Ongoing Features
-- Configurar tela de usuários / Vínculo de usuário com cuidadora
-    - Desativar usuário tbm desativa cuidadora
-    - Desativar cuidadora tbm desativa usuário
-- Modal editar usuário
-- Modal editar cuidadora
-- Modal de criar novo usuário com dados da cuidadora, já cria o usuário ao finalizar o preenchimento
-- Remover opção de delete para cuidadoras e usuários
-
-
-- Criar tela de admin plantões para editar livremente os plantões
-- Adicionar dados bancários para as cuidadoras
 
 
 Bugs

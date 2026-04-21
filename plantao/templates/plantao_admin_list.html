@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<title>Plantoes</title>
+{% endblock %}
+
+{% block content %}
+<main class="container mb-5">
+    <div class="row align-items-center mb-4">
+        <div class="col-md-12 col-12 mb-3 mb-md-0">
+            <h4 class="mb-0 fw-bold">Plantões</h4>
+        </div>
+    </div>
+
+    <!-- Toolbar / Search Area -->
+    <div class="m-3 border-bottom pb-3">
+        <h5>Filtros</h5>
+
+        <div class="row mb-4">
+            <div class="col-md-2">
+                <label for="data_inicio">Inicio</label>
+                <input type="date" id="data_inicio" class="form-control form-control-sm">
+            </div>
+            <div class="col-md-2">
+                <label for="data_fim">Fim</label>
+                <input type="date" id="data_fim" class="form-control form-control-sm">
+            </div>
+        </div>
+
+        <div class="row g-2 align-items-end mb-5">
+
+            <div class="col-md-3">
+                <label class="form-label">Tipo</label>
+                <select name="filter_type" id="filter_type" class="form-select form-select-sm">
+                    <option selected value="cuidadora__username">Usuário (Cuidador(a))</option>
+                    <option value="cuidadora__nome">Nome (Cuidador(a))</option>
+                    <option value="paciente__nome">Nome (Paciente)</option>
+                    <option value="cuidadora__cpf">CPF (Cuidador(a))</option>
+                    <option value="paciente__cpf">CPF (Paciente)</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Valor</label>
+                <input type="text" id="filter_value" class="form-control form-control-sm">
+            </div>
+
+            <div class="col-md-2 d-flex ms-2">
+                <button class="text-decoration-none btn-modern" id="filter_btn">
+                    <i class="bi bi-search"></i> Filtrar
+                </button>
+                <button class="text-decoration-none btn-modern ms-2" id="clear_filter_btn">
+                    <i class="bi bi-x-circle"></i> Limpar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs (nav) -->
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="andamento-tab" data-bs-toggle="tab" data-bs-target="#andamento" type="button">
+                Andamento
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link text-success" id="finalizados-tab" data-bs-toggle="tab" data-bs-target="#finalizados" type="button">
+                Finalizados
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link text-danger" id="expirados-tab" data-bs-toggle="tab" data-bs-target="#expirados" type="button">
+                Expirados
+            </button>
+        </li>
+    </ul>
+
+    <!-- Conteúdo das tabs -->
+    <div class="tab-content mt-3">
+        <div class="tab-pane fade show active" id="andamento">
+            <div class="row" id="plantoes-andamento">
+            </div>
+        </div>
+        <div class="tab-pane fade" id="finalizados">
+            <div class="row" id="plantoes-finalizados">
+            </div>
+        </div>
+        <div class="tab-pane fade" id="expirados">
+            <div class="row" id="plantoes-expirados">
+            </div>
+        </div>
+    </div>
+</main>
+
+{% include 'partials/plantao_modal.html' %}
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'js/plantao/plantao.admin.js' %}"></script>
+{% endblock %}

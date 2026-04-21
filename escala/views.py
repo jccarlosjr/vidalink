@@ -3,6 +3,7 @@ from .serializers import EscalaSerializer
 from rest_framework.permissions import IsAuthenticated
 from .models import Escala
 from django.views.generic import TemplateView
+from app.mixins import StaffRequiredMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
@@ -13,5 +14,5 @@ class EscalaViewSet(ModelViewSet):
     queryset = Escala.objects.all()
 
 
-class EscalaView(LoginRequiredMixin, TemplateView):
+class EscalaView(StaffRequiredMixin, LoginRequiredMixin, TemplateView):
     template_name = 'escalas.html'

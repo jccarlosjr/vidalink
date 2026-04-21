@@ -1,22 +1,55 @@
+let editarPlantaoModal;
+
+
 function getMaps(endereco) {
     const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(endereco)}`;
     window.open(mapsUrl, '_blank');
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+    editarPlantaoModal = new bootstrap.Modal(document.getElementById('editarPlantaoModal'));
     loadPlantoes();
 })
 
 document.getElementById("andamento-tab").addEventListener("click", loadPlantoes);
 document.getElementById("finalizados-tab").addEventListener("click", loadPlantoes);
 document.getElementById("expirados-tab").addEventListener("click", loadPlantoes);
+document.getElementById("btn-editar-plantao").addEventListener("click", savePlantaoEdit);
+
+document.getElementById("filter_btn").addEventListener("click", loadPlantoes);
+document.getElementById("clear_filter_btn").addEventListener("click", () => {
+    document.getElementById("filter_type").value = "username";
+    document.getElementById("filter_value").value = "";
+    document.getElementById("data_inicio").value = "";
+    document.getElementById("data_fim").value = "";
+    loadPlantoes();
+})
 
 function formatDateTime(date) {
     return new Date(date).toLocaleTimeString("pt-BR").slice(0, 5) + " - " + new Date(date).toLocaleDateString("pt-BR")
 }
 
 function loadPlantoes() {
-    getData(`/api/plantao/`, (data) => {
+    let filterField = document.getElementById("filter_type").value;
+    let filterValue = document.getElementById("filter_value").value.trim();
+    let dataInicio = document.getElementById("data_inicio").value;
+    let dataFim = document.getElementById("data_fim").value;
+    const params = new URLSearchParams()
+
+    if (filterValue) {
+        params.append("filter_type", filterField);
+        params.append("filter_value", filterValue);
+    }
+
+    if (dataInicio) {
+        params.append("data_inicio", dataInicio);
+    }
+
+    if (dataFim) {
+        params.append("data_fim", dataFim);
+    }
+
+    getData(`/api/plantao/?${params.toString()}`, (data) => {
         renderPlantoes(data)
     })
 }
@@ -70,6 +103,12 @@ function renderPlantoes(plantoes) {
                     <div class="card plantao-card shadow-lg">
                         <div class="card-header d-flex justify-content-between">
                             <div>
+                                <button class="btn-modern btn-sm"
+                                    data-plantao='${JSON.stringify(plantao)}'
+                                    onclick="openEditPlantaoModal(this)"
+                                    >
+                                    <i class="bi bi-gear"></i> Editar
+                                </button>
                             </div>
                             <div>
                                 <span class="badge text-center gap-1 ${badgeColor}">
@@ -108,7 +147,7 @@ function renderPlantoes(plantoes) {
                         </div>
                         <div class="card-body">
                             <div class="d-flex justify-content-center mb-2">
-                                <a href="/registro/${plantao.id}" class="btn-modern">
+                                <a href="/registro/${plantao.id}" target="_blank" class="btn-modern">
                                     Registro
                                 </a>
                             </div>
@@ -157,4 +196,28 @@ function renderPlantoes(plantoes) {
     divAndamento.innerHTML = htmlAndamento
     divFinalizados.innerHTML = htmlFinalizados
     divExpirados.innerHTML = htmlExpirados
+}
+
+function openEditPlantaoModal(btn) {
+    const plantao = JSON.parse(btn.dataset.plantao);
+    document.getElementById("editar-plantao-id").value = plantao.id;
+    document.getElementById("editar-plantao-nome").innerText = plantao.paciente_nome;
+    editarPlantaoModal.show();
+}
+
+function savePlantaoEdit() {
+    const id = document.getElementById("editar-plantao-id").value;
+    const status = document.getElementById("editar-plantao-status").value;
+    const horas_cumpridas = document.getElementById("editar-plantao-horas-cumpridas").value;
+
+    const data = {
+        id: id,
+        status: status,
+        horas_cumpridas: horas_cumpridas
+    }
+
+    patchData(`/api/plantao/${id}/`, data, () => {
+        editarPlantaoModal.hide();
+        loadPlantoes();
+    });
 }

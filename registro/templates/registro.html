@@ -21,7 +21,7 @@
                         </div>
 
                         <div class="col-6">
-                            <small class="text-muted">Cuidadora</small>
+                            <small class="text-muted">Cuidador(a)</small>
                             <div class="fw-semibold">{{ plantao.cuidadora.nome }}</div>
                         </div>
 
@@ -45,6 +45,11 @@
                             <div>{{ plantao.horas_cumpridas_formatadas }}h</div>
                         </div>
 
+                    </div>
+
+                    <div class="text-field mt-3">
+                        <label for="observacoes">Observações</label>
+                        <textarea id="observacoes" name="observacoes" rows="3" class="form-control">{{ plantao.paciente.observacoes }}</textarea>
                     </div>
 
                 </div>

@@ -1,0 +1,44 @@
+<div class="modal fade" id="editarPlantaoModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5>Editar Plantão <strong id="editar-plantao-nome"></strong></h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <input type="hidden" id="editar-plantao-id">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="editar-plantao-status">Status</label>
+                        <select name="" id="editar-plantao-status" class="form-select form-select-sm">
+                            <option value="P">Pendente</option>
+                            <option value="A">Aguarda Atendimento</option>
+                            <option value="C">Confirmado</option>
+                            <option value="R">Em Andamento</option>
+                            <option value="F">Finalizado</option>
+                            <option value="E">Expirado</option>
+                            <option value="D">Desistência do Cuidador</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="editar-plantao-horas-cumpridas">Horas Cumpridas</label>
+                        <input type="text" maxlength="2" id="editar-plantao-horas-cumpridas" class="form-control form-control-sm numbers-only">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-sm btn-modern" data-bs-dismiss="modal">Cancelar</button>
+                <button class="btn-sm btn-modern text-success" id="btn-editar-plantao">
+                    Salvar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -7,6 +7,7 @@ router.register(r'api/plantao', views.PlantaoViewSet)
 
 urlpatterns = [
     path('plantoes/', views.PlantaoListView.as_view(), name='plantoes'),
+    path('plantoes/admin/', views.PlantaoAdminListView.as_view(), name='plantoes_admin'),
 ]
 
 urlpatterns += router.urls

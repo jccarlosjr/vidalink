@@ -5,6 +5,7 @@ let novaCuidadoraModal;
 let deletarCuidadoraModal;
 let detalhesCuidadoraModal;
 let plantoesCuidadoraModal;
+let resetSenhaModal;
 
 document.addEventListener("DOMContentLoaded", () => {
     loadCuidadoras();
@@ -12,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     deletarCuidadoraModal = new bootstrap.Modal(document.getElementById('deletarCuidadoraModal'));
     detalhesCuidadoraModal = new bootstrap.Modal(document.getElementById('detalhesCuidadoraModal'));
     plantoesCuidadoraModal = new bootstrap.Modal(document.getElementById('plantoesCuidadoraModal'));
+    resetSenhaModal = new bootstrap.Modal(document.getElementById('resetSenhaModal'));
 });
 
 document.querySelector("form").addEventListener("submit", function (e) {
@@ -26,6 +28,8 @@ document.getElementById("novaCuidadoraBtn").addEventListener("click", () => {
 document.getElementById("saveNovaCuidadoraBtn").addEventListener("click", saveCuidadora);
 document.getElementById("filter_btn").addEventListener("click", loadCuidadoras);
 document.getElementById("clear_filter_btn").addEventListener("click", clearFilter);
+document.getElementById("btn-reset-password").addEventListener("click", resetSenhaUsuario);
+
 
 document.getElementById("cep").addEventListener("blur", function () {
     const cep = this.value.replace("-", "");
@@ -92,7 +96,6 @@ function loadCuidadoras() {
     })
 }
 
-
 async function saveCuidadora() {
     let id_cuidadora = document.getElementById("id_cuidadora").value
     let nome = document.getElementById("nome").value
@@ -107,18 +110,14 @@ async function saveCuidadora() {
     let bairro = document.getElementById("bairro").value
     let cidade = document.getElementById("cidade").value
     let estado = document.getElementById("estado").value
+    let codigo_banco = document.getElementById("codigo_banco").value
+    let agencia_conta = document.getElementById("agencia_conta").value
+    let numero_conta = document.getElementById("numero_conta").value
+    let tipo_conta = document.getElementById("tipo_conta").value
+    let chave_pix = document.getElementById("chave_pix").value
+    let tipo_chave_pix = document.getElementById("tipo_chave_pix").value
     let ativoBool = document.getElementById("ativo").checked;
 
-    let url
-    let method
-
-    if (id_cuidadora) {
-        url = `/api/cuidadoras/${id_cuidadora}/`
-        method = "PATCH"
-    } else {
-        url = `/api/cuidadoras/`
-        method = "POST"
-    }
 
     let payload = {
         "id_cuidadora": id_cuidadora,
@@ -134,7 +133,24 @@ async function saveCuidadora() {
         "bairro": bairro,
         "cidade": cidade,
         "estado": estado,
+        "codigo_banco": codigo_banco,
+        "agencia_conta": agencia_conta,
+        "numero_conta": numero_conta,
+        "tipo_conta": tipo_conta,
+        "chave_pix": chave_pix,
+        "tipo_chave_pix": tipo_chave_pix,
         "is_active": ativoBool
+    }
+
+    let url
+    let method
+
+    if (id_cuidadora) {
+        url = `/api/cuidadoras/${id_cuidadora}/`
+        method = "PATCH"
+    } else {
+        url = `/api/cuidadoras/`
+        method = "POST"
     }
 
     let res = await saveData(
@@ -157,7 +173,22 @@ async function getPlantoes(cuidadora_id) {
         renderPlantoes(data)
         plantoesCuidadoraModal.show();
     })
+
+    getData(`/api/plantao/plantoes_finalizados_by_user/?cuidadora=${cuidadora_id}`, (data) => {
+        if (data.horas_cumpridas_total < data.horas_devidas) {
+            document.getElementById("horas_cumpridas").classList.add("text-danger")
+        }
+
+        document.getElementById("total_plantoes").value = data.total_plantoes
+        document.getElementById("horas_devidas").value = `${data.horas_devidas}h`
+        document.getElementById("horas_cumpridas").value = `${data.horas_cumpridas_total}h`
+        document.getElementById("plantoes_finalizados").value = data.plantoes_finalizados
+        document.getElementById("plantoes_expirados").value = data.plantoes_expirados
+        document.getElementById("plantoes_expirados").classList.add("text-danger")
+    })
 }
+
+
 
 async function toggleActiveCuidadora(id_cuidadora) {
     let res = await patchData(
@@ -173,6 +204,46 @@ async function toggleActiveCuidadora(id_cuidadora) {
     }
 }
 
+function resetSenhaUsuario() {
+    const userId = document.getElementById('reset-user-id').value
+    const password = document.getElementById('reset-password').value
+    const confirm = document.getElementById('reset-password-confirm').value
+
+    if (!password || !confirm) {
+        showToast('Informe a nova senha e a confirmação')
+        return
+    }
+
+    if (password !== confirm) {
+        showToast('As senhas não coincidem')
+        return
+    }
+
+    fetch(`/api/cuidadoras/${userId}/reset-password/`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken()
+        },
+        body: JSON.stringify({
+            password: password
+        })
+    })
+        .then(async r => {
+            const data = await r.json()
+
+            if (!r.ok) {
+                throw new Error(data.detail || 'Erro ao redefinir senha')
+            }
+
+            return data
+        })
+        .then(data => {
+            resetSenhaModal.hide()
+            showToast(data.detail || 'Senha redefinida com sucesso', 'success')
+        })
+        .catch(err => showToast(err.message))
+}
 // ############################################
 // ############################################
 
@@ -224,7 +295,7 @@ function renderCuidadoras(cuidadoras) {
     cuidadoras.forEach(cuidadora => {
         const enderecoCompleto = `${cuidadora.endereco}, ${cuidadora.numero}, ${cuidadora.complemento}, ${cuidadora.bairro}, ${cuidadora.cidade}-${cuidadora.estado}, ${cuidadora.cep}`;
         const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(enderecoCompleto)}`;
-        const telefoneLimpo = cuidadora.telefone.replace(/\D/g, "");
+        const telefoneLimpo = cuidadora.telefone?.replace(/\D/g, "") || ""
 
         const ativa = cuidadora.is_active
         let icon
@@ -246,15 +317,26 @@ function renderCuidadoras(cuidadoras) {
             badgeAtiva = "<span class='badge bg-danger'>Cuidador(a) Inativo(a)</span>"
         }
 
+        let isAdmin = ""
+        if (cuidadora.is_staff || cuidadora.is_superuser) {
+            isAdmin = "<span class='badge rounded-pill bg-success' title='Membro da Equipe Administradora'><i class='bi bi-person-workspace'></i></span>"
+        }
+
         html += `
         <div class="col-12 col-md-3 col-lg-3 col-xl-3">
             <div class="card shadow-lg border-0">
-
                 <div class="card-header">
                     <div class="d-flex justify-content-between">
                         <div>
+                        </div>
+
+                        <div>
                             <button class="btn-modern btn-sm" title="${title}" onclick="toggleActiveCuidadora(${cuidadora.id})">
                                 <i class="bi ${icon}"></i>
+                            </button>
+                            <button class="btn-modern btn-sm" title="Resetar senha"
+                                onclick="openResetPasswordModal(${cuidadora.id}, '${cuidadora.username}')">
+                                <i class="bi bi-key"></i>
                             </button>
 
                             <button class="btn-modern btn-sm" title="Editar"
@@ -278,14 +360,18 @@ function renderCuidadoras(cuidadoras) {
                     </div>
                 </div>
 
-                <div class="card-body d-flex flex-column">
+                <div class="card-body d-flex flex-column text-center">
                     ${badgeAtiva}
-                    <div class="fw-semibold fs-5">${cuidadora.nome}</div>
+                    <small class="fw-semibold text-light badge rounded-pill bg-dark">
+                        ${cuidadora.username}
+                        ${isAdmin}
+                    </small>
+                    <div class="fw-semibold fs-5">${cuidadora.nome || ''}</div>
                     <div class="mb-3 small text-muted">
-                        ${cuidadora.cpf}
+                        ${cuidadora.cpf || ''}
                     </div>
                     <div class="mb-3 small">
-                        ${cuidadora.telefone}
+                        ${cuidadora.telefone || ''}
                         <a href="https://wa.me/55${telefoneLimpo}" target="_blank" class="text-success text-decoration-none">
                             <i class="bi bi-whatsapp btn-modern btn-sm"></i>
                         </a>
@@ -297,8 +383,8 @@ function renderCuidadoras(cuidadoras) {
                         <a href="${mapsUrl}" target="_blank" class="text-decoration-none">
                             <i class="bi bi-geo-alt-fill text-primary border rounded btn-modern btn-sm"></i>
                         </a>
-                        ${cuidadora.endereco}, ${cuidadora.numero}, ${cuidadora.bairro}
-                        ${cuidadora.cep} - ${cuidadora.cidade}-${cuidadora.estado} ${cuidadora.complemento ? ', ' + cuidadora.complemento : ''}</p>
+                        ${cuidadora.endereco || ''}, ${cuidadora.numero || ''}, ${cuidadora.bairro || ''}
+                        ${cuidadora.cep || ''} - ${cuidadora.cidade || ''}-${cuidadora.estado || ''} ${cuidadora.complemento ? ', ' + cuidadora.complemento : ''}</p>
                     </small>
                 </div>
 
@@ -460,10 +546,15 @@ function abrirModalEditarCuidadora(btn) {
     document.getElementById("cidade").value = cuidadora.cidade
     document.getElementById("estado").value = cuidadora.estado
     document.getElementById("ativo").value = cuidadora.is_active
+    document.getElementById("codigo_banco").value = cuidadora.codigo_banco
+    document.getElementById("agencia_conta").value = cuidadora.agencia_conta
+    document.getElementById("numero_conta").value = cuidadora.numero_conta
+    document.getElementById("tipo_conta").value = cuidadora.tipo_conta
+    document.getElementById("chave_pix").value = cuidadora.chave_pix
+    document.getElementById("tipo_chave_pix").value = cuidadora.tipo_chave_pix
 
     novaCuidadoraModal.show();
 }
-
 
 function abrirModalDetalheCuidadora(btn) {
     let cuidadora = JSON.parse(btn.dataset.cuidadora)
@@ -479,10 +570,25 @@ function abrirModalDetalheCuidadora(btn) {
     document.getElementById("detalhe_bairro").value = cuidadora.bairro
     document.getElementById("detalhe_cidade").value = cuidadora.cidade
     document.getElementById("detalhe_estado").value = cuidadora.estado
+    document.getElementById("detalhe_codigo_banco").value = cuidadora.codigo_banco
+    document.getElementById("detalhe_agencia_conta").value = cuidadora.agencia_conta
+    document.getElementById("detalhe_numero_conta").value = cuidadora.numero_conta
+    document.getElementById("detalhe_tipo_conta").value = cuidadora.tipo_conta
+    document.getElementById("detalhe_chave_pix").value = cuidadora.chave_pix
+    document.getElementById("detalhe_tipo_chave_pix").value = cuidadora.tipo_chave_pix
 
     document.getElementById("detalhe_ativo").checked = cuidadora.is_active;
 
     detalhesCuidadoraModal.show();
+}
+
+function openResetPasswordModal(userId, username) {
+    document.getElementById('reset-user-id').value = userId
+    document.getElementById('reset-user-name').innerText = username
+    document.getElementById('reset-password').value = ''
+    document.getElementById('reset-password-confirm').value = ''
+
+    resetSenhaModal.show()
 }
 // ############################################
 // ############################################
