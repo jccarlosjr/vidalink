@@ -13,6 +13,7 @@ class Paciente(models.Model):
     cidade = models.CharField(max_length=50)
     estado = models.CharField(max_length=2)
     observacoes = models.TextField()
+    ativo = models.BooleanField(default=True)
 
     def __str__(self):
         return self.nome

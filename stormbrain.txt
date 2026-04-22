@@ -5,7 +5,6 @@ New Features
 - App para classificação de cuidadoras com base nos plantões finalizados
 - Criar registro de substituição de plantões afim de analisar se cada cuidadora tem finalizado os plantões originalmente atribuídos a elas
 - App para disponibilidade cruzado com plantões já ativos
-- Remover delete de pacientes, criar botão para desativar paciente
 
 
 Ongoing Features

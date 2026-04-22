@@ -68,11 +68,15 @@ function clearFilter() {
 function loadPacientes() {
     let filterField = document.getElementById("filter_type").value
     let filterValue = document.getElementById("filter_value").value.trim()
+    let checked = document.getElementById("filter_active").checked;
+
     const params = new URLSearchParams()
 
     if (filterValue) {
-        params.append("filter_type", filterField)
-        params.append("filter_value", filterValue)
+        params.append("filter_type", filterField);
+        params.append("filter_value", filterValue);
+    } else if (checked) {
+        params.append("is_active", true);
     }
 
     getData(`/api/pacientes/?${params.toString()}`, (data) => {
@@ -128,6 +132,11 @@ function renderPacientes(pacientes = []) {
 
     pacientes.forEach(paciente => {
         let badge, icon, text;
+        let iconActive
+        let title
+        const ativa = paciente.ativo
+        let badgeActive;
+
 
         if (paciente.sexo == "M") {
             badge = "badge bg-primary bg-opacity-10 text-primary border border-primary-subtle rounded-pill"
@@ -143,6 +152,17 @@ function renderPacientes(pacientes = []) {
             text = paciente.sexo
         }
 
+        if (ativa) {
+            badgeActive = ""
+            iconActive = "bi-check-circle text-success"
+            title = "Ativa"
+        } else {
+            badgeActive = "<span class='badge bg-danger'>Paciente Inativo(a)</span>"
+            iconActive = "bi-x-circle text-danger"
+            title = "Inativa"
+        }
+
+
         const enderecoCompleto = `${paciente.endereco}, ${paciente.numero}, ${paciente.complemento}, ${paciente.bairro}, ${paciente.cidade}-${paciente.estado}, ${paciente.cep}`;
         const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(enderecoCompleto)}`;
 
@@ -153,6 +173,11 @@ function renderPacientes(pacientes = []) {
                 <div class="card-header">
                     <div class="d-flex justify-content-end">
                         <div>
+                            <button class="btn-modern btn-sm" title="${title}"
+                                onclick="toggleActivePaciente(${paciente.id})">
+                                <i class="bi ${iconActive}"></i>
+                            </button>
+
                             <button class="btn-modern btn-sm" title="Editar"
                                 data-paciente='${JSON.stringify(paciente)}'
                                 onclick="abrirModalEditarPaciente(this)">
@@ -178,6 +203,7 @@ function renderPacientes(pacientes = []) {
                 </div>
 
                 <div class="card-body d-flex flex-column">
+                    ${badgeActive}
                     <div class="fw-semibold fs-5">${paciente.nome}</div>
                     <div class="mb-3 small">
                         <i class="${icon} ${badge}">${text}</i> ${paciente.idade} anos
@@ -415,6 +441,20 @@ async function salvarPaciente() {
     if (res) {
         novoPacienteModal.hide();
         showToast("Paciente salvo com sucesso!", "success");
+    }
+}
+
+async function toggleActivePaciente(id_paciente) {
+    let res = await patchData(
+        `/api/pacientes/${id_paciente}/active/`,
+        null,
+        () => {
+            loadPacientes();
+        }
+    )
+
+    if (res) {
+        showToast("Paciente atualizado com sucesso!", "success");
     }
 }
 
