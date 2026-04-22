@@ -21,6 +21,7 @@ class Plantao(models.Model):
     fim = models.DateTimeField()
     horas = models.IntegerField()
     horas_cumpridas = models.FloatField(default=0)
+    valor_calculado = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='A')
     cuidadora = models.ForeignKey(Cuidadora, on_delete=models.PROTECT)
     escala = models.ForeignKey(Escala, on_delete=models.PROTECT)
@@ -28,6 +29,7 @@ class Plantao(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     observacoes = models.TextField(null=True, blank=True) 
+    regra_pagamento = models.ForeignKey("financeiro.RegraPagamento", on_delete=models.PROTECT, null=True, blank=True)
 
     def __str__(self):
         return self.escala.codigo_interno

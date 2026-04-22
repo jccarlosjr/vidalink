@@ -1,23 +1,40 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
-from django.utils import timezone
-from .models import Plantao
+from django.db import transaction
+from plantao.models import Plantao
+from financeiro.models import Pagamento
+from plantao.services import PlantaoValidator
 
 
-def get_internal_code(plantao):
-    plantao_id = str(plantao.id).zfill(5)
-    data = timezone.now().strftime("%d%m%Y")
-    return f"PLA-{data}-{plantao_id}"
+@receiver(pre_save, sender=Plantao)
+def cache_status_anterior(sender, instance, **kwargs):
+    if instance.pk:
+        try:
+            instance._status_anterior = (
+                Plantao.objects
+                .only("status")
+                .get(pk=instance.pk)
+                .status
+            )
+        except Plantao.DoesNotExist:
+            instance._status_anterior = None
+    else:
+        instance._status_anterior = None
 
 
 @receiver(post_save, sender=Plantao)
-def gerar_codigo_interno(sender, instance, created, **kwargs):
-    print("SIGNAL DISPARADO", created)
+def criar_pagamento_se_finalizado(sender, instance, **kwargs):
+    status_anterior = getattr(instance, "_status_anterior", None)
 
-    if created:
-        instance.codigo_interno = get_internal_code(instance)
+    if instance.status == 'F' and status_anterior != 'F':
 
-        Plantao.objects.filter(id=instance.id).update(
-            codigo_interno=instance.codigo_interno
-        )
-            
+        if instance.pagamentos.exists():
+            return
+
+        with transaction.atomic():
+            valor = PlantaoValidator.calcular_valor_plantao(instance)
+
+            Pagamento.objects.create(
+                plantao=instance,
+                valor_calculado=valor
+            )

@@ -1,13 +1,24 @@
 New Features
 - Criar app histórico de plantões
 - Mostrar o histórico do plantão na tela de escala
-- Criar app de financeiro
 - App para classificação de cuidadoras com base nos plantões finalizados
 - Criar registro de substituição de plantões afim de analisar se cada cuidadora tem finalizado os plantões originalmente atribuídos a elas
 - App para disponibilidade cruzado com plantões já ativos
+- Criar app de financeiro
 
 
 Ongoing Features
+- Lógica de lançamento de pagamentos
+---- Ao finalizar um plantão o pagamento é criado automaticamente
+---- O pagamento segue a regra de pagamento selecionada no momento do cadastro do plantão
+---- Caso não tenha regra de pagamento selecionada, o pagamento é criado com valor 0
+---- O pagamento deve seguir a regra de pagamento vigente no momento do plantão, e não a regra de pagamento atual
+---- Ao finalizar um plantão o pagamento deve ser atualizado com o valor calculado
+---- Criar template com criação de relatórios, filtrando plantões por data, cuidadora, paciente e status
+- Alterar criação de plantão no template "escalas" para selecionar o tipo de plantão, se é por hora ou por plantão
+- Alterar edição de plantão no template "plantao_admin_list" para selecionar o tipo de plantão, se é por hora ou por plantão
+- Caso seja por plantão, selecionar a faixa de pagamento
+
 
 
 Bugs
@@ -21,7 +32,6 @@ Finalizado
 - App Pacientes
 - App Escala/Plantões
 - App Registros de plantões
-
 
 Sistema de avaliação por estrelas como uber e ifood (máximo 5 estrelas)
 

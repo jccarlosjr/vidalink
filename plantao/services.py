@@ -1,6 +1,8 @@
 from django.db.models import Q
 from .models import Plantao
 from datetime import datetime
+from financeiro.models import RegraPagamento
+from decimal import Decimal
 
 
 class PlantaoValidator:
@@ -34,3 +36,22 @@ class PlantaoValidator:
             intervalos.append((inicio, fim))
 
             PlantaoValidator.validar_intervalo(inicio, fim, cuidadora_id)
+
+
+    @staticmethod
+    def calcular_valor_plantao(plantao):
+        regra = plantao.regra_pagamento
+
+        if regra.tipo == RegraPagamento.Tipo.HORA:
+            if regra.valor_base is None:
+                raise Exception("Regra de pagamento por hora sem valor_base definido")
+
+            return Decimal(plantao.horas_cumpridas) * regra.valor_base
+
+        elif regra.tipo == RegraPagamento.Tipo.PLANTAO:
+            if regra.valor_base is None:
+                raise Exception("Regra de pagamento por plantão sem valor_base definido")
+
+            return regra.valor_base
+
+        raise Exception("Tipo de regra de pagamento inválido")

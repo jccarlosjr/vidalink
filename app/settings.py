@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'plantao',
     'cuidadora',
     'registro',
+    'financeiro',
 ]
 
 MIDDLEWARE = [
