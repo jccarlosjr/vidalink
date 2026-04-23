@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<title>Relatórios</title>
+{% endblock %}
+
+{% block content %}
+<main class="container-fluid py-4 mb-5">
+    <!-- Header -->
+    <div class="row align-items-center mb-4">
+        <div class="col-md-12 col-12 mb-3 mb-md-0">
+            <h4 class="mb-0 fw-bold">Relatórios</h4>
+            <a class="shadow-lg mt-2 text-decoration-none btn-modern" id="novoRelatorioBtn" title="Adicionar Novo Relatório">
+                <i class="bi bi-plus-circle me-2"></i>Novo Relatório
+            </a>
+        </div>
+    </div>
+
+    <!-- Toolbar / Search Area -->
+    <div class="m-3 border-bottom pb-3">
+        <h5>Filtros</h5>
+
+        <div class="row mb-4">
+            <div class="col-md-2">
+                <label class="form-label" for="data_inicio">Início do Plantão</label>
+                <input type="date" id="data_inicio" class="form-control form-control-sm">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label" for="data_fim">Fim do Plantão</label>
+                <input type="date" id="data_fim" class="form-control form-control-sm">
+            </div>
+
+        </div>
+
+        <div class="row g-2 align-items-end mb-3">
+            <div class="col-md-2">
+                <label class="form-label" for="filter_type">Tipo</label>
+                <select name="filter_type" id="filter_type" class="form-select form-select-sm">
+                    <option selected value="cuidador__nome">Nome (Cuidador(a))</option>
+                    <option value="cuidador__cpf">CPF (Cuidador(a))</option>
+                    <option value="cuidador__cnpj">CNPJ (Cuidador(a))</option>
+                    <option value="paciente__nome">Nome (Paciente)</option>
+                    <option value="paciente__cpf">CPF (Paciente)</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Valor</label>
+                <input type="text" id="filter_value" class="form-control form-control-sm">
+            </div>
+
+            <div class="col-md-2 d-flex">
+                <button class="text-decoration-none btn-modern" id="filter_btn">
+                    <i class="bi bi-search"></i> Filtrar
+                </button>
+                <button class="text-decoration-none btn-modern ms-2" id="clear_filter_btn">
+                    <i class="bi bi-x-circle"></i> Limpar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <table id="table-regras-pagamento" class="table table-responsive">
+    </table>
+</main>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

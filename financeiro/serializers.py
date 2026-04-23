@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from .models import Pagamento, Relatorio, RegraPagamento
 
 
@@ -15,6 +15,11 @@ class RelatorioSerializer(ModelSerializer):
 
 
 class RegraPagamentoSerializer(ModelSerializer):
+    tipo_name = SerializerMethodField()
+
+    def get_tipo_name(self, obj):
+        return obj.get_tipo_display()
+
     class Meta:
         model = RegraPagamento
         fields = "__all__"

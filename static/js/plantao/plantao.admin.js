@@ -9,6 +9,7 @@ function getMaps(endereco) {
 document.addEventListener("DOMContentLoaded", async () => {
     editarPlantaoModal = new bootstrap.Modal(document.getElementById('editarPlantaoModal'));
     loadPlantoes();
+    buscarRegraPagamento();
 })
 
 document.getElementById("andamento-tab").addEventListener("click", loadPlantoes);
@@ -129,6 +130,11 @@ function renderPlantoes(plantoes) {
                                 <span class="badge ${horarioColor} ${textColor}">
                                     ⏱ ${cumpridas}h
                                 </span>
+                                <br>
+                                Regra:
+                                <span class="badge bg-info-subtle text-info-emphasis">
+                                    ${plantao.regra_pagamento_nome || "Sem Regra"}
+                                </span>
                             </div>
 
                             <div class="text-truncate text-center">
@@ -202,6 +208,11 @@ function openEditPlantaoModal(btn) {
     const plantao = JSON.parse(btn.dataset.plantao);
     document.getElementById("editar-plantao-id").value = plantao.id;
     document.getElementById("editar-plantao-nome").innerText = plantao.paciente_nome;
+
+    document.getElementById("editar-plantao-status").value = plantao.status;
+    document.getElementById("editar-plantao-horas-cumpridas").value = plantao.horas_cumpridas;
+    document.getElementById("edit_regra_pagamento").value = plantao.regra_pagamento;
+
     editarPlantaoModal.show();
 }
 
@@ -209,15 +220,44 @@ function savePlantaoEdit() {
     const id = document.getElementById("editar-plantao-id").value;
     const status = document.getElementById("editar-plantao-status").value;
     const horas_cumpridas = document.getElementById("editar-plantao-horas-cumpridas").value;
+    const regraPagamento = document.getElementById("edit_regra_pagamento").value;
 
     const data = {
         id: id,
-        status: status,
-        horas_cumpridas: horas_cumpridas
+        status: status
+    }
+
+    if (horas_cumpridas) {
+        data.horas_cumpridas = horas_cumpridas;
+    }
+
+    if (regraPagamento) {
+        data.regra_pagamento = regraPagamento;
     }
 
     patchData(`/api/plantao/${id}/`, data, () => {
         editarPlantaoModal.hide();
         loadPlantoes();
+    });
+}
+
+
+function buscarRegraPagamento() {
+    getData("/api/regra-pagamento/", (data) => {
+        renderRegrasPagamentoSelect(data.results)
+    })
+}
+
+
+function renderRegrasPagamentoSelect(regras) {
+    const selectEdit = document.getElementById("edit_regra_pagamento");
+
+    selectEdit.innerHTML = "<option value=''>Selecione uma regra de pagamento</option>";
+
+    regras.forEach(regra => {
+        const option = document.createElement("option");
+        option.value = regra.id;
+        option.textContent = `${regra.nome} (${Number(regra.valor_base).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })})`;
+        selectEdit.appendChild(option);
     });
 }

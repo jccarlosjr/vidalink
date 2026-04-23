@@ -28,6 +28,7 @@ def expirar_plantoes():
 class PlantaoListView(LoginRequiredMixin, TemplateView):
     template_name = "plantao_list.html"
 
+
 class PlantaoAdminListView(StaffRequiredMixin, LoginRequiredMixin, TemplateView):
     template_name = "plantao_admin_list.html"
 
@@ -148,6 +149,7 @@ class PlantaoViewSet(ModelViewSet):
 
                 paciente_id = primeiro["paciente"]
                 cuidadora_id = primeiro["cuidadora"]
+                regra_pagamento_id = primeiro["regra_pagamento"]
 
                 PlantaoValidator.validar_lote(plantoes, cuidadora_id)
 
@@ -175,6 +177,7 @@ class PlantaoViewSet(ModelViewSet):
                         horas=int((fim - inicio).total_seconds() / 3600),
                         paciente_id=paciente_id,
                         cuidadora_id=cuidadora_id,
+                        regra_pagamento_id=regra_pagamento_id,
                         escala=escala
                     ))
 

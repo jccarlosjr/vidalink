@@ -13,7 +13,7 @@ class RegraPagamento(models.Model):
     tipo = models.CharField(max_length=10, choices=Tipo.choices, default=Tipo.PLANTAO)
     valor_base = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     ativa = models.BooleanField(default=True)
-    data_inicio = models.DateField(default=timezone.now)
+    data_inicio = models.DateField(auto_now_add=True)
     data_fim = models.DateField(null=True, blank=True)
 
     def __str__(self):

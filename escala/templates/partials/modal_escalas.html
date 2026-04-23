@@ -13,8 +13,7 @@
                             <select name="tipo_busca" id="filter_paciente" class="form-select form-select-sm">
                                 <option value="nome">Nome</option>
                             </select>
-                            <input type="text" id="filter_value_paciente" class="form-control form-control-sm"
-                                placeholder="Buscar paciente">
+                            <input type="text" id="filter_value_paciente" class="form-control form-control-sm" placeholder="Buscar paciente">
                             <button class="btn-modern" id="btn-buscar-paciente">
                                 <i class="bi bi-search"></i> Buscar
                             </button>
@@ -63,7 +62,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row mb-2">
                     <div class="col-md-6">
                         <label class="form-label small">Início</label>
                         <input type="time" id="edit_inicio" class="form-control form-control-sm">
@@ -74,7 +73,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row mb-2">
                     <div class="col-md-12">
                         <label class="form-label small">Status</label>
                         <select name="edit_status" id="edit_status" class="form-select form-select-sm">
@@ -88,6 +87,18 @@
                     </div>
                 </div>
 
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <label for="edit_regra_pagamento" class="form-label small">Regra de Pagamento</label>
+                        <select name="edit_regra_pagamento" id="edit_regra_pagamento" class="form-select form-select-sm">
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="edit_horas_cumpridas" class="form-label small">Horas Cumpridas</label>
+                        <input type="text" name="edit_horas_cumpridas" id="edit_horas_cumpridas" class="form-control form-control-sm numbers-only">
+                    </div>
+                </div>
+
                 <div class="mb-2">
                     <label class="form-label small">Cuidadora</label>
 
@@ -96,8 +107,7 @@
 
                         <input type="text" id="edit_cuidadora_nome" class="form-control form-control-sm" readonly>
 
-                        <button class="btn-outline-secondary btn-modern btn-sm" type="button" title="Alterar Cuidador(a)"
-                            onclick="openModalBuscarCuidadora()">
+                        <button class="btn-outline-secondary btn-modern btn-sm" type="button" title="Alterar Cuidador(a)" onclick="openModalBuscarCuidadora()">
                             <i class="bi bi-arrow-clockwise"></i>
                         </button>
                     </div>
@@ -132,8 +142,7 @@
                                 <option value="cnpj">CNPJ</option>
                                 <option value="telefone">Telefone</option>
                             </select>
-                            <input type="text" id="filter_value_cuidadora" class="form-control form-control-sm"
-                                placeholder="Buscar cuidadora">
+                            <input type="text" id="filter_value_cuidadora" class="form-control form-control-sm" placeholder="Buscar cuidadora">
                             <button class="btn-modern" id="btn-buscar-cuidadora">
                                 <i class="bi bi-search"></i> Buscar
                             </button>

@@ -2,7 +2,7 @@ from django.db.models import Q
 from .models import Plantao
 from datetime import datetime
 from financeiro.models import RegraPagamento
-from decimal import Decimal
+from decimal import Decimal, ROUND_CEILING
 
 
 class PlantaoValidator:
@@ -20,6 +20,7 @@ class PlantaoValidator:
 
         if conflito:
             raise ValueError("Conflito de horário com plantão existente, esse(a) cuidador(a) já possui um ou mais plantões criados para essas datas/horários")
+
 
     @staticmethod
     def validar_lote(plantoes, cuidadora_id):
@@ -46,7 +47,10 @@ class PlantaoValidator:
             if regra.valor_base is None:
                 raise Exception("Regra de pagamento por hora sem valor_base definido")
 
-            return Decimal(plantao.horas_cumpridas) * regra.valor_base
+            horas = Decimal(str(plantao.horas_cumpridas))
+
+            valor = horas * regra.valor_base
+            return valor.quantize(Decimal("0.01"), rounding=ROUND_CEILING)
 
         elif regra.tipo == RegraPagamento.Tipo.PLANTAO:
             if regra.valor_base is None:

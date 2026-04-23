@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<title>Regras de Pagamento</title>
+{% endblock %}
+
+{% block content %}
+<main class="container-fluid py-4 mb-5">
+    <!-- Header -->
+    <div class="row align-items-center mb-4">
+        <div class="col-md-12 col-12 mb-3 mb-md-0">
+            <h4 class="mb-0 fw-bold">Regras de Pagamento</h4>
+            <a class="shadow-lg mt-2 text-decoration-none btn-modern" id="novaRegraPagamentoBtn" title="Adicionar Nova Regra">
+                <i class="bi bi-plus-circle me-2"></i>Nova Regra
+            </a>
+        </div>
+    </div>
+
+    <!-- Toolbar / Search Area -->
+    <div class="m-3 border-bottom pb-3">
+        <h5>Filtros</h5>
+
+        <div class="row g-2 align-items-end mb-5">
+            <div class="col-md-2">
+                <label class="form-label">Tipo</label>
+                <select name="filter_type" id="filter_type" class="form-select form-select-sm">
+                    <option selected value="nome">Nome</option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <label class="form-label">Valor</label>
+                <input type="text" id="filter_value" class="form-control form-control-sm">
+            </div>
+
+            <div class="col-md-1 mt-2 form-check form-switch d-inline-flex">
+                <input class="form-check-input" type="checkbox" id="filter_active" checked="on">
+                <label class="form-check-label ms-1" for="filter_active">
+                    Ativo
+                </label>
+            </div>
+
+            <div class="col-md-2 d-flex">
+                <button class="text-decoration-none btn-modern" id="filter_btn">
+                    <i class="bi bi-search"></i> Filtrar
+                </button>
+                <button class="text-decoration-none btn-modern ms-2" id="clear_filter_btn">
+                    <i class="bi bi-x-circle"></i> Limpar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <table id="table-regras-pagamento" class="table table-responsive">
+        <thead class="table align-middle">
+            <tr>
+                <th class="text-center">Nome</th>
+                <th class="text-center">Tipo</th>
+                <th class="text-center">Valor Base</th>
+                <th class="text-center">Inicio</th>
+                <th class="text-center">Ativa</th>
+                <th class="text-center">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</main>
+
+{% include "partials/modal_regra_pagamento.html" %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/financeiro/regra_pagamento.js' %}"></script>
+{% endblock %}

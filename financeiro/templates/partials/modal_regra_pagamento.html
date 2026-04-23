@@ -1,0 +1,48 @@
+<div class="modal modal-lg fade" id="regraPagamentoModal" tabindex="-2" aria-labelledby="regraPagamentoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="regraPagamentoModalLabel">Nova Regra de Pagamento</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="regraPagamentoForm">
+                    <input type="hidden" id="id_regra" name="id_regra">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="nome_regra" class="form-label">Nome</label>
+                            <input type="text" class="form-control form-control-sm" id="nome_regra" name="nome_regra" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="tipo_regra" class="form-label">Tipo</label>
+                            <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Por Hora: <small>Considera as horas cumpridas</small><br>Por Plantão: <small>Valor Fixo</small>">
+                                <a class="bi bi-question-circle text-decoration-none" type="button" disabled></a>
+                            </span>
+                            <select class="form-select form-select-sm" id="tipo_regra" name="tipo_regra" required>
+                                <option value="">Selecione o tipo</option>
+                                <option value="HORA">Por Hora (Considera as horas cumpridas)</option>
+                                <option value="PLANTAO">Por Plantão (Valor Fixo)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label for="valor_base" class="form-label">Valor Base</label>
+                            <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Valor a ser pago por hora cumprida ou fixo por plantão">
+                                <a class="bi bi-question-circle text-decoration-none" type="button" disabled></a>
+                            </span>
+                            <input type="number" class="form-control form-control-sm" id="valor_base" name="valor_base" step="0.01" min="0" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="data_fim" class="form-label">Data de Fim (Opcional)</label>
+                            <input type="date" class="form-control form-control-sm" id="data_fim" name="data_fim">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveRegraPagamentoBtn" class="btn-modern"><i class="bi bi-floppy"></i>Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -39,6 +39,22 @@
         <li><a href="{% url 'plantoes_admin' %}"><i class="bi-calendar-check"></i> Plantões</a></li>
       </ul>
     </li>
+    <li class="menu-item has-submenu">
+      <a href="#">
+        <i class="bi bi-cash-coin"></i>
+        <span class="menu-label">Financeiro</span>
+        <i class="bi bi-chevron-down arrow"></i>
+      </a>
+      <ul class="submenu">
+        <li><a href="{% url 'regra_pagamento' %}"><i class="bi bi-coin"></i> Regras de Pagamento</a></li>
+      </ul>
+      <ul class="submenu">
+        <li><a href="{% url 'pagamento' %}"><i class="bi bi-cash-stack"></i> Pagamentos</a></li>
+      </ul>
+      <ul class="submenu">
+        <li><a href="{% url 'relatorio' %}"><i class="bi bi-receipt"></i> Relatórios</a></li>
+      </ul>
+    </li>
     {% endif %}
   </ul>
 

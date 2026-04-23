@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
     modal_buscar_cuidadora = new bootstrap.Modal(document.getElementById('modal_buscar_cuidadora'));
     modal_buscar_paciente = new bootstrap.Modal(document.getElementById('modal_buscar_paciente'));
     modalEditarPlantao = new bootstrap.Modal(document.getElementById('modalEditarPlantao'));
+    buscarRegraPagamento();
 
     document.addEventListener("mousedown", () => {
         isDraggingGlobal = false;
@@ -225,6 +226,7 @@ function criarPlantoesLote() {
     const cuidadora = document.getElementById("cuidadora_id").value;
     const inicio = document.getElementById("hora_inicio").value;
     const fim = document.getElementById("hora_fim").value;
+    const regra_pagamento = document.getElementById("select_regra").value;
 
     if (!paciente || !cuidadora) {
         showToast("Selecione paciente e cuidadora", "danger");
@@ -238,6 +240,11 @@ function criarPlantoesLote() {
 
     if (inicio === fim) {
         showToast("Hora início e fim não podem ser iguais", "danger");
+        return;
+    }
+
+    if (!regra_pagamento) {
+        showToast("Selecione uma regra de pagamento", "danger");
         return;
     }
 
@@ -255,6 +262,7 @@ function criarPlantoesLote() {
             fim: `${dataFim}T${fim}:00`,
             paciente: paciente,
             cuidadora: cuidadora,
+            regra_pagamento: regra_pagamento,
         };
     });
 
@@ -332,7 +340,9 @@ function renderPlantoesNoCalendario(plantoes = []) {
                 cuidadora: p.cuidadora_nome,
                 cuidadora_id: p.cuidadora,
                 status: p.status,
-                titulo: titulo
+                titulo: titulo,
+                regra_pagamento: p.regra_pagamento,
+                horas_cumpridas: p.horas_cumpridas
             }
         };
     });
@@ -379,6 +389,12 @@ function abrirModalEditarPlantao(event) {
     document.getElementById("edit_fim").value =
         fim.toTimeString().slice(0, 5);
 
+    document.getElementById("edit_cuidadora_nome").value = event.extendedProps.cuidadora;
+    document.getElementById("edit_cuidadora").value = event.extendedProps.cuidadora_id;
+
+    document.getElementById("edit_regra_pagamento").value = event.extendedProps.regra_pagamento;
+    document.getElementById("edit_horas_cumpridas").value = event.extendedProps.horas_cumpridas;
+
     modalEditarPlantao.show();
 }
 
@@ -388,6 +404,8 @@ function patchPlantao() {
     const fim = document.getElementById("edit_fim").value;
     const status = document.getElementById("edit_status").value;
     const cuidadora = document.getElementById("edit_cuidadora").value;
+    const regra_pagamento = document.getElementById("edit_regra_pagamento").value;
+    const horas_cumpridas = document.getElementById("edit_horas_cumpridas").value;
 
     const event = calendar.getEventById(id);
 
@@ -406,7 +424,9 @@ function patchPlantao() {
         inicio: `${dataInicio}T${inicio}:00`,
         fim: `${dataFim}T${fim}:00`,
         cuidadora: cuidadora,
-        status: status
+        status: status,
+        regra_pagamento: regra_pagamento,
+        horas_cumpridas: horas_cumpridas
     };
 
     saveData(`/api/plantao/${id}/`, payload, () => {
@@ -607,4 +627,38 @@ function exportarEscalaProfissional(plantoes) {
     }
 
     pdf.save(`escala_${pacienteNome}.pdf`);
+}
+
+// ###################################
+// ########### ESCALAS #############
+// ###################################
+
+function buscarRegraPagamento() {
+    getData("/api/regra-pagamento/", (data) => {
+        renderRegrasPagamentoSelect(data.results)
+    })
+}
+
+function renderRegrasPagamentoSelect(regras) {
+    const select = document.getElementById("select_regra");
+
+    select.innerHTML = "<option value=''>Selecione uma regra de pagamento</option>";
+
+    regras.forEach(regra => {
+        const option = document.createElement("option");
+        option.value = regra.id;
+        option.textContent = `${regra.nome} (${Number(regra.valor_base).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })})`;
+        select.appendChild(option);
+    });
+
+    const selectEdit = document.getElementById("edit_regra_pagamento");
+
+    selectEdit.innerHTML = "<option value=''>Selecione uma regra de pagamento</option>";
+
+    regras.forEach(regra => {
+        const option = document.createElement("option");
+        option.value = regra.id;
+        option.textContent = `${regra.nome} (${Number(regra.valor_base).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })})`;
+        selectEdit.appendChild(option);
+    });
 }

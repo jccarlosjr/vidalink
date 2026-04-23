@@ -5,7 +5,12 @@ from . import views
 router = DefaultRouter()
 router.register(r'api/pagamento', views.PagamentoViewSet)
 router.register(r'api/relatorio', views.RelatorioViewSet)
-router.register(r'api/faixa-pagamento', views.FaixaPagamentoViewSet)
 router.register(r'api/regra-pagamento', views.RegraPagamentoViewSet)
 
-urlpatterns = router.urls
+urlpatterns = [
+    path('regras-de-pagamento/', views.RegraPagamentoView.as_view(), name='regra_pagamento'),
+    path('pagamentos/', views.PagamentoView.as_view(), name='pagamento'),
+    path('relatorios/', views.RelatorioView.as_view(), name='relatorio'),
+]
+
+urlpatterns += router.urls
