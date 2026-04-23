@@ -4,6 +4,13 @@ from django.db import transaction
 from plantao.models import Plantao
 from financeiro.models import Pagamento
 from plantao.services import PlantaoValidator
+from django.utils import timezone
+
+
+def get_internal_code(relatorio, tipo):
+    relatorio_id = str(relatorio.id).zfill(5)
+    data = timezone.now().strftime("%d%m%Y")
+    return f"{tipo}-{data}-{relatorio_id}"
 
 
 @receiver(pre_save, sender=Plantao)

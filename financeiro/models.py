@@ -36,11 +36,12 @@ class Relatorio(models.Model):
     valor_liquido = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     fechado_em = models.DateTimeField(null=True, blank=True)
     observacoes = models.TextField(blank=True)
+    codigo_interno = models.CharField(max_length=20, unique=True, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.cuidadora} ({self.periodo_inicio} - {self.periodo_fim})"
+        return self.codigo_interno
 
 
 class Pagamento(models.Model):
@@ -49,11 +50,13 @@ class Pagamento(models.Model):
         PAGO = "PAGO", "Pago"
         CANCELADO = "CANCELADO", "Cancelado"
 
-    plantao = models.ForeignKey("plantao.Plantao", on_delete=models.PROTECT, related_name="pagamentos")
+    relatorio = models.ForeignKey(Relatorio, on_delete=models.PROTECT, related_name="pagamentos", null=True, blank=True)
+    plantao = models.ForeignKey("plantao.Plantao", on_delete=models.PROTECT, related_name="pagamentos", null=True, blank=True)
     valor_calculado = models.DecimalField(max_digits=10, decimal_places=2)
     valor_pago = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     data_pagamento = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=20, choices=StatusPagamento.choices, default=StatusPagamento.PENDENTE)
+    codigo_interno = models.CharField(max_length=20, unique=True, null=True, blank=True)
 
     def __str__(self):
         return f"Pagamento #{self.id}"
