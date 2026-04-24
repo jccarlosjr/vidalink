@@ -16,6 +16,7 @@ STATUS_CHOICES = (
 
 
 class Plantao(models.Model):
+    codigo_interno = models.CharField(max_length=20, null=True, blank=True)
     data = models.DateField()
     inicio = models.DateTimeField()
     fim = models.DateTimeField()
@@ -32,7 +33,7 @@ class Plantao(models.Model):
     regra_pagamento = models.ForeignKey("financeiro.RegraPagamento", on_delete=models.PROTECT, null=True, blank=True)
 
     def __str__(self):
-        return self.escala.codigo_interno
+        return self.codigo_interno
 
     @property
     def horas_cumpridas_formatadas(self):

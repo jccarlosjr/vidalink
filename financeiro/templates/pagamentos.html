@@ -60,12 +60,23 @@
         </div>
     </div>
 
-
-
-    <table id="table-pagamentos" class="table table-responsive">
+    <table class="table table-responsive">
+        <thead>
+            <tr class="text-center">
+                <th>Código Interno</th>
+                <th>Plantão</th>
+                <th>Regra Pagamento</th>
+                <th>Status</th>
+                <th>Valor</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="table-pagamentos">
+        </tbody>
     </table>
 </main>
 {% endblock %}
 
 {% block scripts %}
+<script src="{% static 'js/financeiro/pagamentos.js' %}"></script>
 {% endblock %}

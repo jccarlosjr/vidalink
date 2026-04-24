@@ -108,8 +108,9 @@ function renderPlantoes(plantoes) {
                                     data-plantao='${JSON.stringify(plantao)}'
                                     onclick="openEditPlantaoModal(this)"
                                     >
-                                    <i class="bi bi-gear"></i> Editar
+                                    <i class="bi bi-gear"></i>
                                 </button>
+                                <small class="badge bg-primary-subtle text-primary-emphasis small fw-bold">${plantao.codigo_interno}</small>
                             </div>
                             <div>
                                 <span class="badge text-center gap-1 ${badgeColor}">

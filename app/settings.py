@@ -40,10 +40,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'paciente',
     'escala.apps.EscalaConfig',
-    'plantao',
+    'plantao.apps.PlantaoConfig',
     'cuidadora',
     'registro',
-    'financeiro',
+    'financeiro.apps.FinanceiroConfig',
 ]
 
 MIDDLEWARE = [

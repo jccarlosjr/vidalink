@@ -7,10 +7,10 @@ from plantao.services import PlantaoValidator
 from django.utils import timezone
 
 
-def get_internal_code(relatorio, tipo):
-    relatorio_id = str(relatorio.id).zfill(5)
+def get_internal_code(plantao, tipo):
+    plantao_id = str(plantao.id).zfill(5)
     data = timezone.now().strftime("%d%m%Y")
-    return f"{tipo}-{data}-{relatorio_id}"
+    return f"{tipo}-{data}-{plantao_id}"
 
 
 @receiver(pre_save, sender=Plantao)
@@ -45,3 +45,12 @@ def criar_pagamento_se_finalizado(sender, instance, **kwargs):
                 plantao=instance,
                 valor_calculado=valor
             )
+
+@receiver(post_save, sender=Plantao)
+def gerar_codigo_interno(sender, instance, created, **kwargs):
+    if created:
+        instance.codigo_interno = get_internal_code(instance, "PLT")
+
+        Plantao.objects.filter(id=instance.id).update(
+            codigo_interno=instance.codigo_interno
+        )

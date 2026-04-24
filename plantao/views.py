@@ -25,6 +25,13 @@ def expirar_plantoes():
     ).exclude(status='E').exclude(status='F').update(status='E')
 
 
+def get_internal_code(tipo, id):
+    plantao_id = str(id).zfill(5)
+    data = timezone.now().strftime("%d%m%Y")
+    return f"{tipo}-{data}-{plantao_id}"
+
+
+
 class PlantaoListView(LoginRequiredMixin, TemplateView):
     template_name = "plantao_list.html"
 
@@ -181,7 +188,12 @@ class PlantaoViewSet(ModelViewSet):
                         escala=escala
                     ))
 
-                Plantao.objects.bulk_create(objs)
+                created = Plantao.objects.bulk_create(objs)
+
+                for obj in created:
+                    obj.codigo_interno = get_internal_code("PLT", obj.id)
+
+                Plantao.objects.bulk_update(created, ["codigo_interno"])
 
             return Response({"status": "plantoes criados"})
 

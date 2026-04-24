@@ -70,6 +70,7 @@ function renderPlantoes(plantoes) {
                     <div class="card plantao-card shadow-lg">
                         <div class="card-header d-flex justify-content-between">
                             <div>
+                                <small class="badge bg-primary-subtle text-primary-emphasis small fw-bold">${plantao.codigo_interno}</small>
                             </div>
                             <div>
                                 <span class="badge text-center gap-1 ${badgeColor}">
