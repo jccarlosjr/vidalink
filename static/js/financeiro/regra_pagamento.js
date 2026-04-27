@@ -40,9 +40,9 @@ async function loadRegraPagamento() {
 
 
 function renderRegraPagamento(data) {
-    const table = document.getElementById("table-regras-pagamento")
-    const tbody = table.getElementsByTagName("tbody")[0]
-    tbody.innerHTML = ""
+    const container = document.getElementById('table-regras-pagamento')
+    container.innerHTML = ""
+
     data.forEach(regra => {
         let btn_active, icon_btn
 
@@ -54,18 +54,46 @@ function renderRegraPagamento(data) {
             icon_btn = "<i class='bi bi-check-circle'></i>"
         }
 
-        const row = tbody.insertRow()
-        row.classList.add("text-center")
-        row.dataset.regra = JSON.stringify(regra)
-        row.insertCell().innerText = regra.nome
-        row.insertCell().innerText = regra.tipo_name
-        row.insertCell().innerText = Number(regra.valor_base).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-        row.insertCell().innerText = new Date(regra.data_inicio).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
-        row.insertCell().innerText = regra.ativa ? "Ativo" : "Inativo"
-        row.insertCell().innerHTML = `
-            <button class="btn-modern btn-sm" title="Editar" onclick="abrirEditRegraPagamentoModal(this)"><i class="bi bi-pencil-square"></i></button>
-            <button class="btn-modern btn-sm" title="${btn_active}" onclick="toggleActive(${regra.id})">${icon_btn}</button>
-            `
+        const linha = document.createElement("div")
+        linha.className = "card p-2 mb-2 ms-2 me-2 shadow-sm"
+        linha.innerHTML = `
+            <div class="row g-2 align-items-center">
+                <div class="col-6 col-md">
+                    <label class="small fw-bold">Nome</label>
+                    <span class="small d-block">${regra.nome}</span>
+                </div>
+                <div class="col-6 col-md">
+                    <label class="small fw-bold">Tipo</label>
+                    <span class="small d-block">${regra.tipo_name}</span>
+                </div>
+                <div class="col-6 col-md">
+                    <label class="small fw-bold">Valor Base</label>
+                    <span class="small d-block">
+                        ${Number(regra.valor_base).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                    </span>
+                </div>
+                <div class="col-6 col-md">
+                    <label class="small fw-bold">Inicio</label>
+                    <span class="small d-block">${new Date(regra.data_inicio).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
+                </div>
+                <div class="col-6 col-md">
+                    <label class="small fw-bold">Ativa</label>
+                    <span class="small d-block">${regra.ativa ? "Ativo" : "Inativo"}</span>
+                </div>
+                <div class="col-12 col-md-auto text-md-end mt-2 mt-md-0">
+                    <a href="#" class="text-decoration-none btn-modern btn-sm me-1" id="editarRegraPagamentoBtn">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <a href="#" class="text-decoration-none btn-modern btn-sm" title=${btn_active} id="inativarRegraPagamentoBtn">
+                        ${icon_btn}
+                    </a>
+                </div>
+            </div>
+        `
+        container.appendChild(linha)
+        linha.dataset.regra = JSON.stringify(regra)
+        linha.querySelector("#editarRegraPagamentoBtn").addEventListener("click", () => abrirEditRegraPagamentoModal(linha))
+        linha.querySelector("#inativarRegraPagamentoBtn").addEventListener("click", () => toggleActive(regra.id))
     });
 }
 
@@ -91,8 +119,8 @@ function abrirNovaRegraPagamentoModal() {
 }
 
 
-function abrirEditRegraPagamentoModal(button) {
-    const regra = JSON.parse(button.closest("tr").dataset.regra)
+function abrirEditRegraPagamentoModal(regra) {
+    regra = JSON.parse(regra.dataset.regra)
     document.getElementById("regraPagamentoModalLabel").innerText = "Editar Regra de Pagamento"
     document.getElementById("id_regra").value = regra.id
     document.getElementById("nome_regra").value = regra.nome

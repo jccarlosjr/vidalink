@@ -1,6 +1,8 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField, PrimaryKeyRelatedField
 from .models import Pagamento, Relatorio, RegraPagamento
 from plantao.models import Plantao
+from paciente.models import Paciente
+from cuidadora.models import Cuidadora
 
 
 class RegraPagamentoSerializer(ModelSerializer):
@@ -14,12 +16,27 @@ class RegraPagamentoSerializer(ModelSerializer):
         fields = "__all__"
 
 
+class PacienteMinSerializer(ModelSerializer):
+    class Meta:
+        model = Paciente
+        fields = ['id', 'nome']
+
+
+class CuidadoraMinSerializer(ModelSerializer):
+    class Meta:
+        model = Cuidadora
+        fields = ['id', 'nome']
+
+
 class PlantaoMinSerializer(ModelSerializer):
     regra_pagamento_detalhe = RegraPagamentoSerializer(source="regra_pagamento", read_only=True)
+    paciente_detalhe = PacienteMinSerializer(source="paciente", read_only=True)
+    cuidadora_detalhe = CuidadoraMinSerializer(source="cuidadora", read_only=True)
+
 
     class Meta:
         model = Plantao
-        fields = '__all__'
+        fields = ['id', 'codigo_interno', 'regra_pagamento', 'regra_pagamento_detalhe', 'paciente_detalhe', 'cuidadora_detalhe']
 
 
 class PagamentoSerializer(ModelSerializer):

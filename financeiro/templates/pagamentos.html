@@ -30,7 +30,6 @@
                 <label class="form-label" for="data_fim">Fim do Plantão</label>
                 <input type="date" id="data_fim" class="form-control form-control-sm">
             </div>
-
         </div>
 
         <div class="row g-2 align-items-end mb-3">
@@ -60,21 +59,10 @@
         </div>
     </div>
 
-    <table class="table table-responsive">
-        <thead>
-            <tr class="text-center">
-                <th>Código Interno</th>
-                <th>Plantão</th>
-                <th>Regra Pagamento</th>
-                <th>Status</th>
-                <th>Valor</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody id="table-pagamentos">
-        </tbody>
-    </table>
+    <div id="table-pagamentos">
+    </div>
 </main>
+{% include 'partials/modal_pagamentos.html' %}
 {% endblock %}
 
 {% block scripts %}

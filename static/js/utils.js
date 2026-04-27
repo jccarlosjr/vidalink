@@ -161,6 +161,12 @@ document.querySelectorAll('.numbers-only').forEach(input => {
     });
 });
 
+document.querySelectorAll('.currency').forEach(input => {
+    input.addEventListener('input', function () {
+        floatFormat(this);
+    });
+});
+
 document.querySelectorAll(".cpf-mask").forEach(input => {
     input.addEventListener("input", function () {
         this.value = maskCPF(this.value);
