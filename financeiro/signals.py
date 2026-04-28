@@ -1,7 +1,8 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.utils import timezone
 from .models import Relatorio, Pagamento
+from rest_framework import serializers
 
 
 def get_internal_code(relatorio, tipo):
@@ -30,3 +31,19 @@ def gerar_codigo_interno(sender, instance, created, **kwargs):
             Pagamento.objects.filter(id=instance.id).update(
                 codigo_interno=instance.codigo_interno
             )
+
+
+@receiver(pre_save, sender=Pagamento)
+def validar_pagamento(sender, instance, **kwargs):
+    if instance.plantao.status != 'F':
+        raise serializers.ValidationError({"erro": "Não é possível criar pagamento para plantão não finalizado"})
+
+
+@receiver(pre_save, sender=Pagamento)
+def has_pagamento(sender, instance, **kwargs):
+    if instance.id:
+        return
+    if Pagamento.objects.filter(plantao=instance.plantao).exists():
+        raise serializers.ValidationError({"erro": "Já existe um pagamento para o plantão selecionado"})
+
+    

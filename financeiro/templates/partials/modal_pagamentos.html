@@ -7,32 +7,36 @@
             </div>
             <div class="modal-body">
                 <form id="pagamentoForm">
+                    <input type="hidden" id="pagamento_id_modal_pagamentos">
                     <div class="row">
                         <div class="col-md-12">
                             <label for="" class="label">Plantão</label>
+                            <input type="hidden" id="plantao_id_modal_pagamentos">
                             <div class="col-md-12 d-flex">
-                                <input type="text" class="form-control form-control-sm" placeholder="Selecione o Plantão ->" reandonly><button type="button" class="btn-modern btn-sm" id="abrirSearchPlantao"><i class="bi bi-search"></i></button>
+                                <input id="plantao_codigo_modal_pagamentos" type="text" class="form-control form-control-sm" placeholder="Selecione o Plantão ->" reandonly><button type="button" class="btn-modern btn-sm" id="abrirSearchPlantao"><i class="bi bi-search"></i></button>
                             </div>
                         </div>
 
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <label for="" class="label">Paciente</label>
+                            <input type="hidden" id="paciente_id_modal_pagamentos">
                             <div class="col-md-12">
-                                <input type="text" class="form-control form-control-sm" reandonly>
+                                <input id="paciente_nome_modal_pagamentos" type="text" class="form-control form-control-sm" reandonly>
                             </div>
                         </div>
 
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <label for="" class="label">Cuidador(a)</label>
+                            <input type="hidden" id="cuidadora_id_modal_pagamentos">
                             <div class="col-md-12">
-                                <input type="text" class="form-control form-control-sm" reandonly>
+                                <input id="cuidadora_nome_modal_pagamentos" type="text" class="form-control form-control-sm" reandonly>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <label for="" class="label">Regra</label>
                             <div class="col-md-12">
-                                <select name="" id="" class="form-select form-select-sm">
+                                <select id="regra_pagamento_id_modal_pagamentos" class="form-select form-select-sm">
                                     <option value=""></option>
                                 </select>
                             </div>
@@ -41,15 +45,15 @@
                         <div class="col-md-4">
                             <label for="" class="label">Valor Calculado</label>
                             <div class="col-md-12">
-                                <input type="text" class="form-control form-control-sm currency">
+                                <input id="valor_calculado_modal_pagamentos" type="text" class="form-control form-control-sm currency">
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <label for="" class="label">Status</label>
                             <div class="col-md-12">
-                                <select name="" id="" class="form-select form-select-sm">
-                                    <option value="PENDENTE">Pendente</option>
+                                <select id="status_modal_pagamentos" class="form-select form-select-sm">
+                                    <option selected value="PENDENTE">Pendente</option>
                                     <option value="PAGO">Pago</option>
                                     <option value="CANCELADO">Cancelado</option>
                                 </select>
@@ -66,7 +70,7 @@
 </div>
 
 
-<div class="modal modal-lg fade" id="searchPlantaoModal" tabindex="-2" aria-labelledby="searchPlantaoModalLabel" aria-hidden="true">
+<div class="modal modal-xl fade" id="searchPlantaoModal" tabindex="-2" aria-labelledby="searchPlantaoModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -76,35 +80,36 @@
             <div class="modal-body">
                 <div class="row mb-4">
                     <div class="col-md-4">
-                        <label class="form-label" for="data_inicio">Início do Plantão</label>
-                        <input type="date" id="data_inicio" class="form-control form-control-sm">
+                        <label class="form-label" for="data_inicio_plantao">Início do Plantão</label>
+                        <input type="date" id="data_inicio_plantao" class="form-control form-control-sm">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label" for="data_fim">Fim do Plantão</label>
-                        <input type="date" id="data_fim" class="form-control form-control-sm">
+                        <label class="form-label" for="data_fim_plantao">Fim do Plantão</label>
+                        <input type="date" id="data_fim_plantao" class="form-control form-control-sm">
                     </div>
                 </div>
                 <div class="row g-2 align-items-end mb-3">
                     <div class="col-md-4">
-                        <label class="form-label" for="filter_type">Tipo</label>
-                        <select name="filter_type" id="filter_type" class="form-select form-select-sm">
-                            <option selected value="cuidador__nome">Nome (Cuidador(a))</option>
-                            <option value="cuidador__cpf">CPF (Cuidador(a))</option>
-                            <option value="cuidador__cnpj">CNPJ (Cuidador(a))</option>
+                        <label class="form-label" for="filter_type_plantao">Tipo</label>
+                        <select name="filter_type_plantao" id="filter_type_plantao" class="form-select form-select-sm">
+                            <option selected value="codigo_interno">Código Interno (Plantão)</option>
+                            <option value="cuidadora__nome">Nome (Cuidador(a))</option>
+                            <option value="cuidadora__cpf">CPF (Cuidador(a))</option>
+                            <option value="cuidadora__cnpj">CNPJ (Cuidador(a))</option>
                             <option value="paciente__nome">Nome (Paciente)</option>
                             <option value="paciente__cpf">CPF (Paciente)</option>
                         </select>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Valor</label>
-                        <input type="text" id="filter_value" class="form-control form-control-sm">
+                        <input type="text" id="filter_value_plantao" class="form-control form-control-sm">
                     </div>
 
                     <div class="col-md-4 d-flex align-items-end">
-                        <button class="text-decoration-none btn-modern" id="filter_btn">
+                        <button class="text-decoration-none btn-modern" id="filter_btn_plantao">
                             <i class="bi bi-search"></i> Filtrar
                         </button>
-                        <button class="text-decoration-none btn-modern ms-2" id="clear_filter_btn">
+                        <button class="text-decoration-none btn-modern ms-2" id="clear_filter_btn_plantao">
                             <i class="bi bi-x-circle"></i> Limpar
                         </button>
                     </div>

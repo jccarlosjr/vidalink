@@ -438,7 +438,7 @@ function renderPlantoes(plantoes) {
 
                         <div class="d-flex justify-content-between align-items-start mb-2">
                             <span class="badge plantao-badge">
-                                ${plantao.escala_codigo_interno || 'Sem código'}
+                                ${plantao.codigo_interno || 'Sem código'}
                             </span>
                             <span class="badge d-flex align-items-center gap-1 ${bgcolor}">
                                 ${plantao.status_name}

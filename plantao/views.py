@@ -79,6 +79,9 @@ class PlantaoViewSet(ModelViewSet):
         filter_type = self.request.query_params.get('filter_type', None)
         filter_value = self.request.query_params.get('filter_value', None)
 
+        if self.request.query_params.get("status"):
+            plantaoes = plantaoes.filter(status=self.request.query_params.get("status"))
+
         if filter_type and filter_value:
             plantaoes = plantaoes.filter(**{filter_type + "__icontains": filter_value})
 
