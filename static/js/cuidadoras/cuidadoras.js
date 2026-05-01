@@ -378,16 +378,6 @@ function renderCuidadoras(cuidadoras) {
                     </div>
 
                 </div>
-                <div class="card-footer small">
-                    <small class="text-body fw-bold ms-2">
-                        <a href="${mapsUrl}" target="_blank" class="text-decoration-none">
-                            <i class="bi bi-geo-alt-fill text-primary border rounded btn-modern btn-sm"></i>
-                        </a>
-                        ${cuidadora.endereco || ''}, ${cuidadora.numero || ''}, ${cuidadora.bairro || ''}
-                        ${cuidadora.cep || ''} - ${cuidadora.cidade || ''}-${cuidadora.estado || ''} ${cuidadora.complemento ? ', ' + cuidadora.complemento : ''}</p>
-                    </small>
-                </div>
-
             </div>
         </div>
         `

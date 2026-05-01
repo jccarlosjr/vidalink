@@ -32,11 +32,20 @@ class PlantaoMinSerializer(ModelSerializer):
     regra_pagamento_detalhe = RegraPagamentoSerializer(source="regra_pagamento", read_only=True)
     paciente_detalhe = PacienteMinSerializer(source="paciente", read_only=True)
     cuidadora_detalhe = CuidadoraMinSerializer(source="cuidadora", read_only=True)
+    status_name = SerializerMethodField()
+
+    def get_status_name(self, obj):
+        return obj.get_status_display()
 
 
     class Meta:
         model = Plantao
-        fields = ['id', 'codigo_interno', 'regra_pagamento', 'regra_pagamento_detalhe', 'paciente_detalhe', 'cuidadora_detalhe']
+        fields = [
+            'id', 'codigo_interno', 'regra_pagamento', 
+            'regra_pagamento_detalhe', 'paciente_detalhe', 
+            'cuidadora_detalhe', 'status_name', 'status',
+            'horas', 'horas_cumpridas', 'inicio', 'fim',
+            ]
 
 
 class PagamentoSerializer(ModelSerializer):

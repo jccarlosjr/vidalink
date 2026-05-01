@@ -27,10 +27,8 @@ class Relatorio(models.Model):
         PAGO = "PAGO", "Pago"
 
     cuidadora = models.ForeignKey(Cuidadora, on_delete=models.PROTECT, related_name="relatorios")
-    paciente = models.ForeignKey(Paciente, on_delete=models.PROTECT, related_name="relatorios", null=True, blank=True)
-    periodo_inicio = models.DateField()
-    periodo_fim = models.DateField()
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.ABERTO)
+    data_referencia = models.DateField(null=True, blank=True)
     valor_total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     deducoes = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     valor_liquido = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)

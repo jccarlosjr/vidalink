@@ -1,10 +1,13 @@
 let pagamentoModal;
 let searchPlantaoModal;
+let plantaoDetailsModal;
 
 document.addEventListener("DOMContentLoaded", () => {
-    loadPagamento()
-    pagamentoModal = new bootstrap.Modal(document.getElementById('pagamentoModal'))
-    searchPlantaoModal = new bootstrap.Modal(document.getElementById('searchPlantaoModal'))
+    loadPagamento();
+    getRegraPagamentos();
+    pagamentoModal = new bootstrap.Modal(document.getElementById('pagamentoModal'));
+    searchPlantaoModal = new bootstrap.Modal(document.getElementById('searchPlantaoModal'));
+    plantaoDetailsModal = new bootstrap.Modal(document.getElementById('plantaoDetailsModal'));
 })
 
 document.getElementById("novoPagamentoBtn").addEventListener("click", () => {
@@ -23,11 +26,28 @@ document.getElementById("clear_filter_btn_plantao").addEventListener("click", ()
     clearFilterPlantao()
 })
 
+document.getElementById("filter_btn").addEventListener("click", () => {
+    loadPagamento()
+})
+
+document.getElementById("clear_filter_btn").addEventListener("click", () => {
+    clearFilterPagamento()
+})
+
 
 document.getElementById("savePagamentoBtn").addEventListener("click", () => {
     savePagamento()
 })
 
+
+function clearFilterPagamento() {
+    document.getElementById("filter_type").value = "codigo_interno"
+    document.getElementById("filter_value").value = ""
+    document.getElementById("data_inicio").value = ""
+    document.getElementById("data_fim").value = ""
+
+    loadPagamento()
+}
 
 // ###############################
 // ######### PAGAMENTOS ##########
@@ -37,11 +57,22 @@ document.getElementById("savePagamentoBtn").addEventListener("click", () => {
 async function loadPagamento() {
     let filterField = document.getElementById("filter_type").value;
     let filterValue = document.getElementById("filter_value").value.trim();
+    let dataInicio = document.getElementById("data_inicio").value;
+    let dataFim = document.getElementById("data_fim").value;
+
     const params = new URLSearchParams()
 
     if (filterValue) {
         params.append("filter_type", filterField);
         params.append("filter_value", filterValue);
+    }
+
+    if (dataInicio) {
+        params.append("data_inicio", dataInicio);
+    }
+
+    if (dataFim) {
+        params.append("data_fim", dataFim);
     }
 
     getData(`/api/pagamento/?${params.toString()}`, (data) => {
@@ -62,40 +93,43 @@ function renderPagamentos(pagamentos) {
             <div class="row g-2 align-items-center">
 
                 <div class="col-4 col-md">
-                    <label class="small fw-bold">Código Interno</label>
-                    <span class="small d-block">${pagamento.codigo_interno}</span>
+                    <label class="fw-bold">Código Interno</label>
+                    <span class="small text-muted d-block">${pagamento.codigo_interno}</span>
                 </div>
 
                 <div class="col-4 col-md">
-                    <label class="small fw-bold">Plantão</label>
-                    <span class="small d-block">${pagamento.plantao_detalhe.codigo_interno}</span>
+                    <label class="fw-bold">Plantão</label>
+                    <span class="small text-muted d-block">${pagamento.plantao_detalhe.codigo_interno}</span>
                 </div>
 
                 <div class="col-4 col-md">
-                    <label class="small fw-bold">Regra</label>
-                    <span class="small d-block">${pagamento.plantao_detalhe.regra_pagamento_detalhe.nome}</span>
+                    <label class="fw-bold">Regra</label>
+                    <span class="small text-muted d-block">${pagamento.plantao_detalhe.regra_pagamento_detalhe.nome}</span>
                 </div>
                 <div class="col-6 col-md">
-                    <label class="small fw-bold">Cuidador(a)</label>
-                    <span class="small d-block">${pagamento.plantao_detalhe.cuidadora_detalhe.nome}</span>
+                    <label class="fw-bold">Cuidador(a)</label>
+                    <span class="small text-muted d-block">${pagamento.plantao_detalhe.cuidadora_detalhe.nome}</span>
                 </div>
                 <div class="col-6 col-md">
-                    <label class="small fw-bold">Paciente</label>
-                    <span class="small d-block">${pagamento.plantao_detalhe.paciente_detalhe.nome}</span>
+                    <label class="fw-bold">Paciente</label>
+                    <span class="small text-muted d-block">${pagamento.plantao_detalhe.paciente_detalhe.nome}</span>
                 </div>
                 <div class="col-4 col-md">
-                    <label class="small fw-bold">Status</label>
-                    <span class="small d-block">${pagamento.status_name}</span>
+                    <label class="fw-bold">Status</label>
+                    <span class="small text-muted d-block">${pagamento.status_name}</span>
                 </div>
 
                 <div class="col-4 col-md">
-                    <label class="small fw-bold">Valor</label>
-                    <span class="small d-block">
+                    <label class="fw-bold">Valor</label>
+                    <span class="small text-muted d-block">
                         ${Number(pagamento.valor_calculado).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                     </span>
                 </div>
 
                 <div class="col-2 col-md-auto text-md-end mt-2 mt-md-0">
+                    <a href="#" class="text-decoration-none btn-modern btn-sm me-1" data-plantao='${JSON.stringify(pagamento.plantao_detalhe)}' onclick="abrirDetalhesPlantaoModal(this)">
+                        <i class="bi bi-eye"></i>
+                    </a>
                     <a href="#" class="text-decoration-none btn-modern btn-sm me-1" data-pagamento='${JSON.stringify(pagamento)}' onclick="abrirEditarPagamentoModal(this)">
                         <i class="bi bi-pencil"></i>
                     </a>
@@ -116,6 +150,7 @@ function savePagamento() {
     let plantaoId = document.getElementById("plantao_id_modal_pagamentos").value
     let valor_calculado = document.getElementById("valor_calculado_modal_pagamentos").value
     let status = document.getElementById("status_modal_pagamentos").value
+    let regraPagamentoId = document.getElementById("regra_pagamento_id_modal_pagamentos").value
 
     const url = pagamentoId ? `/api/pagamento/${pagamentoId}/` : `/api/pagamento/`
 
@@ -133,6 +168,7 @@ function savePagamento() {
         plantao: plantaoId,
         valor_calculado: valor_calculado,
         status: status,
+        regra_pagamento: regraPagamentoId,
     }
 
     if (pagamentoId) {
@@ -149,7 +185,7 @@ function savePagamento() {
 }
 
 
-function abrirNovoPagamentoModal() {
+async function abrirNovoPagamentoModal() {
     document.getElementById("pagamento_id_modal_pagamentos").value = ""
     document.getElementById("plantao_codigo_modal_pagamentos").value = ""
     document.getElementById("plantao_id_modal_pagamentos").value = ""
@@ -157,15 +193,14 @@ function abrirNovoPagamentoModal() {
     document.getElementById("cuidadora_nome_modal_pagamentos").value = ""
     document.getElementById("paciente_id_modal_pagamentos").value = ""
     document.getElementById("paciente_nome_modal_pagamentos").value = ""
+    document.getElementById("regra_pagamento_id_modal_pagamentos").value = ""
 
     document.getElementById("pagamentoModalLabel").innerText = "Novo Pagamento"
-
-    getRegraPagamentos();
     pagamentoModal.show()
 }
 
 
-function abrirEditarPagamentoModal(element) {
+async function abrirEditarPagamentoModal(element) {
     const pagamento = JSON.parse(element.dataset.pagamento);
 
     document.getElementById("pagamento_id_modal_pagamentos").value = pagamento.id
@@ -177,10 +212,8 @@ function abrirEditarPagamentoModal(element) {
     document.getElementById("paciente_nome_modal_pagamentos").value = pagamento.plantao_detalhe.paciente_detalhe.nome
     document.getElementById("valor_calculado_modal_pagamentos").value = pagamento.valor_calculado
     document.getElementById("status_modal_pagamentos").value = pagamento.status
-
+    document.getElementById("regra_pagamento_id_modal_pagamentos").value = pagamento.plantao_detalhe.regra_pagamento
     document.getElementById("pagamentoModalLabel").innerText = `Editar Pagamento - ${pagamento.codigo_interno}`
-
-    getRegraPagamentos();
     pagamentoModal.show()
 }
 
@@ -299,13 +332,133 @@ document.addEventListener("click", function (e) {
     }
 });
 
+function abrirDetalhesPlantaoModal(plantao) {
+    const plantaoData = JSON.parse(plantao.getAttribute("data-plantao"))
+    const container = document.getElementById('plantao-detail-modal')
+    container.innerHTML = ""
+    container.innerHTML = renderPlantaoModal(plantaoData);
+    plantaoDetailsModal.show()
+}
+
+function renderPlantaoModal(plantao) {
+    console.log(plantao)
+    function formatDateTime(date) {
+        return new Date(date).toLocaleTimeString("pt-BR").slice(0, 5) + " - " + new Date(date).toLocaleDateString("pt-BR")
+    }
+
+    function floatToHHMM(value) {
+        const hours = Math.floor(value)
+        const minutes = Math.round((value - hours) * 60)
+
+        return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`
+    }
+    let bgcolor = ""
+    let badgeColor = ""
+
+    if (plantao.status == 'P') bgcolor = "bg-warning-subtle"
+    else if (plantao.status == 'A' || plantao.status == 'C') bgcolor = "bg-secondary-subtle"
+    else if (plantao.status == 'R') bgcolor = "bg-primary-subtle"
+    else if (plantao.status == 'F') bgcolor = "bg-success-subtle"
+    else if (plantao.status == 'E' || plantao.status == 'D') bgcolor = "bg-danger-subtle"
+
+    if (plantao.status == 'P') badgeColor = "bg-warning"
+    else if (plantao.status == 'A' || plantao.status == 'C') badgeColor = "bg-secondary"
+    else if (plantao.status == 'R') badgeColor = "bg-primary"
+    else if (plantao.status == 'F') badgeColor = "bg-success"
+    else if (plantao.status == 'E' || plantao.status == 'D') badgeColor = "bg-danger"
+
+    const cumpridas = floatToHHMM(plantao.horas_cumpridas)
+
+    let horarioColor = plantao.horas_cumpridas < plantao.horas
+        ? "bg-warning-subtle"
+        : "bg-success-subtle"
+
+    let textColor = plantao.horas_cumpridas < plantao.horas
+        ? "text-danger"
+        : "text-info-emphasis"
+
+    const card = `
+        <div class="col-12 mb-4">
+            <div class="card plantao-card shadow-lg">
+                <div class="card-header d-flex justify-content-between">
+                    <div>
+                        <small class="badge bg-primary-subtle text-primary-emphasis small fw-bold">${plantao.codigo_interno}</small>
+                    </div>
+                    <div>
+                        <span class="badge text-center gap-1 ${badgeColor}">
+                            ${plantao.status_name}
+                        </span>
+                    </div>
+
+                </div>
+
+                <div class="card-body d-flex flex-column">
+                    <div class="mb-3 small text-center">
+                        Carga Horária
+                        <span class="badge bg-info-subtle text-info-emphasis">
+                            ⏱ ${plantao.horas}h
+                        </span>
+                        <br>
+                        Cumpridas
+                        <span class="badge ${horarioColor} ${textColor}">
+                            ⏱ ${cumpridas}h
+                        </span>
+                        <br>
+                        Regra:
+                        <span class="badge bg-info-subtle text-info-emphasis">
+                            ${plantao.regra_pagamento_detalhe.nome || "Sem Regra"}
+                        </span>
+                    </div>
+
+                    <div class="text-truncate text-center">
+                        <div class="fw-semibold">
+                            <small class="text-body-secondary">Paciente:</small>
+                            ${plantao.paciente_detalhe.nome}
+                        </div>
+                    </div>
+
+                    <div class="text-truncate text-center">
+                        <div class="fw-semibold">
+                            <small class="text-body-secondary">Cuidador(a):</small>
+                            ${plantao.cuidadora_detalhe.nome}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-center mb-2">
+                        <a href="/registro/${plantao.id}" target="_blank" class="btn-modern">
+                            Registro
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <div class="d-flex justify-content-center gap-1">
+                        <small>
+                            <span class="badge bg-dark rounded-pill">
+                                ${formatDateTime(plantao.inicio)}
+                            </span>
+                            <span class="badge bg-dark rounded-pill">
+                                <i class="bi bi-arrow-right-short"></i>
+                            </span>
+                            <span class="badge bg-dark rounded-pill">
+                                ${formatDateTime(plantao.fim)}
+                            </span>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `
+    return card;
+}
 
 // ###############################
 // ######### PAGAMENTOS ##########
 // ###############################
 
 
-function getRegraPagamentos() {
+async function getRegraPagamentos() {
     getData(`/api/regra-pagamento/`, (data) => {
         renderRegraPagamentosSelect(data.results);
     })

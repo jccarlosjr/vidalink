@@ -10,7 +10,7 @@ Ongoing Features
 - Lógica de lançamento de pagamentos
 ---- Criar template com criação de relatórios, filtrando plantões por data, cuidadora, paciente e status
 ---- Criar template para pagamentos, listando pagamentos por cuidadora
-
+- Adicionar counter badge para plantões
 
 Bugs
 - Precisão de geolocalização do registro muito alta

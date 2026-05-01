@@ -3,6 +3,7 @@ from .models import Pagamento, Relatorio,  RegraPagamento
 from .serializers import PagamentoSerializer, RelatorioSerializer, RegraPagamentoSerializer
 from rest_framework.permissions import IsAuthenticated
 from django.views.generic import TemplateView
+from plantao.models import Plantao
 
 
 class PagamentoViewSet(ModelViewSet):
@@ -17,8 +18,37 @@ class PagamentoViewSet(ModelViewSet):
 
         if filter_type and filter_value:
             queryset = queryset.filter(**{filter_type + "__icontains": filter_value})
+        
+        if self.request.query_params.get("data_inicio"):
+            data_inicio = self.request.query_params.get("data_inicio")
+
+            queryset = queryset.filter(
+                plantao__inicio__date__gte=data_inicio
+            )
+
+        if self.request.query_params.get("data_fim"):
+            data_fim = self.request.query_params.get("data_fim")
+
+            queryset = queryset.filter(
+                plantao__fim__date__lte=data_fim
+            )
 
         return queryset.order_by('-id')
+
+    def perform_create(self, serializer):
+        pagamento = serializer.save()
+        self._update_regra_plantao(pagamento)
+
+    def perform_update(self, serializer):
+        pagamento = serializer.save()
+        self._update_regra_plantao(pagamento)
+
+    def _update_regra_plantao(self, pagamento):
+        Plantao.objects.filter(id=pagamento.plantao_id).update(
+            regra_pagamento=self.request.data['regra_pagamento'],
+            valor_calculado=self.request.data['valor_calculado'],
+        )
+
 
 
 class RelatorioViewSet(ModelViewSet):

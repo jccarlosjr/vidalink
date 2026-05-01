@@ -86,10 +86,10 @@ class PlantaoViewSet(ModelViewSet):
             plantaoes = plantaoes.filter(**{filter_type + "__icontains": filter_value})
 
         if self.request.query_params.get("data_inicio"):
-            plantaoes = plantaoes.filter(inicio__gte=self.request.query_params.get("data_inicio")).order_by('inicio')
+            plantaoes = plantaoes.filter(inicio__date__gte=self.request.query_params.get("data_inicio")).order_by('inicio')
 
         if self.request.query_params.get("data_fim"):
-            plantaoes = plantaoes.filter(fim__lte=self.request.query_params.get("data_fim")).order_by('inicio')
+            plantaoes = plantaoes.filter(fim__date__lte=self.request.query_params.get("data_fim")).order_by('inicio')
 
         return plantaoes
 
