@@ -11,6 +11,8 @@ Ongoing Features
 ---- Criar template com criação de relatórios, filtrando plantões por data, cuidadora, paciente e status
 ---- Criar template para pagamentos, listando pagamentos por cuidadora
 - Adicionar counter badge para plantões
+- Adicionar limite de 30 dias para todas as requests baseadas em datas
+
 
 Bugs
 - Precisão de geolocalização do registro muito alta

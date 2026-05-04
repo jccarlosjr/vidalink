@@ -258,6 +258,11 @@ function renderPlantoesSearch(plantoes) {
     const container = document.getElementById('result_plantao')
     container.innerHTML = ""
 
+    if (plantoes.length == 0) {
+        container.innerHTML = `<div class="alert alert-info">Nenhum plantão finalizado foi encontrado.</div>`
+        return
+    }
+
     plantoes.forEach(plantao => {
         const linha = document.createElement('div')
         linha.className = "card p-2 mb-4 ms-2 me-2 shadow-sm"

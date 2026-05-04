@@ -4,6 +4,8 @@ from .serializers import PagamentoSerializer, RelatorioSerializer, RegraPagament
 from rest_framework.permissions import IsAuthenticated
 from django.views.generic import TemplateView
 from plantao.models import Plantao
+from rest_framework import serializers
+from django.db.models import Count
 
 
 class PagamentoViewSet(ModelViewSet):
@@ -11,10 +13,16 @@ class PagamentoViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Pagamento.objects.all()
 
+
     def get_queryset(self):
         queryset = super().get_queryset()
         filter_type = self.request.query_params.get('filter_type', None)
         filter_value = self.request.query_params.get('filter_value', None)
+
+        if filter_type == "plantao__cuidadora":
+            return queryset.filter(
+                plantao__cuidadora_id=filter_value
+            )
 
         if filter_type and filter_value:
             queryset = queryset.filter(**{filter_type + "__icontains": filter_value})
@@ -35,20 +43,46 @@ class PagamentoViewSet(ModelViewSet):
 
         return queryset.order_by('-id')
 
+
     def perform_create(self, serializer):
+        pagamento = self.get_object()
+        self._validate_pagamento(pagamento)
         pagamento = serializer.save()
         self._update_regra_plantao(pagamento)
+
 
     def perform_update(self, serializer):
+        pagamento = self.get_object()
+        self._validate_pagamento(pagamento)
         pagamento = serializer.save()
         self._update_regra_plantao(pagamento)
 
-    def _update_regra_plantao(self, pagamento):
-        Plantao.objects.filter(id=pagamento.plantao_id).update(
-            regra_pagamento=self.request.data['regra_pagamento'],
-            valor_calculado=self.request.data['valor_calculado'],
-        )
 
+    def perform_destroy(self, instance):
+        self._validate_pagamento(instance)
+        super().perform_destroy(instance)
+
+
+    def _validate_pagamento(self, pagamento):
+        if pagamento.status in ["PAGO", "ADICIONADO_RELATORIO"]:
+            raise serializers.ValidationError({"erro": "O pagamento já foi processado ou adicionado a um relatório. Não é possível editar ou deletar."})
+        if pagamento.relatorio is not None:
+            raise serializers.ValidationError({"erro": "O pagamento já foi adicionado a um relatório."})
+        if pagamento.plantao.status not in ["F", "E"]:
+            raise serializers.ValidationError({"erro": "Plantão não foi finalizado"})
+
+
+    def _update_regra_plantao(self, pagamento):
+        regra_pagamento = self.request.data.get('regra_pagamento')
+        if regra_pagamento is not None:
+            Plantao.objects.filter(id=pagamento.plantao_id).update(
+                regra_pagamento=regra_pagamento,
+            )
+        valor_calculado = self.request.data.get('valor_calculado')
+        if valor_calculado is not None:
+            Plantao.objects.filter(id=pagamento.plantao_id).update(
+                valor_calculado=valor_calculado,
+            )
 
 
 class RelatorioViewSet(ModelViewSet):
@@ -56,6 +90,15 @@ class RelatorioViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     queryset = Relatorio.objects.all()
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        filter_type = self.request.query_params.get('filter_type', None)
+        filter_value = self.request.query_params.get('filter_value', None)
+
+        if filter_type and filter_value:
+            queryset = queryset.filter(**{filter_type + "__icontains": filter_value})
+        return queryset.annotate(pagamentos_count=Count('pagamentos')).order_by('-id')
+        
 
 class RegraPagamentoViewSet(ModelViewSet):
     serializer_class = RegraPagamentoSerializer

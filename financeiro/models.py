@@ -27,7 +27,7 @@ class Relatorio(models.Model):
         PAGO = "PAGO", "Pago"
 
     cuidadora = models.ForeignKey(Cuidadora, on_delete=models.PROTECT, related_name="relatorios")
-    status = models.CharField(max_length=10, choices=Status.choices, default=Status.ABERTO)
+    status = models.CharField(max_length=30, choices=Status.choices, default=Status.ABERTO)
     data_referencia = models.DateField(null=True, blank=True)
     valor_total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     deducoes = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -47,6 +47,8 @@ class Pagamento(models.Model):
         PENDENTE = "PENDENTE", "Pendente"
         PAGO = "PAGO", "Pago"
         CANCELADO = "CANCELADO", "Cancelado"
+        ADICIONADO_RELATORIO = "ADICIONADO_RELATORIO", "Adicionado ao Relatório"
+
 
     relatorio = models.ForeignKey(Relatorio, on_delete=models.PROTECT, related_name="pagamentos", null=True, blank=True)
     plantao = models.ForeignKey("plantao.Plantao", on_delete=models.PROTECT, related_name="pagamentos", null=True, blank=True)

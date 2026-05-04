@@ -4,7 +4,7 @@ from . import views
 
 router = DefaultRouter()
 router.register(r'api/pagamento', views.PagamentoViewSet)
-router.register(r'api/relatorio', views.RelatorioViewSet)
+router.register(r'api/relatorios', views.RelatorioViewSet)
 router.register(r'api/regra-pagamento', views.RegraPagamentoViewSet)
 
 urlpatterns = [

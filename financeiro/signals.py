@@ -46,4 +46,8 @@ def has_pagamento(sender, instance, **kwargs):
     if Pagamento.objects.filter(plantao=instance.plantao).exists():
         raise serializers.ValidationError({"erro": "Já existe um pagamento para o plantão selecionado"})
 
-    
+
+@receiver(post_save, sender=Relatorio)
+def delete_relatorio_sem_pagamentos(sender, instance, created, **kwargs):
+    if not instance.pagamentos.all().exists() and instance.status != "ABERTO":
+        instance.delete()

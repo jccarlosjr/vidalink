@@ -3,6 +3,7 @@ from .models import Pagamento, Relatorio, RegraPagamento
 from plantao.models import Plantao
 from paciente.models import Paciente
 from cuidadora.models import Cuidadora
+from rest_framework import serializers
 
 
 class RegraPagamentoSerializer(ModelSerializer):
@@ -61,6 +62,14 @@ class PagamentoSerializer(ModelSerializer):
 
 
 class RelatorioSerializer(ModelSerializer):
+    status_name = SerializerMethodField()
+    cuidadora_detalhe = CuidadoraMinSerializer(source="cuidadora", read_only=True)
+    pagamentos_count = serializers.IntegerField(read_only=True)
+    pagamentos = PagamentoSerializer(many=True, read_only=True)
+
+    def get_status_name(self, obj):
+        return obj.get_status_display()
+
     class Meta:
         model = Relatorio
         fields = "__all__"
