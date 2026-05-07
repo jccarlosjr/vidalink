@@ -6,6 +6,8 @@ from django.views.generic import TemplateView
 from plantao.models import Plantao
 from rest_framework import serializers
 from django.db.models import Count
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 
 class PagamentoViewSet(ModelViewSet):
@@ -18,15 +20,20 @@ class PagamentoViewSet(ModelViewSet):
         queryset = super().get_queryset()
         filter_type = self.request.query_params.get('filter_type', None)
         filter_value = self.request.query_params.get('filter_value', None)
+        cuidadora = self.request.query_params.get('cuidadora', None)
+        status = self.request.query_params.get('status', None)
 
-        if filter_type == "plantao__cuidadora":
-            return queryset.filter(
-                plantao__cuidadora_id=filter_value
+        if cuidadora:
+            queryset = queryset.filter(
+                plantao__cuidadora_id=cuidadora
             )
+
+        if status:
+            queryset = queryset.filter(status=status)
 
         if filter_type and filter_value:
             queryset = queryset.filter(**{filter_type + "__icontains": filter_value})
-        
+
         if self.request.query_params.get("data_inicio"):
             data_inicio = self.request.query_params.get("data_inicio")
 
@@ -61,6 +68,15 @@ class PagamentoViewSet(ModelViewSet):
     def perform_destroy(self, instance):
         self._validate_pagamento(instance)
         super().perform_destroy(instance)
+
+
+    @action(detail=True, methods=['patch'], url_path='update_status')
+    def update_status(self, request, pk=None):
+        pagamento = self.get_object()
+        pagamento = PagamentoSerializer(pagamento, data=request.data, partial=True)
+        pagamento.is_valid(raise_exception=True)
+        pagamento.save()
+        return Response(pagamento.data)
 
 
     def _validate_pagamento(self, pagamento):

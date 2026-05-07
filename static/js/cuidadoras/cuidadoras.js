@@ -73,7 +73,7 @@ function clearFilter() {
     loadCuidadoras()
 }
 
-function loadCuidadoras() {
+function loadCuidadoras(url = null) {
     let filterField = document.getElementById("filter_type").value;
     let filterValue = document.getElementById("filter_value").value.trim();
     let checked = document.getElementById("filter_active").checked;
@@ -86,7 +86,9 @@ function loadCuidadoras() {
         params.append("is_active", true);
     }
 
-    getData(`/api/cuidadoras/?${params.toString()}`, (data) => {
+    const endpoint = url || `/api/cuidadoras/?${params.toString()}`
+
+    getData(endpoint, (data) => {
         renderCuidadoras(data.results)
 
         renderPaginationDRF({
@@ -260,7 +262,7 @@ function renderPaginationDRF(pagination) {
     html += `
         <button class="btn-modern"
             ${!pagination.previous ? "disabled" : ""}
-            onclick="loadPacientes('${pagination.previous}')">
+            onclick="loadCuidadoras('${pagination.previous}')">
             ← Anterior
         </button>
     `
@@ -268,7 +270,7 @@ function renderPaginationDRF(pagination) {
     html += `
         <button class="btn-modern"
             ${!pagination.next ? "disabled" : ""}
-            onclick="loadPacientes('${pagination.next}')">
+            onclick="loadCuidadoras('${pagination.next}')">
             Próxima →
         </button>
     `

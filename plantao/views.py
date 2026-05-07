@@ -71,10 +71,10 @@ class PlantaoViewSet(ModelViewSet):
         expirar_plantoes()
         if self.request.query_params.get("cuidadora"):
             plantaoes = Plantao.objects.filter(cuidadora=self.request.query_params.get("cuidadora")).order_by('inicio')
-        elif self.request.user.is_superuser:
+        elif self.request.user.is_staff:
             plantaoes = Plantao.objects.all().order_by('inicio')
         else:
-            plantaoes = Plantao.objects.filter(cuidadora=self.request.user.cuidadora).order_by('inicio')
+            plantaoes = Plantao.objects.filter(cuidadora=self.request.user.id).order_by('inicio')
 
         filter_type = self.request.query_params.get('filter_type', None)
         filter_value = self.request.query_params.get('filter_value', None)

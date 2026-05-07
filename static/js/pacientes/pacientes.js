@@ -65,7 +65,7 @@ function clearFilter() {
     loadPacientes()
 }
 
-function loadPacientes() {
+function loadPacientes(url = null) {
     let filterField = document.getElementById("filter_type").value
     let filterValue = document.getElementById("filter_value").value.trim()
     let checked = document.getElementById("filter_active").checked;
@@ -79,7 +79,9 @@ function loadPacientes() {
         params.append("is_active", true);
     }
 
-    getData(`/api/pacientes/?${params.toString()}`, (data) => {
+    const endpoint = url || `/api/pacientes/?${params.toString()}`
+
+    getData(endpoint, (data) => {
         renderPacientes(data.results)
 
         renderPaginationDRF({

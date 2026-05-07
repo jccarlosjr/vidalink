@@ -39,7 +39,7 @@ class CuidadoraAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'password1', 'password2', 'cuidadora'),
+            'fields': ('username', 'password1', 'password2'),
         }),
     )
 

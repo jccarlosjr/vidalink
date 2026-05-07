@@ -247,6 +247,38 @@ body {
     transform: scale(0.95);
 }
 
+.btn-modern:disabled,
+.btn-modern.disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+
+    background: rgba(255, 255, 255, 0.18);
+    color: rgba(17, 24, 39, 0.55);
+    border-color: rgba(255, 255, 255, 0.25);
+
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+
+    pointer-events: none;
+    transform: none;
+}
+
+/* Remove efeitos de hover quando desabilitado */
+.btn-modern:disabled:hover,
+.btn-modern.disabled:hover {
+    transform: none;
+
+    background: rgba(255, 255, 255, 0.18);
+
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
 .btn-primary {
     --btn-bg: linear-gradient(135deg, #3b82f6, #2563eb);
     --btn-border: transparent;

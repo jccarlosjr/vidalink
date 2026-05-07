@@ -30,6 +30,16 @@ document.addEventListener("DOMContentLoaded", function () {
     loadRelatorios();
 });
 
+document.getElementById("filter_btn").addEventListener("click", loadRelatorios);
+document.getElementById("clear_filter_btn").addEventListener("click", clearFilters);
+
+function clearFilters() {
+    document.getElementById("filter_type").value = "codigo_interno";
+    document.getElementById("filter_value").value = "";
+    loadRelatorios();
+}
+
+
 // #####################################
 // ############# RELATORIOS ############
 // #####################################
@@ -37,11 +47,14 @@ document.addEventListener("DOMContentLoaded", function () {
 document.getElementById("novoRelatorioBtn").addEventListener("click", abrirModalNovoRelatorio);
 
 function abrirModalNovoRelatorio() {
+    document.getElementById("relatorio_id_modal_relatorio").value = "";
     document.getElementById("cuidadora_id_modal_relatorio").value = "";
     document.getElementById("cuidadora_nome_modal_relatorio").value = "";
     document.getElementById("status_modal_relatorio").value = "ABERTO";
     document.getElementById("data_referencia_modal_relatorio").value = "";
     document.getElementById("pagamentos_list_relatorio").innerHTML = "";
+    document.getElementById("deducoes_modal_relatorio").value = "";
+    document.getElementById("liquido_modal_relatorio").value = "";
     relatorioModal.show();
 }
 
@@ -53,13 +66,24 @@ function getValorTotal() {
     return valor;
 }
 
+
+function calcularLiquido() {
+    let valor_total = getValorTotal();
+    let deducoes = document.getElementById("deducoes_modal_relatorio").value;
+    let liquido = valor_total - Number(deducoes);
+    document.getElementById("liquido_modal_relatorio").value = liquido;
+}
+
+document.getElementById("deducoes_modal_relatorio").addEventListener("input", calcularLiquido);
+
 function saveRelatorio() {
+    let relatorio_id = document.getElementById("relatorio_id_modal_relatorio").value;
     let cuidadora = document.getElementById("cuidadora_id_modal_relatorio").value;
     let status = document.getElementById("status_modal_relatorio").value;
     let data_referencia = document.getElementById("data_referencia_modal_relatorio").value;
     let valor_total = getValorTotal();
-
-    const url = "/api/relatorios/"
+    let deducoes = document.getElementById("deducoes_modal_relatorio")?.value || 0;
+    let liquido = document.getElementById("liquido_modal_relatorio").value;
 
     if (!cuidadora) showToast("Selecione um(a) cuidador(a)", "warning")
     if (!data_referencia) showToast("Selecione uma data de referência", "warning")
@@ -72,31 +96,72 @@ function saveRelatorio() {
         "status": status,
         "data_referencia": data_referencia,
         "valor_total": valor_total,
+        "deducoes": deducoes,
+        "valor_liquido": liquido,
     }
 
-    saveData(url, data, (relatorio) => {
-        pagamentos_selecionados.forEach(pagamento => {
-            let data = {
-                "relatorio": relatorio.id,
-                "status": "ADICIONADO_RELATORIO",
-            }
-            patchData(`/api/pagamento/${pagamento.id}/`, data)
+    if (relatorio_id) {
+        patchData(`/api/relatorios/${relatorio_id}/`, data, (relatorio) => {
+            pagamentos_selecionados.forEach(pagamento => {
+                let data = {
+                    "relatorio": relatorio.id,
+                    "status": "ADICIONADO_RELATORIO",
+                }
+                if (pagamento.status == "PENDENTE") {
+                    patchData(`/api/pagamento/${pagamento.id}/`, data)
+                }
+            })
+            relatorioModal.hide()
+            showToast("Relatório criado com sucesso", "success")
+            pagamentos_selecionados = [];
+            loadRelatorios()
         })
-        relatorioModal.hide()
-        showToast("Relatório criado com sucesso", "success")
-        pagamentos_selecionados = [];
-        loadRelatorios()
-    })
+    } else {
+        saveData("/api/relatorios/", data, (relatorio) => {
+            pagamentos_selecionados.forEach(pagamento => {
+                let data = {
+                    "relatorio": relatorio.id,
+                    "status": "ADICIONADO_RELATORIO",
+                }
+                patchData(`/api/pagamento/${pagamento.id}/`, data)
+            })
+            relatorioModal.hide()
+            showToast("Relatório criado com sucesso", "success")
+            pagamentos_selecionados = [];
+            loadRelatorios()
+        })
+    }
+
+    location.reload();
 }
 
 document.getElementById("saveRelatorioBtn").addEventListener("click", saveRelatorio);
 
 function loadRelatorios() {
+    const filter_type = document.getElementById("filter_type").value;
+    const filter_value = document.getElementById("filter_value").value;
+
+    const params = new URLSearchParams()
+
+    if (filter_value) {
+        params.append("filter_type", filter_type);
+        params.append("filter_value", filter_value);
+    }
+
     const container = document.getElementById("relatorios_list");
     container.innerHTML = "";
 
-    getData("/api/relatorios/", (data) => {
+    getData(`/api/relatorios/?${params.toString()}`, (data) => {
         data.results.forEach(relatorio => {
+            const disableBtn = relatorio.status != "PAGO" ? "" : "disabled";
+
+            let btnDelete = "";
+            if (relatorio.pagamentos_count == 0) {
+                btnDelete = `
+                    <button class="btn-modern btn-sm text-danger" title="Excluir" onclick="excluirRelatorio(${relatorio.id})"><i class="bi bi-trash"></i></button>
+                `
+            }
+
             const linha = document.createElement("div");
             linha.className = "row g-2 pb-2 mb-1 border-bottom align-items-center";
             linha.innerHTML = `
@@ -121,13 +186,14 @@ function loadRelatorios() {
                     <span class="small text-muted d-block">${maskData(relatorio.data_referencia) || 'sem data'}</span>
                 </div>
                 <div class="col-4 col-md text-center">
-                    <label class="fw-bold">Valor</label>
-                    <span class="small text-muted d-block">${Number(relatorio.valor_total).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span>
+                    <label class="fw-bold">Valor Líquido</label>
+                    <span class="small text-muted d-block">${Number(relatorio.valor_liquido).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span>
                 </div>
                 <div class="col-4 col-md">
-                    <button class="btn-modern btn-sm text-success" title="Confirmar pagamento" onclick="confirmarRelatorio(${relatorio.id})"><i class="bi bi-currency-dollar"></i></button>
+                    <button class="btn-modern btn-sm text-success" ${disableBtn} data-confirm='${JSON.stringify(relatorio)}' title="Confirmar pagamento" onclick="confirmarRelatorio(this)"><i class="bi bi-currency-dollar"></i></button>
                     <button class="btn-modern btn-sm" title="Editar" data-edit='${JSON.stringify(relatorio)}' onclick="editarRelatorio(this)"><i class="bi bi-pencil"></i></button>
                     <button class="btn-modern btn-sm" title="Visualizar" data-view='${JSON.stringify(relatorio)}' onclick="visualizarRelatorio(this)"><i class="bi bi-eye"></i></button>
+                    ${btnDelete}
                 </div>
             `;
             container.appendChild(linha);
@@ -137,10 +203,13 @@ function loadRelatorios() {
 
 function editarRelatorio(element) {
     let relatorio = JSON.parse(element.dataset.edit);
+    document.getElementById("relatorio_id_modal_relatorio").value = relatorio.id;
     document.getElementById("cuidadora_id_modal_relatorio").value = relatorio.cuidadora;
     document.getElementById("cuidadora_nome_modal_relatorio").value = relatorio.cuidadora_detalhe.nome;
     document.getElementById("status_modal_relatorio").value = relatorio.status;
     document.getElementById("data_referencia_modal_relatorio").value = relatorio.data_referencia;
+    document.getElementById("deducoes_modal_relatorio").value = relatorio.deducoes;
+    document.getElementById("liquido_modal_relatorio").value = relatorio.valor_liquido;
     pagamentos_selecionados = relatorio.pagamentos;
     renderPagamentosRelatorio();
     relatorioModal.show();
@@ -154,18 +223,19 @@ function visualizarRelatorio(element) {
     document.getElementById("status_detalhe_modal").innerHTML = relatorio.status_name;
     document.getElementById("data_referencia_detalhe_modal").innerHTML = maskData(relatorio.data_referencia);
     document.getElementById("valor_total_detalhe_modal").innerHTML = Number(relatorio.valor_total).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+    document.getElementById("deducoes_detalhe_modal").innerHTML = Number(relatorio.deducoes).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+    document.getElementById("liquido_detalhe_modal").innerHTML = Number(relatorio.valor_liquido).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
     renderPagamentosRelatorioDetalhe(relatorio.pagamentos);
 
     detalhesModal.show();
 }
-
 
 function renderPagamentosRelatorioDetalhe(pagamentos) {
     let container = document.getElementById("pagamentos_list_detalhe_modal");
     container.innerHTML = "";
     pagamentos.forEach(pagamento => {
         const linha = document.createElement("div");
-        linha.className = "row g-2 pb-2 mb-1 border-bottom align-items-center mt-2";
+        linha.className = "row g-2 pb-2 mb-1 border align-items-center mt-2";
         linha.innerHTML = `
             <div class="col-4 col-md text-center">
                 <label class="fw-bold">Código Interno</label>
@@ -176,16 +246,53 @@ function renderPagamentosRelatorioDetalhe(pagamentos) {
                 <span class="small text-muted d-block">${pagamento.status_name}</span>
             </div>
             <div class="col-4 col-md text-center">
-                <label class="fw-bold">Cuidadora</label>
-                <span class="small text-muted d-block">${pagamento.plantao_detalhe.cuidadora_detalhe.nome}</span>
-            </div>
-            <div class="col-4 col-md text-center">
                 <label class="fw-bold">Valor</label>
                 <span class="small text-muted d-block">${Number(pagamento.valor_calculado).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span>
             </div>
         `;
         container.appendChild(linha);
     })
+}
+
+function confirmarRelatorio(element) {
+    const relatorio = JSON.parse(element.getAttribute("data-confirm"));
+
+    const agora = new Date();
+    const dataFormatada = agora.toISOString().slice(0, 16);
+
+    const data = {
+        status: "PAGO",
+        fechado_em: dataFormatada,
+    }
+
+    patchData(`/api/relatorios/${relatorio.id}/`, data, () => {
+        showToast("Relatório confirmado com sucesso", "success");
+
+        relatorio.pagamentos.forEach(pagamento => {
+            const hoje = new Date().toISOString().split('T')[0];
+
+            const dataPagamento = {
+                status: "PAGO",
+                data_pagamento: hoje,
+                valor_pago: pagamento.valor_calculado
+            }
+
+            patchData(`/api/pagamento/${pagamento.id}/update_status/`, dataPagamento, () => {
+                showToast("Pagamento confirmado com sucesso", "success");
+            })
+        })
+        loadRelatorios();
+    })
+    location.reload();
+}
+
+function excluirRelatorio(id) {
+    if (confirm("Tem certeza que deseja excluir este relatório?")) {
+        deleteData(`/api/relatorios/${id}/`, () => {
+            showToast("Relatório excluído com sucesso", "success");
+            loadRelatorios();
+        })
+    }
 }
 
 // #####################################
@@ -295,13 +402,8 @@ async function loadPagamentos() {
 
     const params = new URLSearchParams()
 
-    if (cuidadora) {
-        params.append("filter_type", "plantao__cuidadora");
-        params.append("filter_value", cuidadora);
-    }
-
-    params.append("filter_type", "status");
-    params.append("filter_value", "PENDENTE");
+    params.append("cuidadora", cuidadora);
+    params.append("status", "PENDENTE");
 
     getData(`/api/pagamento/?${params.toString()}`, (data) => {
         renderPagamentos(data.results)
@@ -392,6 +494,7 @@ function adicionarPagamentoRelatorio(btn) {
     renderPagamentosRelatorio()
     searchPagamentoModal.hide();
     relatorioModal.show();
+    calcularLiquido();
 }
 
 function renderPagamentosRelatorio() {
@@ -448,7 +551,7 @@ function renderPagamentosRelatorio() {
                 </div>
 
                 <div class="col-2 col-md-auto text-md-end mt-2 mt-md-0">
-                    <button type="button" class="btn-modern btn-sm" data-pagamento='${JSON.stringify(pagamento)}' onclick="removerPagamentoRelatorio(this)">
+                    <button type="button" class="btn-modern btn-sm" data-pagamento='${JSON.stringify(pagamento)}' onclick="editPagamento(this)">
                         <i class="bi bi-trash"></i> Remover
                     </button>
                 </div>
@@ -476,6 +579,25 @@ function removerPagamentoRelatorio(btn) {
     if (pagamentos_selecionados.length === 0) {
         renderPagamentosRelatorio();
     }
+    calcularLiquido();
+}
+
+function editPagamento(btn) {
+    const pagamento = JSON.parse(btn.dataset.pagamento);
+
+    if (pagamento.status === "PENDENTE") {
+        removerPagamentoRelatorio(btn)
+    };
+
+    const url = `/api/pagamento/${pagamento.id}/update_status/`
+    const data = {
+        status: "PENDENTE",
+        relatorio: null
+    }
+
+    patchData(url, data, () => {
+        removerPagamentoRelatorio(btn)
+    })
 }
 
 function adicionarTodosPagamentos() {
@@ -488,6 +610,7 @@ function adicionarTodosPagamentos() {
     renderPagamentosRelatorio()
     searchPagamentoModal.hide();
     relatorioModal.show();
+    calcularLiquido();
 }
 
 document.getElementById("btnAdicionarTodos").addEventListener("click", adicionarTodosPagamentos);

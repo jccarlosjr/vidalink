@@ -49,12 +49,38 @@ function clearFilterPagamento() {
     loadPagamento()
 }
 
+function renderPaginationDRF(pagination, callback) {
+    let container = document.getElementById("pagination")
+
+    let html = `<div class="d-flex justify-content-center gap-2 mt-4">`
+
+    html += `
+        <button class="btn-modern"
+            ${!pagination.previous ? "disabled" : ""}
+            onclick="loadPagamento('${pagination.previous}')">
+            ← Anterior
+        </button>
+    `
+
+    html += `
+        <button class="btn-modern"
+            ${!pagination.next ? "disabled" : ""}
+            onclick="loadPagamento('${pagination.next}')">
+            Próxima →
+        </button>
+    `
+
+    html += `</div>`
+
+    container.innerHTML = html
+}
+
 // ###############################
 // ######### PAGAMENTOS ##########
 // ###############################
 
 
-async function loadPagamento() {
+async function loadPagamento(url = null) {
     let filterField = document.getElementById("filter_type").value;
     let filterValue = document.getElementById("filter_value").value.trim();
     let dataInicio = document.getElementById("data_inicio").value;
@@ -75,8 +101,15 @@ async function loadPagamento() {
         params.append("data_fim", dataFim);
     }
 
-    getData(`/api/pagamento/?${params.toString()}`, (data) => {
+    const endpoint = url || `/api/pagamento/?${params.toString()}`
+
+    getData(endpoint, (data) => {
         renderPagamentos(data.results)
+
+        renderPaginationDRF({
+            next: data.next,
+            previous: data.previous
+        })
     })
 }
 
