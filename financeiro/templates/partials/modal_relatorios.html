@@ -121,7 +121,7 @@
 </div>
 
 
-<div class="modal modal-xl fade" id="detalhesModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-2" aria-labelledby="detalhesModalLabel" aria-hidden="true">
+<div class="modal modal-xl fade" id="detalhesModal" tabindex="-2" aria-labelledby="detalhesModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -129,63 +129,69 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-4">
-                        <label>Cuidador(a):</label>
-                        <small id="cuidadora_nome_detalhe_modal" class="text-muted"></small>
+                <div class="border rounded p-4">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Cuidador(a):</label>
+                            <small id="cuidadora_nome_detalhe_modal" class="text-muted"></small>
+                        </div>
+                        <div class="col-md-4">
+                            <label>Banco:</label>
+                            <small id="cuidadora_codigo_banco_detalhe_modal" class="text-muted"></small>
+                        </div>
+                        <div class="col-md-4">
+                            <label>Chave Pix:</label>
+                            <small id="chave_pix_detalhe_modal" class="text-muted"></small>
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <label>Banco:</label>
-                        <small id="cuidadora_codigo_banco_detalhe_modal" class="text-muted"></small>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>CNPJ:</label>
+                            <small id="cnpj_detalhe_modal" class="text-muted"></small>
+                        </div>
+                        <div class="col-md-4">
+                            <label>Agência:</label>
+                            <small id="cuidadora_agencia_conta_detalhe_modal" class="text-muted"></small>
+                        </div>
+                        <div class="col-md-4">
+                            <label>Status:</label>
+                            <small id="status_detalhe_modal" class="text-muted"></small>
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <label>Chave Pix:</label>
-                        <small id="chave_pix_detalhe_modal" class="text-muted"></small>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>CPF:</label>
+                            <small id="cpf_detalhe_modal" class="text-muted"></small>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label>Conta:</label>
+                            <small id="cuidadora_numero_conta_detalhe_modal" class="text-muted"></small>
+                        </div>
+                        <div class="col-md-4">
+                            <label>Referência:</label>
+                            <small id="data_referencia_detalhe_modal" class="text-muted"></small>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <label>CNPJ:</label>
-                        <small id="cnpj_detalhe_modal" class="text-muted"></small>
+
+                <div class="border rounded p-4 mt-4">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <h5 class="fw-bold">Pagamentos</h5>
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <label>Agência:</label>
-                        <small id="cuidadora_agencia_conta_detalhe_modal" class="text-muted"></small>
-                    </div>
-                    <div class="col-md-4">
-                        <label>Status:</label>
-                        <small id="status_detalhe_modal" class="text-muted"></small>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <label>CPF:</label>
-                        <small id="cpf_detalhe_modal" class="text-muted"></small>
+                    <div class="row mt-2">
+                        <div class="col-md-4 fw-bold text-center">Código Interno</div>
+                        <div class="col-md-4 fw-bold text-center">Status</div>
+                        <div class="col-md-4 fw-bold text-center">Valor</div>
+                        <div class="col-md-12">
+                            <div id="pagamentos_list_detalhe_modal"></div>
+                        </div>
                     </div>
 
-                    <div class="col-md-4">
-                        <label>Conta:</label>
-                        <small id="cuidadora_numero_conta_detalhe_modal" class="text-muted"></small>
-                    </div>
-                    <div class="col-md-4">
-                        <label>Referência:</label>
-                        <small id="data_referencia_detalhe_modal" class="text-muted"></small>
-                    </div>
                 </div>
 
-                <div class="row mt-4">
-                    <div class="col-md-2">
-                        <h5 class="fw-bold">Pagamentos</h5>
-                    </div>
-                </div>
-                <div class="row mt-2">
-                    <div class="col-md-4 fw-bold text-center">Código Interno</div>
-                    <div class="col-md-4 fw-bold text-center">Status</div>
-                    <div class="col-md-4 fw-bold text-center">Valor</div>
-                    <div class="col-md-12">
-                        <div id="pagamentos_list_detalhe_modal"></div>
-                    </div>
-                </div>
 
             </div>
             <div class="modal-footer">

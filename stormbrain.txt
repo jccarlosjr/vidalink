@@ -7,12 +7,7 @@ New Features
 
 
 Ongoing Features
-- Lógica de lançamento de pagamentos
----- Criar template com criação de relatórios, filtrando plantões por data, cuidadora, paciente e status
----- Criar template para pagamentos, listando pagamentos por cuidadora
-- Adicionar counter badge para plantões
-- Adicionar limite de 30 dias para todas as requests baseadas em datas
-
+- Adicionar dashboard para homepage
 
 Bugs
 - Precisão de geolocalização do registro muito alta
@@ -26,7 +21,9 @@ Finalizado
 - App Escala/Plantões
 - App Registros de plantões
 
+
 Sistema de avaliação por estrelas como uber e ifood (máximo 5 estrelas)
+
 
 Avaliação do sistema (Automática)
 - plantão expirado ou cancelado = 1
@@ -37,4 +34,6 @@ Avaliação do sistema (Automática)
 - avaliação do paciente = de 1 a 5
 - avaliação da staff = de 1 a 5
 
+
 No fim o(a) cuidador(a) tem a nota de avaliação baseado na média de todas as notas do sistema
+

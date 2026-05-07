@@ -17,6 +17,7 @@ from rest_framework import serializers
 from django.db.models import Sum
 
 
+
 def expirar_plantoes():
     limite = timezone.now() - timedelta(hours=24)
 
@@ -29,7 +30,6 @@ def get_internal_code(tipo, id):
     plantao_id = str(id).zfill(5)
     data = timezone.now().strftime("%d%m%Y")
     return f"{tipo}-{data}-{plantao_id}"
-
 
 
 class PlantaoListView(LoginRequiredMixin, TemplateView):

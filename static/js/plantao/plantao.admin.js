@@ -35,7 +35,21 @@ function loadPlantoes() {
     let filterValue = document.getElementById("filter_value").value.trim();
     let dataInicio = document.getElementById("data_inicio").value;
     let dataFim = document.getElementById("data_fim").value;
-    const params = new URLSearchParams()
+
+    const params = new URLSearchParams();
+
+    if (!dataInicio && !dataFim) {
+        const hoje = new Date();
+
+        const inicio = new Date();
+        inicio.setDate(hoje.getDate() - 90);
+
+        const fim = new Date();
+        fim.setDate(hoje.getDate() + 90);
+
+        dataInicio = inicio.toISOString().split("T")[0];
+        dataFim = fim.toISOString().split("T")[0];
+    }
 
     if (filterValue) {
         params.append("filter_type", filterField);
@@ -51,14 +65,18 @@ function loadPlantoes() {
     }
 
     getData(`/api/plantao/?${params.toString()}`, (data) => {
-        renderPlantoes(data)
-    })
+        renderPlantoes(data);
+    });
 }
 
 function renderPlantoes(plantoes) {
     let divAndamento = document.getElementById("plantoes-andamento")
     let divFinalizados = document.getElementById("plantoes-finalizados")
     let divExpirados = document.getElementById("plantoes-expirados")
+    const andamentoTab = document.getElementById("andamento-tab")
+    const finalizadosTab = document.getElementById("finalizados-tab")
+    const expiradosTab = document.getElementById("expirados-tab")
+
 
     function floatToHHMM(value) {
         const hours = Math.floor(value)
@@ -70,6 +88,10 @@ function renderPlantoes(plantoes) {
     let htmlAndamento = ""
     let htmlFinalizados = ""
     let htmlExpirados = ""
+    let andamentoCount = 0
+    let finalizadosCount = 0
+    let expiradosCount = 0
+
 
     plantoes.forEach(plantao => {
         let bgcolor = ""
@@ -113,15 +135,16 @@ function renderPlantoes(plantoes) {
                                 <small class="badge bg-primary-subtle text-primary-emphasis small fw-bold">${plantao.codigo_interno}</small>
                             </div>
                             <div>
-                                <span class="badge text-center gap-1 ${badgeColor}">
-                                    ${plantao.status_name}
-                                </span>
                             </div>
 
                         </div>
 
                         <div class="card-body d-flex flex-column">
                             <div class="mb-3 small text-center">
+                                <small class="badge text-center gap-1 ${badgeColor}">
+                                    ${plantao.status_name}
+                                </small>
+                                <br>
                                 Carga Horária
                                 <span class="badge bg-info-subtle text-info-emphasis">
                                     ⏱ ${plantao.horas}h
@@ -193,16 +216,40 @@ function renderPlantoes(plantoes) {
 
         if (['A', 'C', 'P', 'R'].includes(plantao.status)) {
             htmlAndamento += card
+            andamentoCount++
         } else if (plantao.status == 'F') {
             htmlFinalizados += card
+            finalizadosCount++
         } else if (plantao.status == 'E' || plantao.status == 'D') {
             htmlExpirados += card
+            expiradosCount++
         }
     })
 
     divAndamento.innerHTML = htmlAndamento
     divFinalizados.innerHTML = htmlFinalizados
     divExpirados.innerHTML = htmlExpirados
+
+    andamentoTab.innerHTML = `
+        Andamento
+        <small class="badge bg-secondary rounded-pill small ms-1">
+            ${andamentoCount}
+        </small>
+    `
+
+    finalizadosTab.innerHTML = `
+        Finalizados
+        <small class="badge bg-success rounded-pill small ms-1">
+            ${finalizadosCount}
+        </small>
+    `
+
+    expiradosTab.innerHTML = `
+        Expirados
+        <small class="badge bg-danger rounded-pill small ms-1">
+            ${expiradosCount}
+        </small>
+    `
 }
 
 function openEditPlantaoModal(btn) {

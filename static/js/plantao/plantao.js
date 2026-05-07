@@ -10,21 +10,66 @@ document.addEventListener("DOMContentLoaded", async () => {
 document.getElementById("andamento-tab").addEventListener("click", loadPlantoes);
 document.getElementById("finalizados-tab").addEventListener("click", loadPlantoes);
 document.getElementById("expirados-tab").addEventListener("click", loadPlantoes);
+document.getElementById("filter_btn").addEventListener("click", loadPlantoes);
+document.getElementById("clear_filter_btn").addEventListener("click", () => {
+    document.getElementById("filter_type").value = "";
+    document.getElementById("filter_value").value = "";
+    document.getElementById("data_inicio").value = "";
+    document.getElementById("data_fim").value = "";
+    loadPlantoes();
+})
 
 function formatDateTime(date) {
     return new Date(date).toLocaleTimeString("pt-BR").slice(0, 5) + " - " + new Date(date).toLocaleDateString("pt-BR")
 }
 
 function loadPlantoes() {
-    getData(`/api/plantao/`, (data) => {
-        renderPlantoes(data)
-    })
+    let filterField = document.getElementById("filter_type").value;
+    let filterValue = document.getElementById("filter_value").value.trim();
+    let dataInicio = document.getElementById("data_inicio").value;
+    let dataFim = document.getElementById("data_fim").value;
+
+    const params = new URLSearchParams();
+
+    if (!dataInicio && !dataFim) {
+        const hoje = new Date();
+
+        const inicio = new Date();
+        inicio.setDate(hoje.getDate() - 90);
+
+        const fim = new Date();
+        fim.setDate(hoje.getDate() + 90);
+
+        dataInicio = inicio.toISOString().split("T")[0];
+        dataFim = fim.toISOString().split("T")[0];
+    }
+
+    if (filterValue) {
+        params.append("filter_type", filterField);
+        params.append("filter_value", filterValue);
+    }
+
+    if (dataInicio) {
+        params.append("data_inicio", dataInicio);
+    }
+
+    if (dataFim) {
+        params.append("data_fim", dataFim);
+    }
+
+    getData(`/api/plantao/?${params.toString()}`, (data) => {
+        renderPlantoes(data);
+    });
 }
 
 function renderPlantoes(plantoes) {
     let divAndamento = document.getElementById("plantoes-andamento")
     let divFinalizados = document.getElementById("plantoes-finalizados")
     let divExpirados = document.getElementById("plantoes-expirados")
+    const andamentoTab = document.getElementById("andamento-tab")
+    const finalizadosTab = document.getElementById("finalizados-tab")
+    const expiradosTab = document.getElementById("expirados-tab")
+
 
     function floatToHHMM(value) {
         const hours = Math.floor(value)
@@ -36,6 +81,10 @@ function renderPlantoes(plantoes) {
     let htmlAndamento = ""
     let htmlFinalizados = ""
     let htmlExpirados = ""
+    let andamentoCount = 0
+    let finalizadosCount = 0
+    let expiradosCount = 0
+
 
     plantoes.forEach(plantao => {
         let bgcolor = ""
@@ -148,14 +197,39 @@ function renderPlantoes(plantoes) {
 
         if (['A', 'C', 'P', 'R'].includes(plantao.status)) {
             htmlAndamento += card
+            andamentoCount++
         } else if (plantao.status == 'F') {
             htmlFinalizados += card
+            finalizadosCount++
         } else if (plantao.status == 'E' || plantao.status == 'D') {
             htmlExpirados += card
+            expiradosCount++
         }
     })
 
     divAndamento.innerHTML = htmlAndamento
     divFinalizados.innerHTML = htmlFinalizados
     divExpirados.innerHTML = htmlExpirados
+
+    andamentoTab.innerHTML = `
+        Andamento
+        <span class="badge bg-secondary rounded-pill ms-1">
+            ${andamentoCount}
+        </span>
+    `
+
+    finalizadosTab.innerHTML = `
+        Finalizados
+        <span class="badge bg-success rounded-pill ms-1">
+            ${finalizadosCount}
+        </span>
+    `
+
+    expiradosTab.innerHTML = `
+        Expirados
+        <span class="badge bg-danger rounded-pill ms-1">
+            ${expiradosCount}
+        </span>
+    `
+
 }
