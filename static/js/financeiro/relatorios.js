@@ -223,8 +223,15 @@ function visualizarRelatorio(element) {
     document.getElementById("status_detalhe_modal").innerHTML = relatorio.status_name;
     document.getElementById("data_referencia_detalhe_modal").innerHTML = maskData(relatorio.data_referencia);
     document.getElementById("valor_total_detalhe_modal").innerHTML = Number(relatorio.valor_total).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
-    document.getElementById("deducoes_detalhe_modal").innerHTML = Number(relatorio.deducoes).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+    document.getElementById("deducoes_detalhe_modal").innerHTML = Number(-relatorio.deducoes).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
     document.getElementById("liquido_detalhe_modal").innerHTML = Number(relatorio.valor_liquido).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+    document.getElementById("cuidadora_codigo_banco_detalhe_modal").innerHTML = relatorio.cuidadora_detalhe.codigo_banco;
+    document.getElementById("cuidadora_agencia_conta_detalhe_modal").innerHTML = relatorio.cuidadora_detalhe.agencia_conta;
+    document.getElementById("cuidadora_numero_conta_detalhe_modal").innerHTML = relatorio.cuidadora_detalhe.numero_conta;
+    document.getElementById("chave_pix_detalhe_modal").innerHTML = relatorio.cuidadora_detalhe.chave_pix;
+    document.getElementById("cnpj_detalhe_modal").innerHTML = relatorio.cuidadora_detalhe.cnpj;
+    document.getElementById("cpf_detalhe_modal").innerHTML = relatorio.cuidadora_detalhe.cpf;
+
     renderPagamentosRelatorioDetalhe(relatorio.pagamentos);
 
     detalhesModal.show();
@@ -235,19 +242,16 @@ function renderPagamentosRelatorioDetalhe(pagamentos) {
     container.innerHTML = "";
     pagamentos.forEach(pagamento => {
         const linha = document.createElement("div");
-        linha.className = "row g-2 pb-2 mb-1 border align-items-center mt-2";
+        linha.className = "row p-1 border align-items-center";
         linha.innerHTML = `
             <div class="col-4 col-md text-center">
-                <label class="fw-bold">Código Interno</label>
-                <span class="small text-muted d-block">${pagamento.codigo_interno}</span>
+                <small class="d-block">${pagamento.codigo_interno}</small>
             </div>
             <div class="col-4 col-md text-center">
-                <label class="fw-bold">Status</label>
-                <span class="small text-muted d-block">${pagamento.status_name}</span>
+                <small class="d-block">${pagamento.status_name}</small>
             </div>
             <div class="col-4 col-md text-center">
-                <label class="fw-bold">Valor</label>
-                <span class="small text-muted d-block">${Number(pagamento.valor_calculado).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</span>
+                <small class="d-block">${Number(pagamento.valor_calculado).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</small>
             </div>
         `;
         container.appendChild(linha);
@@ -615,3 +619,44 @@ function adicionarTodosPagamentos() {
 
 document.getElementById("btnAdicionarTodos").addEventListener("click", adicionarTodosPagamentos);
 
+function imprimirDetalhesModal() {
+    const conteudo = document.getElementById("detalhesModal").innerHTML;
+
+    const janelaImpressao = window.open('', '', 'width=800,height=600');
+
+    janelaImpressao.document.write(`
+        <html>
+            <head>
+                <title>Impressão</title>
+
+                <link 
+                    rel="stylesheet" 
+                    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+                >
+
+                <style>
+                    body {
+                        padding: 20px;
+                        font-family: Arial, sans-serif;
+                    }
+
+                    .no-print {
+                        display: none !important;
+                    }
+                </style>
+            </head>
+
+            <body>
+                ${conteudo}
+            </body>
+        </html>
+    `);
+
+    janelaImpressao.document.close();
+
+    janelaImpressao.onload = function () {
+        janelaImpressao.focus();
+        janelaImpressao.print();
+        janelaImpressao.close();
+    };
+}

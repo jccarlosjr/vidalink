@@ -26,7 +26,7 @@ class PacienteMinSerializer(ModelSerializer):
 class CuidadoraMinSerializer(ModelSerializer):
     class Meta:
         model = Cuidadora
-        fields = ['id', 'nome']
+        fields = ['id', 'nome', 'codigo_banco', 'agencia_conta', 'numero_conta', 'chave_pix', 'tipo_chave_pix', 'cpf', 'cnpj']
 
 
 class PlantaoMinSerializer(ModelSerializer):
