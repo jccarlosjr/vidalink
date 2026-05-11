@@ -8,6 +8,7 @@ router.register(r'api/profissionais', views.ProfissionalViewSet)
 
 urlpatterns = [
     path('profissionais/', views.ProfissionaisView.as_view(), name='profissionais'),
+    path('perfil/', views.PerfilView.as_view(), name='perfil'),
     path('login/', views.CustomLoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
 ]

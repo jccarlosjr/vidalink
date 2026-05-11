@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from .models import Profissional
 from .serializers import ProfissionalSerializer
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
 from rest_framework.decorators import action
 from app.mixins import StaffRequiredMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -87,3 +87,10 @@ class ProfissionaisView(StaffRequiredMixin, LoginRequiredMixin, TemplateView):
 
 class CustomLoginView(LoginView):
     template_name = 'login.html'
+
+
+class PerfilView(LoginRequiredMixin, DetailView):
+    template_name = 'perfil.html'
+
+    def get_object(self):
+        return self.request.user

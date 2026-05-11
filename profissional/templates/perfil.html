@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head %}
+<title>Perfil</title>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <!-- CARD PERFIL -->
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-9 col-xl-8">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+
+                <!-- HEADER -->
+                <div class="bg-primary-subtle text-primary-emphasis p-4">
+
+                    <div class="d-flex flex-column flex-md-row align-items-center gap-4">
+
+                        <!-- INFO PRINCIPAL -->
+                        <div class="text-center text-md-start flex-grow-1">
+
+                            <h2 class="fw-bold mb-1">
+                                {{ profissional.nome|default:"Profissional" }}
+                            </h2>
+
+                            <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-md-start">
+
+                                {% if profissional.telefone %}
+                                <span>
+                                    <i class="bi bi-telephone"></i>
+                                    {{ profissional.telefone }}
+                                </span>
+                                {% endif %}
+
+                                {% if profissional.nascimento %}
+                                <span>
+                                    <i class="bi bi-calendar"></i>
+                                    {{ profissional.nascimento|date:"d/m/Y" }}
+                                </span>
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- BODY -->
+                <div class="card-body p-4">
+
+                    <div class="row g-4">
+
+                        <!-- DADOS PESSOAIS -->
+                        <div class="col-12 col-md-6">
+
+                            <div class="card h-100 border rounded-4">
+                                <div class="card-body">
+
+                                    <h5 class="fw-bold mb-4">
+                                        <i class="bi bi-person-vcard me-2"></i>
+                                        Dados Pessoais
+                                    </h5>
+
+                                    <div class="mb-3">
+                                        <small class="text-body-secondary d-block">
+                                            CPF
+                                        </small>
+                                        <strong class="text-muted">{{ profissional.cpf|default:"-" }}</strong>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <small class="text-body-secondary d-block">
+                                            CNPJ
+                                        </small>
+                                        <strong class="text-muted">{{ profissional.cnpj|default:"-" }}</strong>
+                                    </div>
+
+                                    <div>
+                                        <small class="text-body-secondary d-block">
+                                            Telefone
+                                        </small>
+                                        <strong class="text-muted">{{ profissional.telefone|default:"-" }}</strong>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- ENDEREÇO -->
+                        <div class="col-12 col-md-6">
+
+                            <div class="card h-100 border rounded-4">
+                                <div class="card-body">
+
+                                    <h5 class="fw-bold mb-4">
+                                        <i class="bi bi-geo-alt me-2"></i>
+                                        Endereço
+                                    </h5>
+
+                                    <div class="mb-3">
+                                        <small class="text-body-secondary d-block">
+                                            Logradouro
+                                        </small>
+
+                                        <strong class="text-muted">
+                                            {{ profissional.endereco|default:"-" }},
+                                            {{ profissional.numero|default:"S/N" }}
+                                        </strong>
+                                    </div>
+
+                                    {% if profissional.complemento %}
+                                    <div class="mb-3">
+                                        <small class="text-body-secondary d-block">
+                                            Complemento
+                                        </small>
+                                        <strong class="text-muted">{{ profissional.complemento }}</strong>
+                                    </div>
+                                    {% endif %}
+
+                                    <div class="mb-3">
+                                        <small class="text-body-secondary d-block">
+                                            Bairro
+                                        </small>
+                                        <strong class="text-muted">{{ profissional.bairro|default:"-" }}</strong>
+                                    </div>
+
+                                    <div>
+                                        <small class="text-body-secondary d-block">
+                                            CEP
+                                        </small>
+                                        <strong class="text-muted">{{ profissional.cep|default:"-" }} - {{ profissional.cidade }}/{{ profissional.estado }}</strong>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- PIX -->
+                        <div class="col-12 col-md-6">
+
+                            <div class="card h-100 border rounded-4">
+                                <div class="card-body">
+
+                                    <h5 class="fw-bold mb-4">
+                                        <i class="bi bi-qr-code me-2"></i>
+                                        PIX
+                                    </h5>
+
+                                    <div class="mb-3">
+                                        <small class="text-body-secondary d-block">
+                                            Tipo da Chave
+                                        </small>
+
+                                        <strong class="text-muted">
+                                            {{ profissional.tipo_chave_pix|default:"-" }}
+                                        </strong>
+                                    </div>
+
+                                    <div>
+                                        <small class="text-body-secondary d-block">
+                                            Chave PIX
+                                        </small>
+
+                                        <strong class="text-break text-muted">
+                                            {{ profissional.chave_pix|default:"-" }}
+                                        </strong>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- DADOS BANCÁRIOS -->
+                        <div class="col-12 col-md-6">
+
+                            <div class="card h-100 border rounded-4">
+                                <div class="card-body">
+
+                                    <h5 class="fw-bold mb-4">
+                                        <i class="bi bi-bank me-2"></i>
+                                        Dados Bancários
+                                    </h5>
+
+                                    <div class="mb-3">
+                                        <small class="text-body-secondary d-block">
+                                            Banco
+                                        </small>
+
+                                        <strong class="text-muted">
+                                            {% if profissional.codigo_banco %}
+                                            {{ profissional.codigo_banco }}
+                                            {% endif %}
+                                        </strong>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <small class="text-body-secondary d-block">
+                                            Agência
+                                        </small>
+
+                                        <strong class="text-muted">
+                                            {{ profissional.agencia_conta|default:"-" }}
+                                        </strong>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <small class="text-body-secondary d-block">
+                                            Conta
+                                        </small>
+
+                                        <strong class="text-muted">
+                                            {{ profissional.numero_conta|default:"-" }}
+                                        </strong>
+                                    </div>
+
+                                    <div>
+                                        <small class="text-body-secondary d-block">
+                                            Tipo de Conta
+                                        </small>
+
+                                        <strong class="text-muted">
+                                            {{ profissional.tipo_conta|default:"-" }}
+                                        </strong>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% block scripts %}
+{% endblock %}
+{% endblock %}
