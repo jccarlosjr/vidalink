@@ -7,10 +7,16 @@ New Features
 
 
 Ongoing Features
-- Adicionar dashboard para homepage
+- Limitar em 500m do endereço do cliente para inserir registro
+- Adicionar histórico de plantão para qualquer alteração feita
+- Adicionar aba de filtros em um accordion pra deixar a tela mais limpa
+- Adicionar paginação aos plantões
+- Revisar os campos reandonly
+
 
 Bugs
 - Precisão de geolocalização do registro muito alta
+
 
 Finalizado
 - App Cuidadoras
@@ -24,13 +30,20 @@ Sistema de avaliação por estrelas como uber e ifood (máximo 5 estrelas)
 
 Avaliação do sistema (Automática)
 - plantão expirado ou cancelado = 1
-- carga horária abaixo de 70% = 2
+- plantão atribuído a outro cuidador = 1
+- carga horária abaixo de 70% = 1
 - carga horária abaixo de 80% = 2
-- carga horária abaixo de 90% = 4
-- carga horária acima de 90% = 5
+- carga horária abaixo de 95% = 4
+- carga horária acima de 95% = 5
+
+
+Avaliação mensal manual
 - avaliação do paciente = de 1 a 5
 - avaliação da staff = de 1 a 5
 
 
-No fim o(a) cuidador(a) tem a nota de avaliação baseado na média de todas as notas do sistema
-
+No fim o(a) cuidador(a) tem a nota de avaliação final baseada na média ponderada de todas as notas do Sistema de Avaliação de Cuidadoras.
+Ponderada:
+- 40% = avaliação automática
+- 30% = avaliação do paciente
+- 30% = avaliação da staff

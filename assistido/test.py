@@ -5,7 +5,7 @@ from assistido.models import Assistido
 
 data = [
     {
-        "nome": "João Carlos Santos",
+        "nome": "JOAO CARLOS SILVA",
         "nascimento": "1980-03-15",
         "sexo": "M",
         "cep": "49055-120",
@@ -20,7 +20,7 @@ data = [
         "ativo": True
     },
     {
-        "nome": "Maria Helena Souza",
+        "nome": "MARIA HELENA DE SOUZA",
         "nascimento": "1968-07-21",
         "sexo": "F",
         "cep": "49037-240",
@@ -35,7 +35,7 @@ data = [
         "ativo": True
     },
     {
-        "nome": "Carlos Eduardo Lima",
+        "nome": "CARLOS EDUARDO LIMA",
         "nascimento": "1992-11-02",
         "sexo": "M",
         "cep": "49060-540",
@@ -50,7 +50,7 @@ data = [
         "ativo": True
     },
     {
-        "nome": "Fernanda Alves Rocha",
+        "nome": "FERNANDA ALVES ROCHA",
         "nascimento": "1985-05-09",
         "sexo": "F",
         "cep": "49100-000",
@@ -65,7 +65,7 @@ data = [
         "ativo": True
     },
     {
-        "nome": "Ricardo Menezes",
+        "nome": "RICARDO MENEZES",
         "nascimento": "1977-09-18",
         "sexo": "M",
         "cep": "49095-410",
@@ -80,7 +80,7 @@ data = [
         "ativo": True
     },
     {
-        "nome": "Patrícia Gomes",
+        "nome": "RENATA GOMES",
         "nascimento": "1990-12-11",
         "sexo": "F",
         "cep": "49080-320",
@@ -95,7 +95,7 @@ data = [
         "ativo": True
     },
     {
-        "nome": "José Antônio Ribeiro",
+        "nome": "JOSE ANTONIO RIBEIRO",
         "nascimento": "1959-04-25",
         "sexo": "M",
         "cep": "49015-230",
@@ -110,7 +110,7 @@ data = [
         "ativo": True
     },
     {
-        "nome": "Luciana Prado",
+        "nome": "LUCIANA PRADO",
         "nascimento": "1988-08-14",
         "sexo": "F",
         "cep": "49160-000",
@@ -125,7 +125,7 @@ data = [
         "ativo": True
     },
     {
-        "nome": "Marcos Vinicius Oliveira",
+        "nome": "MARCOS VINICIUS OLIVEIRA",
         "nascimento": "1973-10-30",
         "sexo": "M",
         "cep": "49020-150",
@@ -140,7 +140,7 @@ data = [
         "ativo": True
     },
     {
-        "nome": "Aline Ferreira Costa",
+        "nome": "ALINE FERREIRA COSTA",
         "nascimento": "1995-01-19",
         "sexo": "F",
         "cep": "49045-600",
@@ -155,7 +155,7 @@ data = [
         "ativo": True
     },
     {
-        "nome": "Roberto Silva Nunes",
+        "nome": "ROBERTO SILVA NUNES",
         "nascimento": "1965-06-03",
         "sexo": "M",
         "cep": "49032-180",
@@ -170,7 +170,7 @@ data = [
         "ativo": True
     },
     {
-        "nome": "Camila Tavares",
+        "nome": "CAMILA TAVARES",
         "nascimento": "2000-02-28",
         "sexo": "F",
         "cep": "49097-520",
@@ -185,7 +185,7 @@ data = [
         "ativo": True
     },
     {
-        "nome": "Paulo Henrique Dias",
+        "nome": "PAULO HENRIQUE DIAS",
         "nascimento": "1983-11-12",
         "sexo": "M",
         "cep": "49040-220",
@@ -200,7 +200,7 @@ data = [
         "ativo": True
     },
     {
-        "nome": "Juliana Mendes",
+        "nome": "JULIANA MENDES",
         "nascimento": "1998-09-05",
         "sexo": "F",
         "cep": "49140-000",
@@ -215,7 +215,7 @@ data = [
         "ativo": True
     },
     {
-        "nome": "André Luiz Barbosa",
+        "nome": "ANDRE LUIZ BARBOSA",
         "nascimento": "1971-03-27",
         "sexo": "M",
         "cep": "49085-410",
@@ -230,7 +230,7 @@ data = [
         "ativo": True
     },
     {
-        "nome": "Tatiane Oliveira Santos",
+        "nome": "TATIANE OLIVEIRA SANTOS",
         "nascimento": "1987-07-17",
         "sexo": "F",
         "cep": "49047-360",
@@ -245,7 +245,7 @@ data = [
         "ativo": True
     },
     {
-        "nome": "Felipe Araújo",
+        "nome": "FELIPE ARAUJO",
         "nascimento": "1993-04-01",
         "sexo": "M",
         "cep": "49025-730",
@@ -260,7 +260,7 @@ data = [
         "ativo": True
     },
     {
-        "nome": "Vanessa Cristina Lopes",
+        "nome": "VANESSA CRISTINA LOPES",
         "nascimento": "1979-08-08",
         "sexo": "F",
         "cep": "49075-120",
@@ -275,7 +275,7 @@ data = [
         "ativo": True
     },
     {
-        "nome": "Eduardo Matos",
+        "nome": "EDUARDO MATOS",
         "nascimento": "1962-12-24",
         "sexo": "M",
         "cep": "49035-500",
@@ -290,7 +290,7 @@ data = [
         "ativo": True
     },
     {
-        "nome": "Beatriz Carvalho",
+        "nome": "BEATRIZ CARVALHO",
         "nascimento": "2001-06-10",
         "sexo": "F",
         "cep": "49052-300",
