@@ -1,6 +1,6 @@
 from django.db import models
-from cuidadora.models import Cuidadora
-from paciente.models import Paciente
+from profissional.models import Profissional
+from assistido.models import Assistido
 from escala.models import Escala
 
 
@@ -11,7 +11,7 @@ STATUS_CHOICES = (
     ('R', 'Em Andamento'),
     ('F', 'Finalizado'),
     ('E', 'Expirado'),
-    ('D', 'Desistência do Cuidador')
+    ('D', 'Desistência do Profissional')
 )
 
 
@@ -24,12 +24,12 @@ class Plantao(models.Model):
     horas_cumpridas = models.FloatField(default=0)
     valor_calculado = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='A')
-    cuidadora = models.ForeignKey(Cuidadora, on_delete=models.PROTECT)
+    profissional = models.ForeignKey(Profissional, on_delete=models.PROTECT)
     escala = models.ForeignKey(Escala, on_delete=models.PROTECT)
-    paciente = models.ForeignKey(Paciente, on_delete=models.PROTECT)
+    assistido = models.ForeignKey(Assistido, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    observacoes = models.TextField(null=True, blank=True) 
+    observacoes = models.TextField(null=True, blank=True)
     regra_pagamento = models.ForeignKey("financeiro.RegraPagamento", on_delete=models.PROTECT, null=True, blank=True)
 
     def __str__(self):

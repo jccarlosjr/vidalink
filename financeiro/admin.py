@@ -10,8 +10,8 @@ class PagamentoAdmin(admin.ModelAdmin):
 
 @admin.register(Relatorio)
 class RelatorioAdmin(admin.ModelAdmin):
-    list_display = ('codigo_interno', 'cuidadora__nome', 'status', 'valor_total', 'valor_liquido', 'created_at', 'updated_at')
-    search_fields = ('codigo_interno', 'cuidadora__nome', 'status', 'created_at', 'updated_at')
+    list_display = ('codigo_interno', 'profissional__nome', 'status', 'valor_total', 'valor_liquido', 'created_at', 'updated_at')
+    search_fields = ('codigo_interno', 'profissional__nome', 'status', 'created_at', 'updated_at')
 
 
 @admin.register(RegraPagamento)

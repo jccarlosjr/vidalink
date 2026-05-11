@@ -1,0 +1,87 @@
+<div class="modal modal-lg fade" id="responsavelModal" tabindex="-2" aria-labelledby="responsavelModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="responsavelModalLabel">Responsáveis</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <input type="hidden" id="assistidoIdModal" required>
+                    <div class="col-12">
+                        <button class="btn-modern" id="adicionarResponsavelBtn">
+                            <i class="bi bi-plus-circle"></i>Adicionar Responsável para o Assistido
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <table class="table align-middle mb-0 text-body">
+                        <thead class="table">
+                            <tr>
+                                <th class="ps-4">Nome</th>
+                                <th class="ps-4">CPF</th>
+                                <th class="text-center">Telefone</th>
+                                <th class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table" id="responsaveisTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="novoResponsavelModal" data-bs-backdrop="static" tabindex="-2" aria-labelledby="novoResponsavelModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="novoResponsavelModalLabel">Novo Responsável</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="novoResponsavelForm">
+                    <input type="hidden" id="responsavelId" required>
+                    <input type="hidden" id="assistidoId" required>
+                    <div class="mb-3">
+                        <label for="novo_responsavel_nome" class="form-label">Nome</label>
+                        <input type="text" class="form-control" id="novo_responsavel_nome" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="novo_responsavel_nome" class="form-label">CPF</label>
+                        <input type="text" maxlength="14" class="form-control cpf-mask" id="novo_responsavel_cpf" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="novo_responsavel_telefone" class="form-label">Telefone</label>
+                        <input type="text" maxlength="14" minlength="14" class="form-control celphone-mask" id="novo_responsavel_telefone" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-modern" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn-modern" id="saveNovoResponsavelBtn">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deletarResponsavelModal" data-bs-backdrop="static" tabindex="-2" aria-labelledby="deletarResponsavelModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deletarResponsavelModalLabel">Deletar Responsável</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="deletarResponsavelId">
+                <p>Tem certeza que deseja deletar o responsável?</p>
+                <p class="text-danger">Essa ação não pode ser desfeita.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-modern" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn-modern text-danger" id="deletarResponsavelBtn">Deletar</button>
+            </div>
+        </div>
+    </div>
+</div>

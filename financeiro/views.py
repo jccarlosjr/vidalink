@@ -20,12 +20,12 @@ class PagamentoViewSet(ModelViewSet):
         queryset = super().get_queryset()
         filter_type = self.request.query_params.get('filter_type', None)
         filter_value = self.request.query_params.get('filter_value', None)
-        cuidadora = self.request.query_params.get('cuidadora', None)
+        profissional = self.request.query_params.get('profissional', None)
         status = self.request.query_params.get('status', None)
 
-        if cuidadora:
+        if profissional:
             queryset = queryset.filter(
-                plantao__cuidadora_id=cuidadora
+                plantao__profissional_id=profissional
             )
 
         if status:
@@ -52,8 +52,9 @@ class PagamentoViewSet(ModelViewSet):
 
 
     def perform_create(self, serializer):
-        pagamento = self.get_object()
-        self._validate_pagamento(pagamento)
+        pagamento_data = serializer.validated_data
+        self._validate_pagamento_data(pagamento_data)
+
         pagamento = serializer.save()
         self._update_regra_plantao(pagamento)
 
@@ -87,6 +88,12 @@ class PagamentoViewSet(ModelViewSet):
         if pagamento.plantao.status not in ["F", "E"]:
             raise serializers.ValidationError({"erro": "Plantão não foi finalizado"})
 
+    def _validate_pagamento_data(self, data):
+        plantao = data.get("plantao")
+        if plantao.status not in ["F", "E"]:
+            raise serializers.ValidationError({
+                "erro": "Plantão não foi finalizado"
+            })
 
     def _update_regra_plantao(self, pagamento):
         regra_pagamento = self.request.data.get('regra_pagamento')

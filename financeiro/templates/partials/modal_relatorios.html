@@ -10,11 +10,11 @@
                     <input type="hidden" id="relatorio_id_modal_relatorio" name="relatorio_id_modal_relatorio">
                     <div class="row">
                         <div class="col-md-12">
-                            <label for="" class="label">Cuidador(a)</label>
-                            <input type="hidden" id="cuidadora_id_modal_relatorio" name="cuidadora_id_modal_relatorio">
+                            <label for="" class="label">Profissional</label>
+                            <input type="hidden" id="profissional_id_modal_relatorio" name="profissional_id_modal_relatorio">
                             <div class="col-md-12 d-flex">
-                                <input id="cuidadora_nome_modal_relatorio" type="text" class="form-control form-control-sm" placeholder="Selecione um(a) Cuidador(a)" readonly="readonly">
-                                <button type="button" class="btn-modern btn-sm" id="abrirSearchCuidadoraModal"><i class="bi bi-search"></i> Buscar</button>
+                                <input id="profissional_nome_modal_relatorio" type="text" class="form-control form-control-sm" placeholder="Selecione um(a) Profissional" readonly="readonly">
+                                <button type="button" class="btn-modern btn-sm" id="abrirSearchProfissionalModal"><i class="bi bi-search"></i> Buscar</button>
                             </div>
                         </div>
                     </div>
@@ -43,7 +43,7 @@
                 </form>
             </div>
             <div class="modal-header">
-                <h5>Pagamentos do(a) Cuidador(a)</h5>
+                <h5>Pagamentos do(a) Profissional</h5>
             </div>
             <div class="modal-body">
                 <button class="btn-modern btn-sm" type="button" id="adicionarPagamentoBtnRelatorio"><i class="bi bi-plus"></i> Adicionar Pagamento</button>
@@ -59,18 +59,18 @@
 </div>
 
 
-<div class="modal modal-lg fade" id="searchCuidadoraModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-2" aria-labelledby="searchCuidadoraModalLabel" aria-hidden="true">
+<div class="modal modal-lg fade" id="searchProfissionalModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-2" aria-labelledby="searchProfissionalModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="searchCuidadoraModalLabel">Buscar Cuidador(a)</h5>
+                <h5 class="modal-title" id="searchProfissionalModalLabel">Buscar Profissional</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-bs-target="#relatorioModal" data-bs-toggle="modal"></button>
             </div>
             <div class="modal-body">
                 <div class="row g-2 align-items-end mb-3">
                     <div class="col-md-4">
-                        <label class="form-label" for="filter_type_cuidadora">Tipo</label>
-                        <select name="filter_type_cuidadora" id="filter_type_cuidadora" class="form-select form-select-sm">
+                        <label class="form-label" for="filter_type_profissional">Tipo</label>
+                        <select name="filter_type_profissional" id="filter_type_profissional" class="form-select form-select-sm">
                             <option value="nome">Nome</option>
                             <option value="cpf">CPF</option>
                             <option value="cnpj">CNPJ</option>
@@ -79,20 +79,20 @@
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Valor</label>
-                        <input type="text" id="filter_value_cuidadora" class="form-control form-control-sm">
+                        <input type="text" id="filter_value_profissional" class="form-control form-control-sm">
                     </div>
 
                     <div class="col-md-4 d-flex align-items-end">
-                        <button class="text-decoration-none btn-modern" id="filter_btn_cuidadora">
+                        <button class="text-decoration-none btn-modern" id="filter_btn_profissional">
                             <i class="bi bi-search"></i> Filtrar
                         </button>
-                        <button class="text-decoration-none btn-modern ms-2" id="clear_filter_btn_cuidadora">
+                        <button class="text-decoration-none btn-modern ms-2" id="clear_filter_btn_profissional">
                             <i class="bi bi-x-circle"></i> Limpar
                         </button>
                     </div>
                 </div>
                 <div class="row">
-                    <div id="result_cuidadora"></div>
+                    <div id="result_profissional"></div>
                 </div>
             </div>
             <div class="modal-footer"></div>
@@ -105,7 +105,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="searchPagamentoModalLabel">Pagamentos Pendentes do(a) Cuidador(a)</h5>
+                <h5 class="modal-title" id="searchPagamentoModalLabel">Pagamentos Pendentes do(a) Profissional</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" data-bs-target="#relatorioModal" data-bs-toggle="modal"></button>
             </div>
             <div class="modal-body">
@@ -132,12 +132,12 @@
                 <div class="border rounded p-4">
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Cuidador(a):</label>
-                            <small id="cuidadora_nome_detalhe_modal" class="text-muted"></small>
+                            <label>Profissional:</label>
+                            <small id="profissional_nome_detalhe_modal" class="text-muted"></small>
                         </div>
                         <div class="col-md-4">
                             <label>Banco:</label>
-                            <small id="cuidadora_codigo_banco_detalhe_modal" class="text-muted"></small>
+                            <small id="profissional_codigo_banco_detalhe_modal" class="text-muted"></small>
                         </div>
                         <div class="col-md-4">
                             <label>Chave Pix:</label>
@@ -151,7 +151,7 @@
                         </div>
                         <div class="col-md-4">
                             <label>Agência:</label>
-                            <small id="cuidadora_agencia_conta_detalhe_modal" class="text-muted"></small>
+                            <small id="profissional_agencia_conta_detalhe_modal" class="text-muted"></small>
                         </div>
                         <div class="col-md-4">
                             <label>Status:</label>
@@ -166,7 +166,7 @@
 
                         <div class="col-md-4">
                             <label>Conta:</label>
-                            <small id="cuidadora_numero_conta_detalhe_modal" class="text-muted"></small>
+                            <small id="profissional_numero_conta_detalhe_modal" class="text-muted"></small>
                         </div>
                         <div class="col-md-4">
                             <label>Referência:</label>

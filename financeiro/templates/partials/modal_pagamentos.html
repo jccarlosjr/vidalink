@@ -13,23 +13,23 @@
                             <label for="" class="label">Plantão</label>
                             <input type="hidden" id="plantao_id_modal_pagamentos">
                             <div class="col-md-12 d-flex">
-                                <input id="plantao_codigo_modal_pagamentos" type="text" class="form-control form-control-sm" placeholder="Selecione o Plantão ->" readonly="readonly"><button type="button" class="btn-modern btn-sm" id="abrirSearchPlantao"><i class="bi bi-search"></i></button>
+                                <input id="plantao_codigo_modal_pagamentos" type="text" class="form-control form-control-sm" placeholder="Selecione o Plantão ->" readonly><button type="button" class="btn-modern btn-sm" id="abrirSearchPlantao"><i class="bi bi-search"></i></button>
                             </div>
                         </div>
 
                         <div class="col-md-6">
-                            <label for="" class="label">Paciente</label>
-                            <input type="hidden" id="paciente_id_modal_pagamentos">
+                            <label for="" class="label">Assistido</label>
+                            <input type="hidden" id="assistido_id_modal_pagamentos">
                             <div class="col-md-12">
-                                <input id="paciente_nome_modal_pagamentos" type="text" class="form-control form-control-sm" reandonly>
+                                <input id="assistido_nome_modal_pagamentos" type="text" class="form-control form-control-sm" readonly>
                             </div>
                         </div>
 
                         <div class="col-md-6">
-                            <label for="" class="label">Cuidador(a)</label>
-                            <input type="hidden" id="cuidadora_id_modal_pagamentos">
+                            <label for="" class="label">Profissional</label>
+                            <input type="hidden" id="profissional_id_modal_pagamentos">
                             <div class="col-md-12">
-                                <input id="cuidadora_nome_modal_pagamentos" type="text" class="form-control form-control-sm" reandonly>
+                                <input id="profissional_nome_modal_pagamentos" type="text" class="form-control form-control-sm" readonly>
                             </div>
                         </div>
 
@@ -93,11 +93,11 @@
                         <label class="form-label" for="filter_type_plantao">Tipo</label>
                         <select name="filter_type_plantao" id="filter_type_plantao" class="form-select form-select-sm">
                             <option selected value="codigo_interno">Código Interno (Plantão)</option>
-                            <option value="cuidadora__nome">Nome (Cuidador(a))</option>
-                            <option value="cuidadora__cpf">CPF (Cuidador(a))</option>
-                            <option value="cuidadora__cnpj">CNPJ (Cuidador(a))</option>
-                            <option value="paciente__nome">Nome (Paciente)</option>
-                            <option value="paciente__cpf">CPF (Paciente)</option>
+                            <option value="profissional__nome">Nome (Profissional)</option>
+                            <option value="profissional__cpf">CPF (Profissional)</option>
+                            <option value="profissional__cnpj">CNPJ (Profissional)</option>
+                            <option value="assistido__nome">Nome (Assistido)</option>
+                            <option value="assistido__cpf">CPF (Assistido)</option>
                         </select>
                     </div>
                     <div class="col-md-4">

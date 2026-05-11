@@ -1,7 +1,5 @@
 from django.db import models
-from cuidadora.models import Cuidadora
-from paciente.models import Paciente
-from django.utils import timezone
+from profissional.models import Profissional
 
 
 class RegraPagamento(models.Model):
@@ -26,7 +24,7 @@ class Relatorio(models.Model):
         FECHADO = "FECHADO", "Fechado"
         PAGO = "PAGO", "Pago"
 
-    cuidadora = models.ForeignKey(Cuidadora, on_delete=models.PROTECT, related_name="relatorios")
+    profissional = models.ForeignKey(Profissional, on_delete=models.PROTECT, related_name="relatorios")
     status = models.CharField(max_length=30, choices=Status.choices, default=Status.ABERTO)
     data_referencia = models.DateField(null=True, blank=True)
     valor_total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)

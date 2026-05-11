@@ -11,9 +11,6 @@ Ongoing Features
 
 Bugs
 - Precisão de geolocalização do registro muito alta
-- Corrigir bug na exportação do PDF onde não é possível ver plantões nas datas corretas de inicio e fim
-- Padronizar o envio de CPF, Nome e CPNJ pro backend
-
 
 Finalizado
 - App Cuidadoras

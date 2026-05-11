@@ -8,8 +8,8 @@ from decimal import Decimal, ROUND_CEILING
 class PlantaoValidator:
 
     @staticmethod
-    def validar_intervalo(inicio, fim, cuidadora_id, instance_id=None):
-        qs = Plantao.objects.filter(cuidadora_id=cuidadora_id)
+    def validar_intervalo(inicio, fim, profissional_id, instance_id=None):
+        qs = Plantao.objects.filter(profissional_id=profissional_id)
 
         if instance_id:
             qs = qs.exclude(id=instance_id)
@@ -19,11 +19,11 @@ class PlantaoValidator:
         ).exists()
 
         if conflito:
-            raise ValueError("Conflito de horário com plantão existente, esse(a) cuidador(a) já possui um ou mais plantões criados para essas datas/horários")
+            raise ValueError("Conflito de horário com plantão existente, esse(a) profissional já possui um ou mais plantões criados para essas datas/horários")
 
 
     @staticmethod
-    def validar_lote(plantoes, cuidadora_id):
+    def validar_lote(plantoes, profissional_id):
         intervalos = []
 
         for p in plantoes:
@@ -32,11 +32,11 @@ class PlantaoValidator:
 
             for i_inicio, i_fim in intervalos:
                 if inicio < i_fim and fim > i_inicio:
-                    raise ValueError("Conflito de horário com plantão existente, esse(a) cuidador(a) já possui um ou mais plantões criados para essas datas/horários")
+                    raise ValueError("Conflito de horário com plantão existente, esse(a) profissional já possui um ou mais plantões criados para essas datas/horários")
 
             intervalos.append((inicio, fim))
 
-            PlantaoValidator.validar_intervalo(inicio, fim, cuidadora_id)
+            PlantaoValidator.validar_intervalo(inicio, fim, profissional_id)
 
 
     @staticmethod

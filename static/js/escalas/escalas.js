@@ -1,8 +1,8 @@
 let datasSelecionadas = new Set();
 let calendar;
 let isDraggingGlobal = false;
-let modal_buscar_paciente;
-let modal_buscar_cuidadora;
+let modal_buscar_assistido;
+let modal_buscar_profissional;
 let modalEditarPlantao
 let PLANTOES
 
@@ -11,8 +11,8 @@ let PLANTOES
 // ###################################
 
 document.addEventListener("DOMContentLoaded", function () {
-    modal_buscar_cuidadora = new bootstrap.Modal(document.getElementById('modal_buscar_cuidadora'));
-    modal_buscar_paciente = new bootstrap.Modal(document.getElementById('modal_buscar_paciente'));
+    modal_buscar_profissional = new bootstrap.Modal(document.getElementById('modal_buscar_profissional'));
+    modal_buscar_assistido = new bootstrap.Modal(document.getElementById('modal_buscar_assistido'));
     modalEditarPlantao = new bootstrap.Modal(document.getElementById('modalEditarPlantao'));
     buscarRegraPagamento();
 
@@ -59,13 +59,13 @@ document.addEventListener("DOMContentLoaded", function () {
         },
 
         eventContent: function (arg) {
-            const { horaInicio, horaFim, cuidadora } = arg.event.extendedProps;
+            const { horaInicio, horaFim, profissional } = arg.event.extendedProps;
 
             return {
                 html: `
                     <div class="fc-event-custom">
                         <div class="fc-event-hora">${horaInicio} - ${horaFim}</div>
-                        <div class="fc-event-cuidadora">${cuidadora}</div>
+                        <div class="fc-event-profissional">${profissional}</div>
                     </div>
                 `
             };
@@ -78,20 +78,20 @@ document.addEventListener("DOMContentLoaded", function () {
     calendar.render();
 });
 
-document.getElementById("btn-buscar-paciente").addEventListener("click", buscarPaciente)
-document.getElementById("btn-buscar-cuidadora").addEventListener("click", buscarCuidadora)
+document.getElementById("btn-buscar-assistido").addEventListener("click", buscarAssistido)
+document.getElementById("btn-buscar-profissional").addEventListener("click", buscarProfissional)
 
 // ###################################
-// ########### PACIENTES #############
+// ########### ASSISTIDOS ##############
 // ###################################
 
-function openModalBuscarPaciente() {
-    modal_buscar_paciente.show();
+function openModalBuscarAssistido() {
+    modal_buscar_assistido.show();
 }
 
-function buscarPaciente() {
-    let filterField = document.getElementById("filter_paciente").value
-    let filterValue = document.getElementById("filter_value_paciente").value.trim()
+function buscarAssistido() {
+    let filterField = document.getElementById("filter_assistido").value
+    let filterValue = document.getElementById("filter_value_assistido").value.trim()
     const params = new URLSearchParams()
 
     if (filterValue) {
@@ -99,19 +99,19 @@ function buscarPaciente() {
         params.append("filter_value", filterValue)
     }
 
-    getData(`/api/pacientes/?${params.toString()}`, (data) => {
-        renderPacientes(data.results)
+    getData(`/api/assistidos/?${params.toString()}`, (data) => {
+        renderAssistidos(data.results)
     })
 }
 
-function renderPacientes(pacientes = []) {
-    let container = document.getElementById("pacientes_table")
+function renderAssistidos(assistidos = []) {
+    let container = document.getElementById("assistidos_table")
     container.innerHTML = ""
 
-    if (pacientes.length === 0) {
+    if (assistidos.length === 0) {
         container.innerHTML = `
             <div class="text-center py-4 text-muted">
-                Nenhum paciente encontrado.
+                Nenhum assistido encontrado.
             </div>
         `
         return;
@@ -119,13 +119,13 @@ function renderPacientes(pacientes = []) {
 
     let html = ""
 
-    pacientes.forEach(paciente => {
+    assistidos.forEach(assistido => {
         html += `
             <tr class="text-center">
-                <td>${paciente.nome}</td>
-                <td>${paciente.idade}</td>
+                <td>${assistido.nome}</td>
+                <td>${maskData(assistido.nascimento)}</td>
                 <td>
-                    <button class="btn btn-modern" onclick="selecionarPaciente(${paciente.id})">
+                    <button class="btn btn-modern" onclick="selecionarAssistido(${assistido.id})">
                         Selecionar
                     </button>
                 </td>
@@ -136,26 +136,26 @@ function renderPacientes(pacientes = []) {
     container.innerHTML = html
 }
 
-function selecionarPaciente(id) {
-    getData(`/api/pacientes/${id}/`, (data) => {
-        document.getElementById("paciente").value = data.nome
-        document.getElementById("paciente_id").value = data.id
-        modal_buscar_paciente.hide()
+function selecionarAssistido(id) {
+    getData(`/api/assistidos/${id}/`, (data) => {
+        document.getElementById("assistido").value = data.nome
+        document.getElementById("assistido_id").value = data.id
+        modal_buscar_assistido.hide()
         buscarPlantoes(id)
     })
 }
 
 // ###################################
-// ########### CUIDADORES ############
+// ########### PROFISSIONAIS #########
 // ###################################
 
-function openModalBuscarCuidadora() {
-    modal_buscar_cuidadora.show();
+function openModalBuscarProfissional() {
+    modal_buscar_profissional.show();
 }
 
-function buscarCuidadora() {
-    let filterField = document.getElementById("filter_cuidadora").value
-    let filterValue = document.getElementById("filter_value_cuidadora").value.trim()
+function buscarProfissional() {
+    let filterField = document.getElementById("filter_profissional").value
+    let filterValue = document.getElementById("filter_value_profissional").value.trim()
     const params = new URLSearchParams()
 
     if (filterValue) {
@@ -163,19 +163,19 @@ function buscarCuidadora() {
         params.append("filter_value", filterValue)
     }
 
-    getData(`/api/cuidadoras/?${params.toString()}`, (data) => {
-        renderCuidadoras(data.results)
+    getData(`/api/profissionais/?${params.toString()}`, (data) => {
+        renderProfissionais(data.results)
     })
 }
 
-function renderCuidadoras(cuidadoras = []) {
-    let container = document.getElementById("cuidadoras_table")
+function renderProfissionais(profissionais = []) {
+    let container = document.getElementById("profissionais_table")
     container.innerHTML = ""
 
-    if (cuidadoras.length === 0) {
+    if (profissionais.length === 0) {
         container.innerHTML = `
             <div class="text-center py-4 text-muted">
-                Nenhuma cuidadora encontrada.
+                Nenhum profissional encontrado.
             </div>
         `
         return;
@@ -183,22 +183,22 @@ function renderCuidadoras(cuidadoras = []) {
 
     let html = ""
 
-    cuidadoras.forEach(cuidadora => {
-        const telefoneLimpo = cuidadora.telefone.replace(/\D/g, "");
+    profissionais.forEach(profissional => {
+        const telefoneLimpo = profissional.telefone.replace(/\D/g, "");
 
         html += `
             <tr class="text-center">
-                <td>${cuidadora.nome}</td>
-                <td>${cuidadora.cpf}</td>
+                <td>${profissional.nome}</td>
+                <td>${profissional.cpf}</td>
                 <td>
-                    ${cuidadora.telefone}
+                    ${profissional.telefone}
                     <a href="https://wa.me/55${telefoneLimpo}" target="_blank" class="text-success text-decoration-none">
                         <i class="bi bi-whatsapp btn-modern"></i>
                     </a>
                 </td>
-                <td>${cuidadora.nascimento.split("T")[0].split("-").reverse().join("/")}</td>
+                <td>${profissional.nascimento.split("T")[0].split("-").reverse().join("/")}</td>
                 <td>
-                    <button class="btn btn-modern" onclick="selecionarCuidadora(${cuidadora.id}, '${cuidadora.nome}')">
+                    <button class="btn btn-modern" onclick="selecionarProfissional(${profissional.id}, '${profissional.nome}')">
                         Selecionar
                     </button>
                 </td>
@@ -209,12 +209,12 @@ function renderCuidadoras(cuidadoras = []) {
     container.innerHTML = html
 }
 
-function selecionarCuidadora(id, nome) {
-    document.getElementById("cuidadora").value = nome
-    document.getElementById("cuidadora_id").value = id
-    document.getElementById("edit_cuidadora_nome").value = nome
-    document.getElementById("edit_cuidadora").value = id
-    modal_buscar_cuidadora.hide()
+function selecionarProfissional(id, nome) {
+    document.getElementById("profissional").value = nome
+    document.getElementById("profissional_id").value = id
+    document.getElementById("edit_profissional_nome").value = nome
+    document.getElementById("edit_profissional").value = id
+    modal_buscar_profissional.hide()
 }
 
 // ###################################
@@ -222,14 +222,14 @@ function selecionarCuidadora(id, nome) {
 // ###################################
 
 function criarPlantoesLote() {
-    const paciente = document.getElementById("paciente_id").value;
-    const cuidadora = document.getElementById("cuidadora_id").value;
+    const assistido = document.getElementById("assistido_id").value;
+    const profissional = document.getElementById("profissional_id").value;
     const inicio = document.getElementById("hora_inicio").value;
     const fim = document.getElementById("hora_fim").value;
     const regra_pagamento = document.getElementById("select_regra").value;
 
-    if (!paciente || !cuidadora) {
-        showToast("Selecione paciente e cuidadora", "danger");
+    if (!assistido || !profissional) {
+        showToast("Selecione assistido e profissional", "danger");
         return;
     }
 
@@ -260,8 +260,8 @@ function criarPlantoesLote() {
         return {
             inicio: `${data}T${inicio}:00`,
             fim: `${dataFim}T${fim}:00`,
-            paciente: paciente,
-            cuidadora: cuidadora,
+            assistido: assistido,
+            profissional: profissional,
             regra_pagamento: regra_pagamento,
         };
     });
@@ -270,12 +270,12 @@ function criarPlantoesLote() {
         showToast("Plantoes criados com sucesso", "success");
         datasSelecionadas.clear();
         atualizarCalendarioVisual();
-        buscarPlantoes(paciente);
+        buscarPlantoes(assistido);
     });
 }
 
-function buscarPlantoes(paciente_id) {
-    getData(`/api/plantao/?paciente=${paciente_id}`, (data) => {
+function buscarPlantoes(assistido_id) {
+    getData(`/api/plantao/?assistido=${assistido_id}`, (data) => {
         renderPlantoesNoCalendario(data)
         PLANTOES = data
     })
@@ -327,7 +327,7 @@ function renderPlantoesNoCalendario(plantoes = []) {
 
             title: isMobile
                 ? `${horaInicio}-${horaFim}`
-                : `${p.cuidadora_nome} (${horaInicio} - ${horaFim})`,
+                : `${p.profissional_nome} (${horaInicio} - ${horaFim})`,
 
             backgroundColor,
             borderColor,
@@ -337,8 +337,8 @@ function renderPlantoesNoCalendario(plantoes = []) {
             extendedProps: {
                 horaInicio,
                 horaFim,
-                cuidadora: p.cuidadora_nome,
-                cuidadora_id: p.cuidadora,
+                profissional: p.profissional_nome,
+                profissional_id: p.profissional,
                 status: p.status,
                 titulo: titulo,
                 regra_pagamento: p.regra_pagamento,
@@ -360,7 +360,7 @@ function renderPlantoesNoCalendario(plantoes = []) {
             };
         }
 
-        let nome = arg.event.extendedProps.cuidadora.length > 15 ? arg.event.extendedProps.cuidadora.substring(0, 15) + "..." : arg.event.extendedProps.cuidadora;
+        let nome = arg.event.extendedProps.profissional.length > 15 ? arg.event.extendedProps.profissional.substring(0, 15) + "..." : arg.event.extendedProps.profissional;
 
         return {
             html: `
@@ -389,8 +389,8 @@ function abrirModalEditarPlantao(event) {
     document.getElementById("edit_fim").value =
         fim.toTimeString().slice(0, 5);
 
-    document.getElementById("edit_cuidadora_nome").value = event.extendedProps.cuidadora;
-    document.getElementById("edit_cuidadora").value = event.extendedProps.cuidadora_id;
+    document.getElementById("edit_profissional_nome").value = event.extendedProps.profissional;
+    document.getElementById("edit_profissional").value = event.extendedProps.profissional_id;
 
     document.getElementById("edit_regra_pagamento").value = event.extendedProps.regra_pagamento;
     document.getElementById("edit_horas_cumpridas").value = event.extendedProps.horas_cumpridas;
@@ -403,7 +403,7 @@ function patchPlantao() {
     const inicio = document.getElementById("edit_inicio").value;
     const fim = document.getElementById("edit_fim").value;
     const status = document.getElementById("edit_status").value;
-    const cuidadora = document.getElementById("edit_cuidadora").value;
+    const profissional = document.getElementById("edit_profissional").value;
     const regra_pagamento = document.getElementById("edit_regra_pagamento").value;
     const horas_cumpridas = document.getElementById("edit_horas_cumpridas").value;
 
@@ -423,7 +423,7 @@ function patchPlantao() {
     const payload = {
         inicio: `${dataInicio}T${inicio}:00`,
         fim: `${dataFim}T${fim}:00`,
-        cuidadora: cuidadora,
+        profissional: profissional,
         status: status,
         regra_pagamento: regra_pagamento,
         horas_cumpridas: horas_cumpridas
@@ -433,7 +433,7 @@ function patchPlantao() {
         showToast("Atualizado com sucesso", "success");
         modalEditarPlantao.hide();
 
-        buscarPlantoes(document.getElementById("paciente_id").value);
+        buscarPlantoes(document.getElementById("assistido_id").value);
 
         event.setStart(payload.inicio);
         event.setEnd(payload.fim);
@@ -452,8 +452,8 @@ function patchPlantao() {
         );
 
         event.setExtendedProp(
-            "cuidadora",
-            document.getElementById("edit_cuidadora_nome").value
+            "profissional",
+            document.getElementById("edit_profissional_nome").value
         );
     }, "PATCH");
 
@@ -517,7 +517,7 @@ function exportarEscalaProfissional(plantoes) {
 
     const pdf = new jsPDF("landscape", "mm", "a4");
 
-    const pacienteNome = document.getElementById("paciente").value || "Paciente";
+    const assistidoNome = document.getElementById("assistido").value || "Assistido";
 
     const hoje = new Date();
     const ano = hoje.getFullYear();
@@ -540,7 +540,7 @@ function exportarEscalaProfissional(plantoes) {
 
         mapa[data].push({
             hora: `${inicio}-${fim}`,
-            nome: p.cuidadora_nome
+            nome: p.profissional_nome
         });
     });
 
@@ -564,7 +564,7 @@ function exportarEscalaProfissional(plantoes) {
 
     pdf.setTextColor(0);
     pdf.setFontSize(11);
-    pdf.text(`Paciente: ${pacienteNome}`, 10, 28);
+    pdf.text(`Assistido: ${assistidoNome}`, 10, 28);
 
     pdf.setDrawColor(200);
     pdf.line(10, 32, 287, 32);
@@ -626,7 +626,7 @@ function exportarEscalaProfissional(plantoes) {
         linha++;
     }
 
-    pdf.save(`escala_${pacienteNome}.pdf`);
+    pdf.save(`escala_${assistidoNome}.pdf`);
 }
 
 // ###################################

@@ -140,12 +140,12 @@ function renderPagamentos(pagamentos) {
                     <span class="small text-muted d-block">${pagamento.plantao_detalhe.regra_pagamento_detalhe.nome}</span>
                 </div>
                 <div class="col-6 col-md">
-                    <label class="fw-bold">Cuidador(a)</label>
-                    <span class="small text-muted d-block">${pagamento.plantao_detalhe.cuidadora_detalhe.nome}</span>
+                    <label class="fw-bold">Profissional</label>
+                    <span class="small text-muted d-block">${pagamento.plantao_detalhe.profissional_detalhe.nome}</span>
                 </div>
                 <div class="col-6 col-md">
-                    <label class="fw-bold">Paciente</label>
-                    <span class="small text-muted d-block">${pagamento.plantao_detalhe.paciente_detalhe.nome}</span>
+                    <label class="fw-bold">Assistido(a)</label>
+                    <span class="small text-muted d-block">${pagamento.plantao_detalhe.assistido_detalhe.nome}</span>
                 </div>
                 <div class="col-4 col-md">
                     <label class="fw-bold">Status</label>
@@ -166,7 +166,7 @@ function renderPagamentos(pagamentos) {
                     <a href="#" class="text-decoration-none btn-modern btn-sm me-1" data-pagamento='${JSON.stringify(pagamento)}' onclick="abrirEditarPagamentoModal(this)">
                         <i class="bi bi-pencil"></i>
                     </a>
-                    <a href="#" class="text-decoration-none btn-modern btn-sm" id="deletarPagamentoBtn">
+                    <a href="#" class="text-decoration-none btn-modern btn-sm" onclick="deletarPagamentoBtn(${pagamento.id})">
                         <i class="bi bi-trash"></i>
                     </a>
                 </div>
@@ -205,11 +205,13 @@ function savePagamento() {
     }
 
     if (pagamentoId) {
+        console.log("PATCH chamado")
         patchData(url, data, () => {
             pagamentoModal.hide()
             loadPagamento()
         })
     } else {
+        console.log("POST chamado")
         saveData(url, data, () => {
             pagamentoModal.hide()
             loadPagamento()
@@ -222,10 +224,10 @@ async function abrirNovoPagamentoModal() {
     document.getElementById("pagamento_id_modal_pagamentos").value = ""
     document.getElementById("plantao_codigo_modal_pagamentos").value = ""
     document.getElementById("plantao_id_modal_pagamentos").value = ""
-    document.getElementById("cuidadora_id_modal_pagamentos").value = ""
-    document.getElementById("cuidadora_nome_modal_pagamentos").value = ""
-    document.getElementById("paciente_id_modal_pagamentos").value = ""
-    document.getElementById("paciente_nome_modal_pagamentos").value = ""
+    document.getElementById("profissional_id_modal_pagamentos").value = ""
+    document.getElementById("profissional_nome_modal_pagamentos").value = ""
+    document.getElementById("assistido_id_modal_pagamentos").value = ""
+    document.getElementById("assistido_nome_modal_pagamentos").value = ""
     document.getElementById("regra_pagamento_id_modal_pagamentos").value = ""
 
     document.getElementById("pagamentoModalLabel").innerText = "Novo Pagamento"
@@ -239,15 +241,26 @@ async function abrirEditarPagamentoModal(element) {
     document.getElementById("pagamento_id_modal_pagamentos").value = pagamento.id
     document.getElementById("plantao_codigo_modal_pagamentos").value = pagamento.codigo_interno
     document.getElementById("plantao_id_modal_pagamentos").value = pagamento.plantao
-    document.getElementById("cuidadora_id_modal_pagamentos").value = pagamento.plantao_detalhe.cuidadora
-    document.getElementById("cuidadora_nome_modal_pagamentos").value = pagamento.plantao_detalhe.cuidadora_detalhe.nome
-    document.getElementById("paciente_id_modal_pagamentos").value = pagamento.plantao_detalhe.paciente
-    document.getElementById("paciente_nome_modal_pagamentos").value = pagamento.plantao_detalhe.paciente_detalhe.nome
+    document.getElementById("profissional_id_modal_pagamentos").value = pagamento.plantao_detalhe.profissional
+    document.getElementById("profissional_nome_modal_pagamentos").value = pagamento.plantao_detalhe.profissional_detalhe.nome
+    document.getElementById("assistido_id_modal_pagamentos").value = pagamento.plantao_detalhe.assistido
+    document.getElementById("assistido_nome_modal_pagamentos").value = pagamento.plantao_detalhe.assistido_detalhe.nome
     document.getElementById("valor_calculado_modal_pagamentos").value = pagamento.valor_calculado
     document.getElementById("status_modal_pagamentos").value = pagamento.status
     document.getElementById("regra_pagamento_id_modal_pagamentos").value = pagamento.plantao_detalhe.regra_pagamento
     document.getElementById("pagamentoModalLabel").innerText = `Editar Pagamento - ${pagamento.codigo_interno}`
     pagamentoModal.show()
+}
+
+
+async function deletarPagamentoBtn(id) {
+    if (!confirm("Deseja realmente excluir este pagamento?")) {
+        return
+    }
+
+    deleteData(`/api/pagamento/${id}/`, () => {
+        loadPagamento()
+    })
 }
 
 
@@ -312,12 +325,12 @@ function renderPlantoesSearch(plantoes) {
                     <span class="small d-block">${plantao.regra_pagamento_detalhe.nome}</span>
                 </div>
                 <div class="col-6 col-md">
-                    <label class="small fw-bold">Cuidador(a)</label>
-                    <span class="small d-block">${plantao.cuidadora_detalhe.nome}</span>
+                    <label class="small fw-bold">Profissional</label>
+                    <span class="small d-block">${plantao.profissional_detalhe.nome}</span>
                 </div>
                 <div class="col-6 col-md">
-                    <label class="small fw-bold">Paciente</label>
-                    <span class="small d-block">${plantao.paciente_detalhe.nome}</span>
+                    <label class="small fw-bold">Assistido(a)</label>
+                    <span class="small d-block">${plantao.assistido_detalhe.nome}</span>
                 </div>
                 <div class="col-4 col-md">
                     <label class="small fw-bold">Status</label>
@@ -328,10 +341,10 @@ function renderPlantoesSearch(plantoes) {
                     <a href="#" 
                         class="text-decoration-none btn-modern btn-sm me-1" 
                         id="selecionarPlantaoBtn" 
-                        data-cuidadora_id="${plantao.cuidadora}"
-                        data-cuidadora_nome="${plantao.cuidadora_detalhe.nome}"
-                        data-paciente_id="${plantao.paciente}"
-                        data-paciente_nome="${plantao.paciente_detalhe.nome}"
+                        data-profissional_id="${plantao.profissional}"
+                        data-profissional_nome="${plantao.profissional_detalhe.nome}"
+                        data-assistido_id="${plantao.assistido}"
+                        data-assistido_nome="${plantao.assistido_detalhe.nome}"
                         data-regra_pagamento_id="${plantao.regra_pagamento}"
                         data-status="${plantao.status}"
                         data-codigo_interno="${plantao.codigo_interno}"
@@ -350,18 +363,18 @@ document.addEventListener("click", function (e) {
     if (e.target.id === "selecionarPlantaoBtn") {
         e.preventDefault();
         const button = e.target;
-        const cuidadoraId = button.getAttribute("data-cuidadora_id");
-        const cuidadoraNome = button.getAttribute("data-cuidadora_nome");
-        const pacienteId = button.getAttribute("data-paciente_id");
-        const pacienteNome = button.getAttribute("data-paciente_nome");
+        const profissionalId = button.getAttribute("data-profissional_id");
+        const profissionalNome = button.getAttribute("data-profissional_nome");
+        const assistidoId = button.getAttribute("data-assistido_id");
+        const assistidoNome = button.getAttribute("data-assistido_nome");
         const regraPagamentoId = button.getAttribute("data-regra_pagamento_id");
         const codigoInterno = button.getAttribute("data-codigo_interno");
         const plantaoId = button.getAttribute("data-id");
 
-        document.getElementById("cuidadora_id_modal_pagamentos").value = cuidadoraId;
-        document.getElementById("cuidadora_nome_modal_pagamentos").value = cuidadoraNome;
-        document.getElementById("paciente_id_modal_pagamentos").value = pacienteId;
-        document.getElementById("paciente_nome_modal_pagamentos").value = pacienteNome;
+        document.getElementById("profissional_id_modal_pagamentos").value = profissionalId;
+        document.getElementById("profissional_nome_modal_pagamentos").value = profissionalNome;
+        document.getElementById("assistido_id_modal_pagamentos").value = assistidoId;
+        document.getElementById("assistido_nome_modal_pagamentos").value = assistidoNome;
         document.getElementById("regra_pagamento_id_modal_pagamentos").value = regraPagamentoId;
         document.getElementById("plantao_codigo_modal_pagamentos").value = codigoInterno;
         document.getElementById("plantao_id_modal_pagamentos").value = plantaoId;
@@ -379,7 +392,6 @@ function abrirDetalhesPlantaoModal(plantao) {
 }
 
 function renderPlantaoModal(plantao) {
-    console.log(plantao)
     function formatDateTime(date) {
         return new Date(date).toLocaleTimeString("pt-BR").slice(0, 5) + " - " + new Date(date).toLocaleDateString("pt-BR")
     }
@@ -450,15 +462,15 @@ function renderPlantaoModal(plantao) {
 
                     <div class="text-truncate text-center">
                         <div class="fw-semibold">
-                            <small class="text-body-secondary">Paciente:</small>
-                            ${plantao.paciente_detalhe.nome}
+                            <small class="text-body-secondary">Assistido(a):</small>
+                            ${plantao.assistido_detalhe.nome}
                         </div>
                     </div>
 
                     <div class="text-truncate text-center">
                         <div class="fw-semibold">
-                            <small class="text-body-secondary">Cuidador(a):</small>
-                            ${plantao.cuidadora_detalhe.nome}
+                            <small class="text-body-secondary">Profissional:</small>
+                            ${plantao.profissional_detalhe.nome}
                         </div>
                     </div>
                 </div>

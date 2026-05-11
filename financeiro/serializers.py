@@ -1,9 +1,9 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField, PrimaryKeyRelatedField
 from .models import Pagamento, Relatorio, RegraPagamento
 from plantao.models import Plantao
-from paciente.models import Paciente
-from cuidadora.models import Cuidadora
+from profissional.models import Profissional
 from rest_framework import serializers
+from assistido.models import Assistido
 
 
 class RegraPagamentoSerializer(ModelSerializer):
@@ -17,22 +17,22 @@ class RegraPagamentoSerializer(ModelSerializer):
         fields = "__all__"
 
 
-class PacienteMinSerializer(ModelSerializer):
+class AssistidoMinSerializer(ModelSerializer):
     class Meta:
-        model = Paciente
+        model = Assistido
         fields = ['id', 'nome']
 
 
-class CuidadoraMinSerializer(ModelSerializer):
+class ProfissionalMinSerializer(ModelSerializer):
     class Meta:
-        model = Cuidadora
+        model = Profissional
         fields = ['id', 'nome', 'codigo_banco', 'agencia_conta', 'numero_conta', 'chave_pix', 'tipo_chave_pix', 'cpf', 'cnpj']
 
 
 class PlantaoMinSerializer(ModelSerializer):
     regra_pagamento_detalhe = RegraPagamentoSerializer(source="regra_pagamento", read_only=True)
-    paciente_detalhe = PacienteMinSerializer(source="paciente", read_only=True)
-    cuidadora_detalhe = CuidadoraMinSerializer(source="cuidadora", read_only=True)
+    assistido_detalhe = AssistidoMinSerializer(source="assistido", read_only=True)
+    profissional_detalhe = ProfissionalMinSerializer(source="profissional", read_only=True)
     status_name = SerializerMethodField()
 
     def get_status_name(self, obj):
@@ -43,8 +43,8 @@ class PlantaoMinSerializer(ModelSerializer):
         model = Plantao
         fields = [
             'id', 'codigo_interno', 'regra_pagamento', 
-            'regra_pagamento_detalhe', 'paciente_detalhe', 
-            'cuidadora_detalhe', 'status_name', 'status',
+            'regra_pagamento_detalhe', 'assistido_detalhe', 
+            'profissional_detalhe', 'status_name', 'status',
             'horas', 'horas_cumpridas', 'inicio', 'fim',
             ]
 
@@ -63,7 +63,7 @@ class PagamentoSerializer(ModelSerializer):
 
 class RelatorioSerializer(ModelSerializer):
     status_name = SerializerMethodField()
-    cuidadora_detalhe = CuidadoraMinSerializer(source="cuidadora", read_only=True)
+    profissional_detalhe = ProfissionalMinSerializer(source="profissional", read_only=True)
     pagamentos_count = serializers.IntegerField(read_only=True)
     pagamentos = PagamentoSerializer(many=True, read_only=True)
 

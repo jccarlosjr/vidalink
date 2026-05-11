@@ -110,7 +110,7 @@ function renderPlantoes(plantoes) {
         else if (plantao.status == 'E' || plantao.status == 'D') badgeColor = "bg-danger"
 
         const cumpridas = floatToHHMM(plantao.horas_cumpridas)
-        const enderecoCompleto = `${plantao.paciente_detalhe.endereco}, ${plantao.paciente_detalhe.numero}, ${plantao.paciente_detalhe.complemento}, ${plantao.paciente_detalhe.bairro}, ${plantao.paciente_detalhe.cidade}-${plantao.paciente_detalhe.estado}, ${plantao.paciente_detalhe.cep}`;
+        const enderecoCompleto = `${plantao.assistido_detalhe.endereco}, ${plantao.assistido_detalhe.numero}, ${plantao.assistido_detalhe.complemento}, ${plantao.assistido_detalhe.bairro}, ${plantao.assistido_detalhe.cidade}-${plantao.assistido_detalhe.estado}, ${plantao.assistido_detalhe.cep}`;
         const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(enderecoCompleto)}`;
 
         let horarioColor = plantao.horas_cumpridas < plantao.horas
@@ -163,15 +163,15 @@ function renderPlantoes(plantoes) {
 
                             <div class="text-truncate text-center">
                                 <div class="fw-semibold">
-                                    <small class="text-body-secondary">Paciente:</small>
-                                    ${plantao.paciente_nome}
+                                    <small class="text-body-secondary">Assistido(a):</small>
+                                    ${plantao.assistido_nome}
                                 </div>
                             </div>
 
                             <div class="text-truncate text-center">
                                 <div class="fw-semibold">
-                                    <small class="text-body-secondary">Cuidador(a):</small>
-                                    ${plantao.cuidadora_nome}
+                                    <small class="text-body-secondary">Profissional:</small>
+                                    ${plantao.profissional_nome}
                                 </div>
                             </div>
                         </div>
@@ -190,7 +190,7 @@ function renderPlantoes(plantoes) {
                                     </a>
                                 </div>
                                 <small class="text-body-secondary">
-                                    ${plantao.paciente_detalhe.endereco}, ${plantao.paciente_detalhe.numero}, ${plantao.paciente_detalhe.bairro} - ${plantao.paciente_detalhe.cidade}-${plantao.paciente_detalhe.estado}
+                                    ${plantao.assistido_detalhe.endereco}, ${plantao.assistido_detalhe.numero}, ${plantao.assistido_detalhe.bairro} - ${plantao.assistido_detalhe.cidade}-${plantao.assistido_detalhe.estado}
                                 </small>
                             </div>
                         </div>
@@ -255,7 +255,7 @@ function renderPlantoes(plantoes) {
 function openEditPlantaoModal(btn) {
     const plantao = JSON.parse(btn.dataset.plantao);
     document.getElementById("editar-plantao-id").value = plantao.id;
-    document.getElementById("editar-plantao-nome").innerText = plantao.paciente_nome;
+    document.getElementById("editar-plantao-nome").innerText = plantao.assistido_nome;
 
     document.getElementById("editar-plantao-status").value = plantao.status;
     document.getElementById("editar-plantao-horas-cumpridas").value = plantao.horas_cumpridas;

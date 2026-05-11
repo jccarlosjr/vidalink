@@ -21,10 +21,10 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.HomeView.as_view(), name='home'),
-    path('', include('cuidadora.urls')),
-    path('', include('paciente.urls')),
+    path('', include('profissional.urls')),
     path('', include('escala.urls')),
     path('', include('plantao.urls')),
     path('', include('registro.urls')),
     path('', include('financeiro.urls')),
+    path('', include('assistido.urls')),
 ]

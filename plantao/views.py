@@ -51,15 +51,15 @@ class PlantaoViewSet(ModelViewSet):
             inicio = datetime.fromisoformat(data.get("inicio"))
             fim = datetime.fromisoformat(data.get("fim"))
 
-            cuidadora_id = data.get("cuidadora")
+            profissional_id = data.get("profissional")
 
-            if not cuidadora_id and instance:
-                cuidadora_id = instance.cuidadora_id
+            if not profissional_id and instance:
+                profissional_id = instance.profissional_id
 
             PlantaoValidator.validar_intervalo(
                 inicio,
                 fim,
-                cuidadora_id,
+                profissional_id,
                 instance_id=instance.id if instance else None
             )
 
@@ -69,12 +69,12 @@ class PlantaoViewSet(ModelViewSet):
 
     def get_queryset(self):
         expirar_plantoes()
-        if self.request.query_params.get("cuidadora"):
-            plantaoes = Plantao.objects.filter(cuidadora=self.request.query_params.get("cuidadora")).order_by('inicio')
+        if self.request.query_params.get("profissional"):
+            plantaoes = Plantao.objects.filter(profissional=self.request.query_params.get("profissional")).order_by('inicio')
         elif self.request.user.is_staff:
             plantaoes = Plantao.objects.all().order_by('inicio')
         else:
-            plantaoes = Plantao.objects.filter(cuidadora=self.request.user.id).order_by('inicio')
+            plantaoes = Plantao.objects.filter(profissional=self.request.user.id).order_by('inicio')
 
         filter_type = self.request.query_params.get('filter_type', None)
         filter_value = self.request.query_params.get('filter_value', None)
@@ -106,7 +106,7 @@ class PlantaoViewSet(ModelViewSet):
 
         data.setdefault("inicio", instance.inicio.isoformat())
         data.setdefault("fim", instance.fim.isoformat())
-        data.setdefault("cuidadora", instance.cuidadora_id)
+        data.setdefault("profissional", instance.profissional_id)
 
         self._validar_plantao(data, instance)
 
@@ -120,7 +120,7 @@ class PlantaoViewSet(ModelViewSet):
 
         data["inicio"] = data.get("inicio", instance.inicio.isoformat())
         data["fim"] = data.get("fim", instance.fim.isoformat())
-        data["cuidadora"] = data.get("cuidadora", instance.cuidadora_id)
+        data["profissional"] = data.get("profissional", instance.profissional_id)
 
         self._validar_plantao(data, instance)
 
@@ -129,8 +129,8 @@ class PlantaoViewSet(ModelViewSet):
 
     @action(detail=False, methods=["get"], url_path="plantoes_finalizados_by_user")
     def plantoes_finalizados_by_user(self, request):
-        cuidadora_id = request.query_params.get("cuidadora")
-        plantoes = Plantao.objects.filter(cuidadora=cuidadora_id, inicio__gte=timezone.now() - timedelta(days=90))
+        profissional_id = request.query_params.get("profissional")
+        plantoes = Plantao.objects.filter(profissional=profissional_id, inicio__gte=timezone.now() - timedelta(days=90))
         horas_cumpridas_total = plantoes.aggregate(total=Sum('horas_cumpridas'))['total'] or 0
         horas_devidas = plantoes.aggregate(total=Sum('horas'))['total'] or 0
         total_plantoes = plantoes.count()
@@ -157,25 +157,25 @@ class PlantaoViewSet(ModelViewSet):
             with transaction.atomic():
                 primeiro = plantoes[0]
 
-                paciente_id = primeiro["paciente"]
-                cuidadora_id = primeiro["cuidadora"]
+                assistido_id = primeiro["assistido"]
+                profissional_id = primeiro["profissional"]
                 regra_pagamento_id = primeiro["regra_pagamento"]
 
-                PlantaoValidator.validar_lote(plantoes, cuidadora_id)
+                PlantaoValidator.validar_lote(plantoes, profissional_id)
 
                 escala, _ = Escala.objects.get_or_create(
-                    paciente_id=paciente_id,
-                    cuidadora_id=cuidadora_id,
+                    assistido_id=assistido_id,
+                    profissional_id=profissional_id,
                     defaults={
-                        "codigo_interno": f"{paciente_id}-{cuidadora_id}"
+                        "codigo_interno": f"{assistido_id}-{profissional_id}"
                     }
                 )
 
                 objs = []
 
                 for p in plantoes:
-                    if p["paciente"] != paciente_id or p["cuidadora"] != cuidadora_id:
-                        raise ValueError("Todos os plantões devem ter o mesmo paciente/cuidadora")
+                    if p["assistido"] != assistido_id or p["profissional"] != profissional_id:
+                        raise ValueError("Todos os plantões devem ter o mesmo assistido/profissional")
 
                     inicio = datetime.fromisoformat(p["inicio"])
                     fim = datetime.fromisoformat(p["fim"])
@@ -185,8 +185,8 @@ class PlantaoViewSet(ModelViewSet):
                         inicio=inicio,
                         fim=fim,
                         horas=int((fim - inicio).total_seconds() / 3600),
-                        paciente_id=paciente_id,
-                        cuidadora_id=cuidadora_id,
+                        assistido_id=assistido_id,
+                        profissional_id=profissional_id,
                         regra_pagamento_id=regra_pagamento_id,
                         escala=escala
                     ))

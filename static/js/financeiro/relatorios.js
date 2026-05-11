@@ -1,5 +1,5 @@
 let relatorioModal;
-let searchCuidadoraModal;
+let searchProfissionalModal;
 let searchPagamentoModal;
 let detalhesModal;
 let pagamentos_selecionados = [];
@@ -24,7 +24,7 @@ function maskData(dataISO) {
 
 document.addEventListener("DOMContentLoaded", function () {
     relatorioModal = new bootstrap.Modal(document.getElementById("relatorioModal"));
-    searchCuidadoraModal = new bootstrap.Modal(document.getElementById("searchCuidadoraModal"));
+    searchProfissionalModal = new bootstrap.Modal(document.getElementById("searchProfissionalModal"));
     searchPagamentoModal = new bootstrap.Modal(document.getElementById("searchPagamentoModal"));
     detalhesModal = new bootstrap.Modal(document.getElementById("detalhesModal"));
     loadRelatorios();
@@ -48,8 +48,8 @@ document.getElementById("novoRelatorioBtn").addEventListener("click", abrirModal
 
 function abrirModalNovoRelatorio() {
     document.getElementById("relatorio_id_modal_relatorio").value = "";
-    document.getElementById("cuidadora_id_modal_relatorio").value = "";
-    document.getElementById("cuidadora_nome_modal_relatorio").value = "";
+    document.getElementById("profissional_id_modal_relatorio").value = "";
+    document.getElementById("profissional_nome_modal_relatorio").value = "";
     document.getElementById("status_modal_relatorio").value = "ABERTO";
     document.getElementById("data_referencia_modal_relatorio").value = "";
     document.getElementById("pagamentos_list_relatorio").innerHTML = "";
@@ -78,21 +78,21 @@ document.getElementById("deducoes_modal_relatorio").addEventListener("input", ca
 
 function saveRelatorio() {
     let relatorio_id = document.getElementById("relatorio_id_modal_relatorio").value;
-    let cuidadora = document.getElementById("cuidadora_id_modal_relatorio").value;
+    let profissional = document.getElementById("profissional_id_modal_relatorio").value;
     let status = document.getElementById("status_modal_relatorio").value;
     let data_referencia = document.getElementById("data_referencia_modal_relatorio").value;
     let valor_total = getValorTotal();
     let deducoes = document.getElementById("deducoes_modal_relatorio")?.value || 0;
     let liquido = document.getElementById("liquido_modal_relatorio").value;
 
-    if (!cuidadora) showToast("Selecione um(a) cuidador(a)", "warning")
+    if (!profissional) showToast("Selecione um(a) profissional", "warning")
     if (!data_referencia) showToast("Selecione uma data de referência", "warning")
     if (pagamentos_selecionados.length == 0) showToast("Selecione pelo menos um pagamento", "warning")
 
-    if (!cuidadora || !data_referencia || pagamentos_selecionados.length == 0) return;
+    if (!profissional || !data_referencia || pagamentos_selecionados.length == 0) return;
 
     let data = {
-        "cuidadora": cuidadora,
+        "profissional": profissional,
         "status": status,
         "data_referencia": data_referencia,
         "valor_total": valor_total,
@@ -174,8 +174,8 @@ function loadRelatorios() {
                     <span class="small text-muted d-block">${relatorio.status_name}</span>
                 </div>
                 <div class="col-4 col-md text-center">
-                    <label class="fw-bold">Cuidador(a)</label>
-                    <span class="small text-muted d-block">${relatorio.cuidadora_detalhe.nome}</span>
+                    <label class="fw-bold">Profissional</label>
+                    <span class="small text-muted d-block">${relatorio.profissional_detalhe.nome}</span>
                 </div>
                 <div class="col-4 col-md text-center">
                     <label class="fw-bold">Pagamentos</label>
@@ -204,8 +204,8 @@ function loadRelatorios() {
 function editarRelatorio(element) {
     let relatorio = JSON.parse(element.dataset.edit);
     document.getElementById("relatorio_id_modal_relatorio").value = relatorio.id;
-    document.getElementById("cuidadora_id_modal_relatorio").value = relatorio.cuidadora;
-    document.getElementById("cuidadora_nome_modal_relatorio").value = relatorio.cuidadora_detalhe.nome;
+    document.getElementById("profissional_id_modal_relatorio").value = relatorio.profissional;
+    document.getElementById("profissional_nome_modal_relatorio").value = relatorio.profissional_detalhe.nome;
     document.getElementById("status_modal_relatorio").value = relatorio.status;
     document.getElementById("data_referencia_modal_relatorio").value = relatorio.data_referencia;
     document.getElementById("deducoes_modal_relatorio").value = relatorio.deducoes;
@@ -219,18 +219,18 @@ function visualizarRelatorio(element) {
     let relatorio = JSON.parse(element.dataset.view);
 
     document.getElementById("codigo_interno_detalhe_modal").innerHTML = relatorio.codigo_interno;
-    document.getElementById("cuidadora_nome_detalhe_modal").innerHTML = relatorio.cuidadora_detalhe.nome;
+    document.getElementById("profissional_nome_detalhe_modal").innerHTML = relatorio.profissional_detalhe.nome;
     document.getElementById("status_detalhe_modal").innerHTML = relatorio.status_name;
     document.getElementById("data_referencia_detalhe_modal").innerHTML = maskData(relatorio.data_referencia);
     document.getElementById("valor_total_detalhe_modal").innerHTML = Number(relatorio.valor_total).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
     document.getElementById("deducoes_detalhe_modal").innerHTML = Number(-relatorio.deducoes).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
     document.getElementById("liquido_detalhe_modal").innerHTML = Number(relatorio.valor_liquido).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
-    document.getElementById("cuidadora_codigo_banco_detalhe_modal").innerHTML = relatorio.cuidadora_detalhe.codigo_banco;
-    document.getElementById("cuidadora_agencia_conta_detalhe_modal").innerHTML = relatorio.cuidadora_detalhe.agencia_conta;
-    document.getElementById("cuidadora_numero_conta_detalhe_modal").innerHTML = relatorio.cuidadora_detalhe.numero_conta;
-    document.getElementById("chave_pix_detalhe_modal").innerHTML = relatorio.cuidadora_detalhe.chave_pix;
-    document.getElementById("cnpj_detalhe_modal").innerHTML = relatorio.cuidadora_detalhe.cnpj;
-    document.getElementById("cpf_detalhe_modal").innerHTML = relatorio.cuidadora_detalhe.cpf;
+    document.getElementById("profissional_codigo_banco_detalhe_modal").innerHTML = relatorio.profissional_detalhe.codigo_banco;
+    document.getElementById("profissional_agencia_conta_detalhe_modal").innerHTML = relatorio.profissional_detalhe.agencia_conta;
+    document.getElementById("profissional_numero_conta_detalhe_modal").innerHTML = relatorio.profissional_detalhe.numero_conta;
+    document.getElementById("chave_pix_detalhe_modal").innerHTML = relatorio.profissional_detalhe.chave_pix;
+    document.getElementById("cnpj_detalhe_modal").innerHTML = relatorio.profissional_detalhe.cnpj;
+    document.getElementById("cpf_detalhe_modal").innerHTML = relatorio.profissional_detalhe.cpf;
 
     renderPagamentosRelatorioDetalhe(relatorio.pagamentos);
 
@@ -300,24 +300,24 @@ function excluirRelatorio(id) {
 }
 
 // #####################################
-// ############# CUIDADORAS ############
+// ############# PROFISSIONAIS #########
 // #####################################
 
-document.getElementById("abrirSearchCuidadoraModal").addEventListener("click", function () {
-    openSearchCuidadoraModal();
+document.getElementById("abrirSearchProfissionalModal").addEventListener("click", function () {
+    openSearchProfissionalModal();
     relatorioModal.hide();
 })
 
-function openSearchCuidadoraModal() {
-    document.getElementById("filter_type_cuidadora").value = "nome";
-    document.getElementById("filter_value_cuidadora").value = "";
-    document.getElementById("result_cuidadora").innerHTML = "";
-    searchCuidadoraModal.show();
+function openSearchProfissionalModal() {
+    document.getElementById("filter_type_profissional").value = "nome";
+    document.getElementById("filter_value_profissional").value = "";
+    document.getElementById("result_profissional").innerHTML = "";
+    searchProfissionalModal.show();
 }
 
-function loadCuidadora() {
-    let filter_type = document.getElementById("filter_type_cuidadora").value;
-    let filter_value = document.getElementById("filter_value_cuidadora").value;
+function loadProfissional() {
+    let filter_type = document.getElementById("filter_type_profissional").value;
+    let filter_value = document.getElementById("filter_value_profissional").value;
 
     const params = new URLSearchParams();
 
@@ -326,59 +326,59 @@ function loadCuidadora() {
         params.append("filter_value", filter_value);
     }
 
-    getData(`/api/cuidadoras/?${params.toString()}`, (data) => {
-        renderCuidadorasSearch(data.results);
+    getData(`/api/profissionais/?${params.toString()}`, (data) => {
+        renderProfissionaisSearch(data.results);
     })
 }
 
-function renderCuidadorasSearch(cuidadoras) {
-    const container = document.getElementById("result_cuidadora");
+function renderProfissionaisSearch(profissionais) {
+    const container = document.getElementById("result_profissional");
     container.innerHTML = "";
 
-    cuidadoras.forEach((cuidadora) => {
+    profissionais.forEach((profissional) => {
         const row = document.createElement("div");
         row.className = "row g-2 border-bottom border-top pb-2 mb-2 mt-2 align-items-center";
         row.innerHTML = `
             <div class="col-4 col-md text-center">
                 <label class="fw-bold">Nome</label>
-                <span class="small text-muted d-block">${cuidadora.nome}</span>
+                <span class="small text-muted d-block">${profissional.nome}</span>
             </div>
             <div class="col-4 col-md text-center">
                 <label class="fw-bold">CPF</label>
-                <span class="small text-muted d-block">${cuidadora.cpf}</span>
+                <span class="small text-muted d-block">${profissional.cpf}</span>
             </div>
             <div class="col-4 col-md text-center">
                 <label class="fw-bold">CNPJ</label>
-                <span class="small text-muted d-block">${cuidadora.cnpj}</span>
+                <span class="small text-muted d-block">${profissional.cnpj}</span>
             </div>
             <div class="col-4 col-md">
-                <button class="btn-modern btn-sm" onclick="selecionarCuidadora(${cuidadora.id}, '${cuidadora.nome}')"><i class="bi bi-check-circle"></i> Selecionar</button>
+                <button class="btn-modern btn-sm" onclick="selecionarProfissional(${profissional.id}, '${profissional.nome}')"><i class="bi bi-check-circle"></i> Selecionar</button>
             </div>
         `;
         container.appendChild(row);
     });
 }
 
-document.getElementById("filter_btn_cuidadora").addEventListener("click", function () {
-    loadCuidadora();
+document.getElementById("filter_btn_profissional").addEventListener("click", function () {
+    loadProfissional();
 })
 
-document.getElementById("clear_filter_btn_cuidadora").addEventListener("click", function () {
-    clearFilterCuidadora();
+document.getElementById("clear_filter_btn_profissional").addEventListener("click", function () {
+    clearFilterProfissional();
 })
 
-function clearFilterCuidadora() {
-    document.getElementById("filter_type_cuidadora").value = "cuidadora__nome";
-    document.getElementById("filter_value_cuidadora").value = "";
-    loadCuidadora();
+function clearFilterProfissional() {
+    document.getElementById("filter_type_profissional").value = "profissional__nome";
+    document.getElementById("filter_value_profissional").value = "";
+    loadProfissional();
 }
 
-function selecionarCuidadora(id, nome) {
-    document.getElementById("cuidadora_id_modal_relatorio").value = id;
-    document.getElementById("cuidadora_nome_modal_relatorio").value = nome;
+function selecionarProfissional(id, nome) {
+    document.getElementById("profissional_id_modal_relatorio").value = id;
+    document.getElementById("profissional_nome_modal_relatorio").value = nome;
     document.getElementById("pagamentos_list_relatorio").innerHTML = "";
     pagamentos_selecionados = [];
-    searchCuidadoraModal.hide();
+    searchProfissionalModal.hide();
     relatorioModal.show();
 }
 
@@ -387,9 +387,9 @@ function selecionarCuidadora(id, nome) {
 // #####################################
 
 document.getElementById('adicionarPagamentoBtnRelatorio').addEventListener("click", function () {
-    let cuidadora = document.getElementById("cuidadora_id_modal_relatorio").value;
-    if (!cuidadora) {
-        showToast("Selecione um(a) cuidador(a).", "warning");
+    let profissional = document.getElementById("profissional_id_modal_relatorio").value;
+    if (!profissional) {
+        showToast("Selecione um(a) profissional.", "warning");
         return;
     }
     loadPagamentos();
@@ -398,15 +398,15 @@ document.getElementById('adicionarPagamentoBtnRelatorio').addEventListener("clic
 })
 
 async function loadPagamentos() {
-    let cuidadora = document.getElementById("cuidadora_id_modal_relatorio").value;
-    if (!cuidadora) {
-        showToast("Selecione um(a) cuidador(a).", "warning");
+    let profissional = document.getElementById("profissional_id_modal_relatorio").value;
+    if (!profissional) {
+        showToast("Selecione um(a) profissional.", "warning");
         return;
     }
 
     const params = new URLSearchParams()
 
-    params.append("cuidadora", cuidadora);
+    params.append("profissional", profissional);
     params.append("status", "PENDENTE");
 
     getData(`/api/pagamento/?${params.toString()}`, (data) => {
@@ -448,12 +448,12 @@ function renderPagamentos(pagamentos) {
                     <span class="small text-muted d-block">${pagamento.plantao_detalhe.regra_pagamento_detalhe.nome}</span>
                 </div>
                 <div class="col-6 col-md">
-                    <label class="fw-bold">Cuidador(a)</label>
-                    <span class="small text-muted d-block">${pagamento.plantao_detalhe.cuidadora_detalhe.nome}</span>
+                    <label class="fw-bold">Profissional</label>
+                    <span class="small text-muted d-block">${pagamento.plantao_detalhe.profissional_detalhe.nome}</span>
                 </div>
                 <div class="col-6 col-md">
-                    <label class="fw-bold">Paciente</label>
-                    <span class="small text-muted d-block">${pagamento.plantao_detalhe.paciente_detalhe.nome}</span>
+                    <label class="fw-bold">Assistido</label>
+                    <span class="small text-muted d-block">${pagamento.plantao_detalhe.assistido_detalhe.nome}</span>
                 </div>
                 <div class="col-4 col-md">
                     <label class="fw-bold">Status</label>
@@ -535,12 +535,12 @@ function renderPagamentosRelatorio() {
                     <span class="small text-muted d-block">${pagamento.plantao_detalhe.regra_pagamento_detalhe.nome}</span>
                 </div>
                 <div class="col-6 col-md">
-                    <label class="fw-bold">Cuidador(a)</label>
-                    <span class="small text-muted d-block">${pagamento.plantao_detalhe.cuidadora_detalhe.nome}</span>
+                    <label class="fw-bold">Profissional</label>
+                    <span class="small text-muted d-block">${pagamento.plantao_detalhe.profissional_detalhe.nome}</span>
                 </div>
                 <div class="col-6 col-md">
-                    <label class="fw-bold">Paciente</label>
-                    <span class="small text-muted d-block">${pagamento.plantao_detalhe.paciente_detalhe.nome}</span>
+                    <label class="fw-bold">Assistido(a)</label>
+                    <span class="small text-muted d-block">${pagamento.plantao_detalhe.assistido_detalhe.nome}</span>
                 </div>
                 <div class="col-4 col-md">
                     <label class="fw-bold">Status</label>

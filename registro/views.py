@@ -6,17 +6,19 @@ from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Plantao, EventoPlantao
 from django.utils import timezone
+from rest_framework.permissions import IsAuthenticated
 
 
 class PlantaoViewSet(ModelViewSet):
     queryset = Plantao.objects.all()
+    permission_classes = [IsAuthenticated]
 
     @action(detail=True, methods=['post'])
     def registrar_evento(self, request, pk=None):
         plantao = self.get_object()
 
-        if request.user != plantao.cuidadora:
-            return Response({"error": "Somente o(a) cuidador(a) registrado(a) pode incluir eventos"}, status=403)
+        if request.user != plantao.profissional:
+            return Response({"error": "Somente o(a) profissional registrado(a) pode incluir eventos"}, status=403)
 
         tipo = request.data.get("tipo")
         lat = request.data.get("lat")

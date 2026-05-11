@@ -38,10 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'paciente',
+    'profissional',
     'escala.apps.EscalaConfig',
     'plantao.apps.PlantaoConfig',
-    'cuidadora',
+    'assistido',
     'registro',
     'financeiro.apps.FinanceiroConfig',
 ]
@@ -54,7 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'cuidadora.middleware.ConcurrentLoginMiddleware',
+    'profissional.middleware.ConcurrentLoginMiddleware',
 ]
 
 ROOT_URLCONF = 'app.urls'
@@ -128,7 +128,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
-AUTH_USER_MODEL = 'cuidadora.Cuidadora'
+AUTH_USER_MODEL = 'profissional.Profissional'
 LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'home'
