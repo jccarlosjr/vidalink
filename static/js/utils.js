@@ -197,3 +197,14 @@ document.querySelectorAll(".cnpj-mask").forEach(input => {
         this.value = maskCNPJ(this.value);
     });
 });
+
+
+document.querySelectorAll(".capitalize-mask").forEach(input => {
+    input.addEventListener("input", function () {
+        this.value = this.value
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-zA-Z0-9\s]/g, "")
+            .toUpperCase();
+    });
+});
