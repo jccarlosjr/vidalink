@@ -2,17 +2,20 @@ from rest_framework.viewsets import ModelViewSet
 from .models import Pagamento, Relatorio,  RegraPagamento
 from .serializers import PagamentoSerializer, RelatorioSerializer, RegraPagamentoSerializer
 from rest_framework.permissions import IsAuthenticated
+from app.mixins import StaffRequiredMixin, IsStaffPermission
 from django.views.generic import TemplateView
 from plantao.models import Plantao
 from rest_framework import serializers
 from django.db.models import Count
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 
 class PagamentoViewSet(ModelViewSet):
     serializer_class = PagamentoSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsStaffPermission]
     queryset = Pagamento.objects.all()
 
 
@@ -112,7 +115,7 @@ class PagamentoViewSet(ModelViewSet):
 
 class RelatorioViewSet(ModelViewSet):
     serializer_class = RelatorioSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsStaffPermission]
     queryset = Relatorio.objects.all()
 
     def get_queryset(self):
@@ -150,7 +153,7 @@ class RelatorioViewSet(ModelViewSet):
 
 class RegraPagamentoViewSet(ModelViewSet):
     serializer_class = RegraPagamentoSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsStaffPermission]
     queryset = RegraPagamento.objects.all()
 
     def get_queryset(self):
@@ -171,13 +174,13 @@ class RegraPagamentoViewSet(ModelViewSet):
 
 
 
-class RegraPagamentoView(TemplateView):
+class RegraPagamentoView(StaffRequiredMixin, LoginRequiredMixin, TemplateView):
     template_name = "regra_pagamento.html"
 
 
-class PagamentoView(TemplateView):
+class PagamentoView(StaffRequiredMixin, LoginRequiredMixin, TemplateView):
     template_name = "pagamentos.html"
 
 
-class RelatorioView(TemplateView):
+class RelatorioView(StaffRequiredMixin, LoginRequiredMixin, TemplateView):
     template_name = "relatorios.html"

@@ -9,6 +9,12 @@ class IsAdminUserCustom(BasePermission):
         return request.user.is_authenticated and request.user.is_staff
 
 
+class IsStaffPermission(BasePermission):
+
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.is_staff
+
+
 class AdminRequiredMixin(AccessMixin):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:

@@ -15,6 +15,9 @@ from .services import PlantaoValidator
 from rest_framework import serializers
 from django.db.models import Sum
 from rest_framework.pagination import LimitOffsetPagination
+from app.mixins import StaffRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 
 def expirar_plantoes():

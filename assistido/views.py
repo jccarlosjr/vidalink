@@ -3,14 +3,14 @@ from .serializers import AssistidoSerializer, ResponsavelSerializer
 from rest_framework.permissions import IsAuthenticated
 from .models import Assistido, Responsavel
 from django.views.generic import TemplateView
-from app.mixins import StaffRequiredMixin
+from app.mixins import StaffRequiredMixin, IsStaffPermission
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework.decorators import action
 
 
 class AssistidoViewSet(ModelViewSet):
     serializer_class = AssistidoSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsStaffPermission]
     queryset = Assistido.objects.all()
 
     def get_queryset(self):
@@ -41,7 +41,7 @@ class AssistidoViewSet(ModelViewSet):
 class ResponsavelViewSet(ModelViewSet):
 
     serializer_class = ResponsavelSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsStaffPermission]
     queryset = Responsavel.objects.all()
 
     def get_queryset(self):

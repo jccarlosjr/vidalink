@@ -8,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import status
 from django.contrib.auth.views import LoginView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 import random
 
 
@@ -15,6 +16,7 @@ import random
 class ProfissionalViewSet(viewsets.ModelViewSet):
     queryset = Profissional.objects.all().order_by('-id').filter(is_superuser=False, is_staff=False)
     serializer_class = ProfissionalSerializer
+    permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
         username = request.data.get('nome').split()
