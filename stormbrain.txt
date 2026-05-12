@@ -9,9 +9,6 @@ New Features
 Ongoing Features
 - Limitar em 500m do endereço do cliente para inserir registro
 - Adicionar histórico de plantão para qualquer alteração feita
-- Adicionar aba de filtros em um accordion pra deixar a tela mais limpa
-- Adicionar paginação aos plantões
-- Revisar os campos reandonly
 
 
 Bugs

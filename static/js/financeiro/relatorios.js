@@ -58,6 +58,32 @@ function abrirModalNovoRelatorio() {
     relatorioModal.show();
 }
 
+function renderPaginationDRF(pagination, callback) {
+    let container = document.getElementById("pagination")
+
+    let html = `<div class="d-flex justify-content-center gap-2 mt-4">`
+
+    html += `
+        <button class="btn-modern"
+            ${!pagination.previous ? "disabled" : ""}
+            onclick="loadRelatorios('${pagination.previous}')">
+            ← Anterior
+        </button>
+    `
+
+    html += `
+        <button class="btn-modern"
+            ${!pagination.next ? "disabled" : ""}
+            onclick="loadRelatorios('${pagination.next}')">
+            Próxima →
+        </button>
+    `
+
+    html += `</div>`
+
+    container.innerHTML = html
+}
+
 function getValorTotal() {
     let valor = 0;
     pagamentos_selecionados.forEach(pagamento => {
@@ -137,7 +163,7 @@ function saveRelatorio() {
 
 document.getElementById("saveRelatorioBtn").addEventListener("click", saveRelatorio);
 
-function loadRelatorios() {
+function loadRelatorios(url = null) {
     const filter_type = document.getElementById("filter_type").value;
     const filter_value = document.getElementById("filter_value").value;
 
@@ -151,20 +177,45 @@ function loadRelatorios() {
     const container = document.getElementById("relatorios_list");
     container.innerHTML = "";
 
-    getData(`/api/relatorios/?${params.toString()}`, (data) => {
-        data.results.forEach(relatorio => {
-            const disableBtn = relatorio.status != "PAGO" ? "" : "disabled";
+    const endpoint = url || `/api/relatorios/?${params.toString()}`
 
-            let btnDelete = "";
-            if (relatorio.pagamentos_count == 0) {
-                btnDelete = `
+    getData(endpoint, (data) => {
+        renderRelatorios(data.results)
+
+        renderPaginationDRF({
+            next: data.next,
+            previous: data.previous
+        })
+    })
+}
+
+
+function renderRelatorios(relatorios) {
+    const container = document.getElementById("relatorios_list");
+    container.innerHTML = "";
+
+    if (!relatorios.length) {
+        container.innerHTML = `
+            <div class="alert alert-light text-center m-3" role="alert">
+                Nenhum relatório encontrado.
+            </div>
+        `
+        return
+    }
+
+    relatorios.forEach(relatorio => {
+        const disableBtn = relatorio.status != "PAGO" ? "" : "disabled";
+
+        let btnDelete = "";
+        if (relatorio.pagamentos_count == 0) {
+            btnDelete = `
                     <button class="btn-modern btn-sm text-danger" title="Excluir" onclick="excluirRelatorio(${relatorio.id})"><i class="bi bi-trash"></i></button>
                 `
-            }
+        }
 
-            const linha = document.createElement("div");
-            linha.className = "row g-2 pb-2 mb-1 border-bottom align-items-center";
-            linha.innerHTML = `
+        const linha = document.createElement("div");
+        linha.className = "row g-2 pb-2 mb-1 border-bottom align-items-center";
+        linha.innerHTML = `
                 <div class="col-4 col-md text-center">
                     <label class="fw-bold">Código Interno</label>
                     <span class="small text-muted d-block">${relatorio.codigo_interno}</span>
@@ -196,8 +247,7 @@ function loadRelatorios() {
                     ${btnDelete}
                 </div>
             `;
-            container.appendChild(linha);
-        })
+        container.appendChild(linha);
     })
 }
 

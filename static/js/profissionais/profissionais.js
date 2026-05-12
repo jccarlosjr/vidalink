@@ -326,7 +326,7 @@ function renderProfissionais(profissionais) {
         }
 
         html += `
-        <div class="col-12 col-md-3 col-lg-3 col-xl-3">
+        <div class="col-12 col-md-3 col-lg-3 col-xl-3 mt-2">
             <div class="card shadow-lg border-0">
                 <div class="card-header">
                     <div class="d-flex justify-content-between">

@@ -15,7 +15,7 @@ from datetime import timedelta
 from .services import PlantaoValidator
 from rest_framework import serializers
 from django.db.models import Sum
-
+from rest_framework.pagination import LimitOffsetPagination
 
 
 def expirar_plantoes():

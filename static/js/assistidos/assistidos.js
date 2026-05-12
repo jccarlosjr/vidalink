@@ -143,11 +143,11 @@ function renderAssistidos(items = []) {
         if (item.sexo == "M") {
             badge = "badge bg-primary bg-opacity-10 text-primary border border-primary-subtle rounded-pill"
             icon = "bi bi-gender-male me-1"
-            text = "Masculino"
+            text = " Masculino"
         } else if (item.sexo == "F") {
             badge = "badge bg-danger bg-opacity-10 text-danger border border-danger-subtle rounded-pill"
             icon = "bi bi-gender-female me-1"
-            text = "Feminino"
+            text = " Feminino"
         } else {
             badge = "badge bg-secondary bg-opacity-10 text-secondary border border-secondary-subtle rounded-pill"
             icon = "bi bi-gender-neutral me-1"
@@ -205,29 +205,36 @@ function renderAssistidos(items = []) {
                     ${badgeActive}
                     <div class="fw-semibold fs-5">${item.nome}</div>
                     <div class="mb-3 small">
-                        <i class="${icon} ${badge}">${text}</i> ${maskData(item.nascimento)}
+                        <i class="${icon} ${badge}">${text}</i>
                     </div>
                     <div class="mb-3 small">
-                        ${item.telefone}
-                        <a href="https://wa.me/55${telefoneLimpo}" target="_blank"
-                            class="text-success text-decoration-none">
-                            <i class="bi bi-whatsapp btn-modern btn-sm"></i>
-                        </a>
+                        <i class="bi bi-calendar text-muted"></i> <small class="text-muted fw-bold">${maskData(item.nascimento)}</small>
                     </div>
-
-                    <div class="mt-auto mb-2 border-top pt-2">
-                        <small class="text-muted">
-                            ${item.observacoes || "Sem observações"}
+                    <div class="mb-3 small">
+                        <i class="bi bi-telephone text-muted"></i> 
+                        <small class="text-muted fw-bold">${item.telefone} 
+                            <a href="https://wa.me/55${telefoneLimpo}" target="_blank" class="text-success text-decoration-none">
+                                <i class="bi bi-whatsapp btn-modern btn-sm"></i>
+                            </a>
                         </small>
                     </div>
-                </div>
-                <div class="card-footer small">
-                    <small class="text-body fw-bold ms-2">
+                    <div class="mt-auto mb-2">
+                    <small class="text-body fw-bold">
+                        <small class="text-muted">
+                        <i class="bi bi-pin-map"></i>
+                            ${item.endereco}, ${item.numero}, ${item.bairro}
+                            ${item.cep} - ${item.cidade}-${item.estado} ${item.complemento ? ', ' + item.complemento : ''}
+                        </small>
                         <a href="${mapsUrl}" target="_blank" class="text-decoration-none">
                             <i class="bi bi-geo-alt-fill btn-modern btn-sm"></i>
                         </a>
-                        ${item.endereco}, ${item.numero}, ${item.bairro}
-                        ${item.cep} - ${item.cidade}-${item.estado} ${item.complemento ? ', ' + item.complemento : ''}</p>
+                    </small>
+                    </div>
+
+                </div>
+                <div class="card-footer h-100">
+                    <small class="text-muted">
+                        ${item.observacoes || "Sem observações"}
                     </small>
                 </div>
 

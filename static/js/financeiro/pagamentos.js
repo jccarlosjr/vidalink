@@ -119,6 +119,15 @@ function renderPagamentos(pagamentos) {
 
     container.innerHTML = ""
 
+    if (!pagamentos.length) {
+        container.innerHTML = `
+            <div class="alert alert-light text-center m-3" role="alert">
+                Nenhum pagamento encontrado.
+            </div>
+        `
+        return
+    }
+
     pagamentos.forEach(pagamento => {
         const linha = document.createElement('div')
         linha.className = "card p-2 mb-4 ms-2 me-2 shadow-sm"

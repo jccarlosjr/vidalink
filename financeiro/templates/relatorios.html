@@ -17,39 +17,50 @@
         </div>
     </div>
 
-    <!-- Toolbar / Search Area -->
-    <div class="m-3 border-bottom pb-3">
-        <h5>Filtros</h5>
-
-        <div class="row g-2 align-items-end mb-3">
-            <div class="col-md-2">
-                <label class="form-label" for="filter_type">Tipo</label>
-                <select name="filter_type" id="filter_type" class="form-select form-select-sm">
-                    <option selected value="codigo_interno">Código Interno</option>
-                    <option value="status">Status</option>
-                    <option value="profissional__nome">Nome (Profissional)</option>
-                    <option value="profissional__cpf">CPF (Profissional)</option>
-                    <option value="profissional__cnpj">CNPJ (Profissional)</option>
-                </select>
-            </div>
-            <div class="col-md-2">
-                <label class="form-label">Valor</label>
-                <input type="text" id="filter_value" class="form-control form-control-sm">
-            </div>
-
-            <div class="col-md-2 d-flex">
-                <button class="text-decoration-none btn-modern" id="filter_btn">
-                    <i class="bi bi-search"></i> Filtrar
+    <div class="accordion shadow-sm" id="accordionFlushExample">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                    Filtros
                 </button>
-                <button class="text-decoration-none btn-modern ms-2" id="clear_filter_btn">
-                    <i class="bi bi-x-circle"></i> Limpar
-                </button>
+            </h2>
+            <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                <div class="accordion-body">
+                    <div class="row g-2 align-items-end mb-3">
+                        <div class="col-md-2">
+                            <label class="form-label" for="filter_type">Tipo</label>
+                            <select name="filter_type" id="filter_type" class="form-select form-select-sm">
+                                <option selected value="codigo_interno">Código Interno</option>
+                                <option value="status">Status</option>
+                                <option value="profissional__nome">Nome (Profissional)</option>
+                                <option value="profissional__cpf">CPF (Profissional)</option>
+                                <option value="profissional__cnpj">CNPJ (Profissional)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Valor</label>
+                            <input type="text" id="filter_value" class="form-control form-control-sm">
+                        </div>
+
+                        <div class="col-md-2 d-flex">
+                            <button class="text-decoration-none btn-modern" id="filter_btn">
+                                <i class="bi bi-search"></i> Filtrar
+                            </button>
+                            <button class="text-decoration-none btn-modern ms-2" id="clear_filter_btn">
+                                <i class="bi bi-x-circle"></i> Limpar
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="m-3" id="relatorios_list">
+
+    <div class="mt-2" id="relatorios_list">
     </div>
+
+    <div id="pagination"></div>
 </main>
 
 {% include 'partials/modal_relatorios.html' %}

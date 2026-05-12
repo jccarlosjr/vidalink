@@ -13,49 +13,56 @@
         </div>
     </div>
 
-    <!-- Toolbar / Search Area -->
-    <div class="m-3 border-bottom pb-3">
-        <h5>Filtros</h5>
-
-        <div class="row mb-4">
-            <div class="col-md-2">
-                <label for="data_inicio">Inicio</label>
-                <input type="date" id="data_inicio" class="form-control form-control-sm">
-            </div>
-            <div class="col-md-2">
-                <label for="data_fim">Fim</label>
-                <input type="date" id="data_fim" class="form-control form-control-sm">
-            </div>
-        </div>
-
-        <div class="row g-2 align-items-end mb-5">
-
-            <div class="col-md-3">
-                <label class="form-label">Tipo</label>
-                <select name="filter_type" id="filter_type" class="form-select form-select-sm">
-                    <option selected value="codigo_interno">Código Interno</option>
-                </select>
-            </div>
-
-            <div class="col-md-3">
-                <label class="form-label">Valor</label>
-                <input type="text" id="filter_value" class="form-control form-control-sm">
-            </div>
-
-            <div class="col-md-2 d-flex ms-2">
-                <button class="text-decoration-none btn-modern" id="filter_btn">
-                    <i class="bi bi-search"></i> Filtrar
+    <div class="accordion shadow-sm" id="accordionFlushExample">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                    Filtros
                 </button>
-                <button class="text-decoration-none btn-modern ms-2" id="clear_filter_btn">
-                    <i class="bi bi-x-circle"></i> Limpar
-                </button>
+            </h2>
+            <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                <div class="accordion-body">
+                    <div class="row mb-4">
+                        <div class="col-md-2">
+                            <label for="data_inicio">Inicio</label>
+                            <input type="date" id="data_inicio" class="form-control form-control-sm">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="data_fim">Fim</label>
+                            <input type="date" id="data_fim" class="form-control form-control-sm">
+                        </div>
+                    </div>
+
+                    <div class="row g-2 align-items-end mb-5">
+
+                        <div class="col-md-3">
+                            <label class="form-label">Tipo</label>
+                            <select name="filter_type" id="filter_type" class="form-select form-select-sm">
+                                <option selected value="codigo_interno">Código Interno</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label">Valor</label>
+                            <input type="text" id="filter_value" class="form-control form-control-sm">
+                        </div>
+
+                        <div class="col-md-2 d-flex ms-2">
+                            <button class="text-decoration-none btn-modern" id="filter_btn">
+                                <i class="bi bi-search"></i> Filtrar
+                            </button>
+                            <button class="text-decoration-none btn-modern ms-2" id="clear_filter_btn">
+                                <i class="bi bi-x-circle"></i> Limpar
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-
     <!-- Tabs (nav) -->
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <ul class="nav nav-tabs mt-2" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="andamento-tab" data-bs-toggle="tab" data-bs-target="#andamento" type="button">
                 Andamento
