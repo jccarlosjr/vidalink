@@ -32,7 +32,7 @@ class AssistidoViewSet(ModelViewSet):
 
     @action(detail=True, methods=['patch'], url_path='active')
     def active(self, request, pk):
-        assistido = self.get_object()
+        assistido = Assistido.objects.get(id=pk)
         assistido.ativo = not assistido.ativo
         assistido.save()
         return self.retrieve(request)

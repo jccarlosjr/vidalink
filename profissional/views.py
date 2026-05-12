@@ -57,7 +57,7 @@ class ProfissionalViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['patch'], url_path='active')
     def active(self, request, pk):
-        profissional = self.get_object()
+        profissional = Profissional.objects.get(id=pk)
         profissional.is_active = not profissional.is_active
         profissional.save()
         return self.retrieve(request)
