@@ -102,7 +102,7 @@ function calcularLiquido() {
 
 document.getElementById("deducoes_modal_relatorio").addEventListener("input", calcularLiquido);
 
-function saveRelatorio() {
+async function saveRelatorio() {
     let relatorio_id = document.getElementById("relatorio_id_modal_relatorio").value;
     let profissional = document.getElementById("profissional_id_modal_relatorio").value;
     let status = document.getElementById("status_modal_relatorio").value;
@@ -122,41 +122,28 @@ function saveRelatorio() {
         "status": status,
         "data_referencia": data_referencia,
         "valor_total": valor_total,
+        "pagamentos": pagamentos_selecionados.map(pagamento => pagamento.id),
         "deducoes": deducoes,
         "valor_liquido": liquido,
     }
 
     if (relatorio_id) {
-        patchData(`/api/relatorios/${relatorio_id}/`, data, (relatorio) => {
-            pagamentos_selecionados.forEach(pagamento => {
-                let data = {
-                    "relatorio": relatorio.id,
-                    "status": "ADICIONADO_RELATORIO",
-                }
-                if (pagamento.status == "PENDENTE") {
-                    patchData(`/api/pagamento/${pagamento.id}/`, data)
-                }
-            })
-            relatorioModal.hide()
-            showToast("Relatório criado com sucesso", "success")
+        await patchData(`/api/relatorios/${relatorio_id}/`, data, async () => {
+            relatorioModal.hide();
+            showToast("Relatório atualizado com sucesso", "success");
             pagamentos_selecionados = [];
-            loadRelatorios()
-        })
+            loadRelatorios();
+        });
+
     } else {
-        saveData("/api/relatorios/", data, (relatorio) => {
-            pagamentos_selecionados.forEach(pagamento => {
-                let data = {
-                    "relatorio": relatorio.id,
-                    "status": "ADICIONADO_RELATORIO",
-                }
-                patchData(`/api/pagamento/${pagamento.id}/`, data)
-            })
-            relatorioModal.hide()
-            showToast("Relatório criado com sucesso", "success")
+        await saveData("/api/relatorios/", data, async () => {
+            relatorioModal.hide();
+            showToast("Relatório criado com sucesso", "success");
             pagamentos_selecionados = [];
-            loadRelatorios()
-        })
+            loadRelatorios();
+        });
     }
+
 
     location.reload();
 }
@@ -242,7 +229,7 @@ function renderRelatorios(relatorios) {
                 </div>
                 <div class="col-4 col-md">
                     <button class="btn-modern btn-sm text-success" ${disableBtn} data-confirm='${JSON.stringify(relatorio)}' title="Confirmar pagamento" onclick="confirmarRelatorio(this)"><i class="bi bi-currency-dollar"></i></button>
-                    <button class="btn-modern btn-sm" title="Editar" data-edit='${JSON.stringify(relatorio)}' onclick="editarRelatorio(this)"><i class="bi bi-pencil"></i></button>
+                    <button class="btn-modern btn-sm" title="Editar" ${disableBtn} data-edit='${JSON.stringify(relatorio)}' onclick="editarRelatorio(this)"><i class="bi bi-pencil"></i></button>
                     <button class="btn-modern btn-sm" title="Visualizar" data-view='${JSON.stringify(relatorio)}' onclick="visualizarRelatorio(this)"><i class="bi bi-eye"></i></button>
                     ${btnDelete}
                 </div>
@@ -291,16 +278,20 @@ function renderPagamentosRelatorioDetalhe(pagamentos) {
     let container = document.getElementById("pagamentos_list_detalhe_modal");
     container.innerHTML = "";
     pagamentos.forEach(pagamento => {
+        console.log(pagamento)
         const linha = document.createElement("div");
         linha.className = "row p-1 border align-items-center";
         linha.innerHTML = `
-            <div class="col-4 col-md text-center">
+            <div class="col-3 col-md text-center">
                 <small class="d-block">${pagamento.codigo_interno}</small>
             </div>
-            <div class="col-4 col-md text-center">
+            <div class="col-3 col-md text-center">
+                <small class="d-block">${pagamento.plantao_detalhe.codigo_interno}</small>
+            </div>
+            <div class="col-3 col-md text-center">
                 <small class="d-block">${pagamento.status_name}</small>
             </div>
-            <div class="col-4 col-md text-center">
+            <div class="col-3 col-md text-center">
                 <small class="d-block">${Number(pagamento.valor_calculado).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</small>
             </div>
         `;
@@ -308,7 +299,7 @@ function renderPagamentosRelatorioDetalhe(pagamentos) {
     })
 }
 
-function confirmarRelatorio(element) {
+async function confirmarRelatorio(element) {
     const relatorio = JSON.parse(element.getAttribute("data-confirm"));
 
     const agora = new Date();
@@ -319,23 +310,8 @@ function confirmarRelatorio(element) {
         fechado_em: dataFormatada,
     }
 
-    patchData(`/api/relatorios/${relatorio.id}/`, data, () => {
+    await patchData(`/api/relatorios/${relatorio.id}/`, data, () => {
         showToast("Relatório confirmado com sucesso", "success");
-
-        relatorio.pagamentos.forEach(pagamento => {
-            const hoje = new Date().toISOString().split('T')[0];
-
-            const dataPagamento = {
-                status: "PAGO",
-                data_pagamento: hoje,
-                valor_pago: pagamento.valor_calculado
-            }
-
-            patchData(`/api/pagamento/${pagamento.id}/update_status/`, dataPagamento, () => {
-                showToast("Pagamento confirmado com sucesso", "success");
-            })
-        })
-        loadRelatorios();
     })
     location.reload();
 }

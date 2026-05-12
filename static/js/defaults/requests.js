@@ -1,4 +1,4 @@
-function getData(url, renderFunction = null) {
+async function getData(url, renderFunction = null) {
     showLoader();
     return fetch(url, {
         method: "GET",
@@ -23,7 +23,7 @@ function getData(url, renderFunction = null) {
         });
 }
 
-function saveData(url, data, callBack = null, method = "POST") {
+async function saveData(url, data, callBack = null, method = "POST") {
     showLoader();
 
     return fetch(url, {
@@ -54,9 +54,9 @@ function saveData(url, data, callBack = null, method = "POST") {
 
             if (typeof error === "object") {
                 let messages = [];
-                try{
+                try {
                     for (let field in error) {
-                    messages.push(`${field}: ${error[field].join(", ")}`);
+                        messages.push(`${field}: ${error[field].join(", ")}`);
                     }
                     showToast(messages.join("<br>"), "danger");
                 } catch {
@@ -71,7 +71,7 @@ function saveData(url, data, callBack = null, method = "POST") {
         });
 }
 
-function deleteData(url, callBack = null) {
+async function deleteData(url, callBack = null) {
     showLoader();
 
     return fetch(url, {
@@ -111,7 +111,7 @@ function deleteData(url, callBack = null) {
 
             if (typeof error === "object") {
                 let messages = [];
-                try{
+                try {
                     for (let field in error) {
                         messages.push(`${field}: ${error[field].join(", ")}`);
                     }
@@ -128,7 +128,7 @@ function deleteData(url, callBack = null) {
         });
 }
 
-function patchData(url, data, callBack = null) {
+async function patchData(url, data, callBack = null) {
     showLoader();
 
     return fetch(url, {
@@ -162,7 +162,7 @@ function patchData(url, data, callBack = null) {
 
             if (typeof error === "object") {
                 let messages = [];
-                try{
+                try {
                     for (let field in error) {
                         messages.push(`${field}: ${error[field].join(", ")}`);
                     }

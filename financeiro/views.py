@@ -88,12 +88,14 @@ class PagamentoViewSet(ModelViewSet):
         if pagamento.plantao.status not in ["F", "E"]:
             raise serializers.ValidationError({"erro": "Plantão não foi finalizado"})
 
+
     def _validate_pagamento_data(self, data):
         plantao = data.get("plantao")
         if plantao.status not in ["F", "E"]:
             raise serializers.ValidationError({
                 "erro": "Plantão não foi finalizado"
             })
+
 
     def _update_regra_plantao(self, pagamento):
         regra_pagamento = self.request.data.get('regra_pagamento')
@@ -121,7 +123,30 @@ class RelatorioViewSet(ModelViewSet):
         if filter_type and filter_value:
             queryset = queryset.filter(**{filter_type + "__icontains": filter_value})
         return queryset.annotate(pagamentos_count=Count('pagamentos')).order_by('-id')
-        
+    
+
+    def perform_create(self, serializer):
+        relatorio = serializer.save()
+        pagamentos = self.request.data.get('pagamentos', [])
+        self._update_pagamentos(pagamentos, relatorio)
+
+
+    def perform_update(self, serializer):
+        relatorio = serializer.save()
+        pagamentos = self.request.data.get('pagamentos', [])
+        if relatorio.status == "PAGO":
+            self._update_pagamentos(pagamentos, relatorio, status="PAGO")
+        else:
+            self._update_pagamentos(pagamentos, relatorio)
+
+
+    def _update_pagamentos(self, pagamentos, relatorio, status="ADICIONADO_RELATORIO", *args, **kwargs):
+        for pagamento in pagamentos:
+            pagamento = Pagamento.objects.get(id=pagamento)
+            pagamento.relatorio = relatorio
+            pagamento.status = status
+            pagamento.save()
+
 
 class RegraPagamentoViewSet(ModelViewSet):
     serializer_class = RegraPagamentoSerializer
