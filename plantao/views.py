@@ -3,15 +3,14 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from escala.models import Escala
-from .serializers import PlantaoSerializer
-from .models import Plantao
-from datetime import datetime
+from .serializers import PlantaoSerializer, HistoricoPlantaoSerializer
+from .models import Plantao, HistoricoPlantao
+from datetime import datetime, timedelta
 from django.db import transaction
 from django.views.generic import TemplateView
 from app.mixins import StaffRequiredMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils import timezone
-from datetime import timedelta
 from .services import PlantaoValidator
 from rest_framework import serializers
 from django.db.models import Sum
@@ -76,6 +75,9 @@ class PlantaoViewSet(ModelViewSet):
         else:
             plantaoes = Plantao.objects.filter(profissional=self.request.user.id).order_by('inicio')
 
+        if self.request.query_params.get("assistido"):
+            plantaoes = plantaoes.filter(assistido=self.request.query_params.get("assistido"))
+
         filter_type = self.request.query_params.get('filter_type', None)
         filter_value = self.request.query_params.get('filter_value', None)
 
@@ -96,6 +98,14 @@ class PlantaoViewSet(ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         self._validar_plantao(request.data)
+
+        historico_plantao_novo = HistoricoPlantao.objects.create(
+            usuario=request.user,
+            plantao=request.data,
+            status=request.data['status'],
+            observacoes="Plantão Criado"
+        )
+
         return super().create(request, *args, **kwargs)
 
 
@@ -109,7 +119,6 @@ class PlantaoViewSet(ModelViewSet):
         data.setdefault("profissional", instance.profissional_id)
 
         self._validar_plantao(data, instance)
-
         return super().update(request, *args, **kwargs)
 
 
@@ -123,6 +132,13 @@ class PlantaoViewSet(ModelViewSet):
         data["profissional"] = data.get("profissional", instance.profissional_id)
 
         self._validar_plantao(data, instance)
+
+        historico_plantao_novo = HistoricoPlantao.objects.create(
+            usuario=request.user,
+            plantao=instance,
+            status=data.get("status"),
+            observacoes="Plantão Atualizado"
+        )
 
         return super().partial_update(request, *args, **kwargs)
 
@@ -194,6 +210,12 @@ class PlantaoViewSet(ModelViewSet):
                 created = Plantao.objects.bulk_create(objs)
 
                 for obj in created:
+                    HistoricoPlantao.objects.create(
+                        usuario=request.user,
+                        plantao=obj,
+                        status=obj.status,
+                        observacoes="Plantão Criado"
+                    )
                     obj.codigo_interno = get_internal_code("PLT", obj.id)
 
                 Plantao.objects.bulk_update(created, ["codigo_interno"])
@@ -205,3 +227,68 @@ class PlantaoViewSet(ModelViewSet):
 
         except ValueError as e:
             return Response({"erro": str(e)}, status=400)
+
+
+    @action(detail=False, methods=["get"], url_path="list_plantoes_pagination")
+    def list_plantoes_pagination(self, request):
+
+        queryset = self.filter_queryset(self.get_queryset())
+
+        andamento_count = queryset.filter(
+            status__in=['A', 'C', 'P', 'R']
+        ).count()
+
+        finalizados_count = queryset.filter(
+            status='F'
+        ).count()
+
+        expirados_count = queryset.filter(
+            status__in=['E', 'D']
+        ).count()
+
+        paginator = LimitOffsetPagination()
+        page = paginator.paginate_queryset(queryset, request)
+
+        andamento = []
+        finalizados = []
+        expirados = []
+
+        serializer = PlantaoSerializer(page, many=True)
+        serialized_data = serializer.data
+
+        for plantao_obj, plantao_data in zip(page, serialized_data):
+
+            if plantao_obj.status in ['A', 'C', 'P', 'R']:
+                andamento.append(plantao_data)
+
+            elif plantao_obj.status == 'F':
+                finalizados.append(plantao_data)
+
+            elif plantao_obj.status in ['E', 'D']:
+                expirados.append(plantao_data)
+
+        return paginator.get_paginated_response({
+            "andamento": andamento,
+            "finalizados": finalizados,
+            "expirados": expirados,
+
+            "andamento_count": andamento_count,
+            "finalizados_count": finalizados_count,
+            "expirados_count": expirados_count,
+        })
+
+
+class HistoricoPlantaoViewSet(ModelViewSet):
+    serializer_class = HistoricoPlantaoSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = HistoricoPlantao.objects.all()
+    pagination_class = None
+
+    def get_queryset(self):
+        plantao_id = self.request.query_params.get("plantao_id")
+        queryset = super().get_queryset()
+        
+        if plantao_id:
+            queryset = queryset.filter(plantao_id=plantao_id)
+
+        return queryset

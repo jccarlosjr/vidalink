@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Plantao
+from .models import Plantao, HistoricoPlantao
 from assistido.models import Assistido
 from profissional.serializers import ProfissionalSerializer
 from profissional.models import Profissional
@@ -25,4 +25,13 @@ class PlantaoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Plantao
+        fields = '__all__'
+
+
+class HistoricoPlantaoSerializer(serializers.ModelSerializer):
+    status_name = serializers.CharField(source='get_status_display', read_only=True)
+    usuario = serializers.CharField(source='usuario.username', read_only=True)
+
+    class Meta:
+        model = HistoricoPlantao
         fields = '__all__'

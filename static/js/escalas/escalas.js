@@ -462,9 +462,11 @@ function patchPlantao() {
 function deletarPlantao() {
     const id = document.getElementById("edit_id").value;
 
-    deleteData(`/api/plantao/${id}/`, () => {
-        showToast("Removido", "success");
+    if (!confirm("Deseja realmente deletar este plantão?")) {
+        return;
+    }
 
+    deleteData(`/api/plantao/${id}/`, () => {
         calendar.getEventById(id).remove();
         modalEditarPlantao.hide();
     });

@@ -20,17 +20,31 @@
           </a>
 
           {% if user.is_staff %}
-
+          <a href="{% url 'plantoes_admin' %}" class="icon-btn" title="Plantões admin">
+            <i class="bi-calendar-check text-primary"></i>
+          </a>
           <a href="{% url 'escalas' %}" class="icon-btn" title="Escalas">
-            <i class="bi bi-calendar-week"></i>
+            <i class="bi bi-calendar-week text-primary"></i>
           </a>
 
           <a href="{% url 'profissionais' %}" class="icon-btn" title="Profissionais">
-            <i class="bi bi-person-vcard"></i>
+            <i class="bi bi-person-vcard text-primary"></i>
           </a>
 
           <a href="{% url 'assistidos' %}" class="icon-btn" title="Assistidos">
-            <i class="bi bi-people"></i>
+            <i class="bi bi-people text-primary"></i>
+          </a>
+
+          <a href="{% url 'regra_pagamento' %}" class="icon-btn" title="Regras de Pagamento">
+            <i class="bi bi-coin text-primary"></i>
+          </a>
+
+          <a href="{% url 'pagamento' %}" class="icon-btn" title="Pagamentos">
+            <i class="bi bi-cash-stack text-primary"></i>
+          </a>
+
+          <a href="{% url 'relatorio' %}" class="icon-btn" title="Relatórios">
+            <i class="bi bi-receipt text-primary"></i>
           </a>
           {% endif %}
 

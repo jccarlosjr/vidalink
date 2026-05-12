@@ -49,3 +49,19 @@ class Plantao(models.Model):
     class Meta:
         verbose_name = 'Plantão'
         verbose_name_plural = 'Plantões'
+
+
+class HistoricoPlantao(models.Model):
+    usuario = models.ForeignKey(Profissional, on_delete=models.CASCADE)
+    plantao = models.ForeignKey(Plantao, on_delete=models.CASCADE)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+    observacoes = models.TextField(null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Histórico de Plantão'
+        verbose_name_plural = 'Histórico de Plantões'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.plantao.codigo_interno} - {self.status}"

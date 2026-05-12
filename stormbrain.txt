@@ -1,6 +1,4 @@
 New Features
-- Criar app histórico de plantões
-- Mostrar o histórico do plantão na tela de escala
 - App para classificação de cuidadoras com base nos plantões finalizados
 - Criar registro de substituição de plantões afim de analisar se cada cuidadora tem finalizado os plantões originalmente atribuídos a elas
 - App para disponibilidade cruzado com plantões já ativos
@@ -8,7 +6,6 @@ New Features
 
 Ongoing Features
 - Limitar em 500m do endereço do cliente para inserir registro
-- Adicionar histórico de plantão para qualquer alteração feita
 
 
 Bugs
