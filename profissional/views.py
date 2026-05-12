@@ -57,10 +57,13 @@ class ProfissionalViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['patch'], url_path='active')
     def active(self, request, pk):
-        profissional = Profissional.objects.get(id=pk)
+        profissional = Profissional.objects.filter(id=pk).first()
         profissional.is_active = not profissional.is_active
         profissional.save()
-        return self.retrieve(request)
+        return Response(
+            {"detail": "Ativado" if profissional.is_active else "Desativado"},
+            status=status.HTTP_200_OK
+        )
 
 
     @action(detail=True, methods=['patch'], url_path='reset-password')

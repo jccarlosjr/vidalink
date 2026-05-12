@@ -6,6 +6,9 @@ from django.views.generic import TemplateView
 from app.mixins import StaffRequiredMixin, IsStaffPermission
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework import status
+
 
 
 class AssistidoViewSet(ModelViewSet):
@@ -35,7 +38,10 @@ class AssistidoViewSet(ModelViewSet):
         assistido = Assistido.objects.get(id=pk)
         assistido.ativo = not assistido.ativo
         assistido.save()
-        return self.retrieve(request)
+        return Response(
+            {"detail": "Ativado" if assistido.ativo else "Desativado"},
+            status=status.HTTP_200_OK
+        )
 
 
 class ResponsavelViewSet(ModelViewSet):
