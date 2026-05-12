@@ -42,7 +42,7 @@ class ProfissionalViewSet(viewsets.ModelViewSet):
         queryset = super().get_queryset()
         filter_type = self.request.query_params.get('filter_type', None)
         filter_value = self.request.query_params.get('filter_value', None)
-        is_active = self.request.query_params.get('is_active', None)
+        is_active = self.request.query_params.get('is_active', 'true')
 
         if filter_type and filter_value:
             queryset = queryset.filter(**{filter_type + "__icontains": filter_value})

@@ -70,6 +70,7 @@ function formatDateTime(date) {
 function clearFilter() {
     document.getElementById("filter_type").value = ""
     document.getElementById("filter_value").value = ""
+    document.getElementById("filter_active").checked = true
     loadProfissionais()
 }
 
@@ -85,6 +86,8 @@ function loadProfissionais(url = null) {
         params.append("filter_value", filterValue);
     } else if (checked) {
         params.append("is_active", true);
+    } else if (!checked) {
+        params.append("is_active", false);
     }
 
     const endpoint = url || `/api/profissionais/?${params.toString()}`

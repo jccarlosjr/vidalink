@@ -122,7 +122,6 @@ async function saveRelatorio() {
         "status": status,
         "data_referencia": data_referencia,
         "valor_total": valor_total,
-        "pagamentos": pagamentos_selecionados.map(pagamento => pagamento.id),
         "deducoes": deducoes,
         "valor_liquido": liquido,
     }

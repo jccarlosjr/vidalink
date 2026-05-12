@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
-from .models import Pagamento, Relatorio,  RegraPagamento
+from .models import Pagamento, Relatorio, RegraPagamento
 from .serializers import PagamentoSerializer, RelatorioSerializer, RegraPagamentoSerializer
 from rest_framework.permissions import IsAuthenticated
 from app.mixins import StaffRequiredMixin, IsStaffPermission
@@ -130,22 +130,32 @@ class RelatorioViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         relatorio = serializer.save()
-        pagamentos = self.request.data.get('pagamentos', [])
-        self._update_pagamentos(pagamentos, relatorio)
+        self._update_pagamentos(relatorio)
 
 
     def perform_update(self, serializer):
         relatorio = serializer.save()
-        pagamentos = self.request.data.get('pagamentos', [])
         if relatorio.status == "PAGO":
-            self._update_pagamentos(pagamentos, relatorio, status="PAGO")
+            self._update_pagamentos(relatorio, status="PAGO")
         else:
-            self._update_pagamentos(pagamentos, relatorio)
+            self._update_pagamentos(relatorio)
 
 
-    def _update_pagamentos(self, pagamentos, relatorio, status="ADICIONADO_RELATORIO", *args, **kwargs):
+    def partial_update(self, request, *args, **kwargs):
+        relatorio = self.get_object()
+        relatorio = self.serializer_class(relatorio, data=request.data, partial=True)
+        relatorio.is_valid(raise_exception=True)
+        relatorio = relatorio.save()
+        if relatorio.status == "PAGO":
+            self._update_pagamentos(relatorio, status="PAGO")
+        else:
+            self._update_pagamentos(relatorio)
+        return Response(self.get_serializer(relatorio).data)
+
+
+    def _update_pagamentos(self, relatorio, status="ADICIONADO_RELATORIO", *args, **kwargs):
+        pagamentos = Pagamento.objects.filter(relatorio_id=relatorio.id)
         for pagamento in pagamentos:
-            pagamento = Pagamento.objects.get(id=pagamento)
             pagamento.relatorio = relatorio
             pagamento.status = status
             pagamento.save()
@@ -171,7 +181,6 @@ class RegraPagamentoViewSet(ModelViewSet):
                 queryset = queryset.filter(ativa=False)
 
         return queryset.order_by('-id')
-
 
 
 class RegraPagamentoView(StaffRequiredMixin, LoginRequiredMixin, TemplateView):
